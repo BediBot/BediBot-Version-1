@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/bin/python"
+    "python.pythonPath": "/home/aadi/anaconda3/bin/python",
+    "python.linting.enabled": false
 }

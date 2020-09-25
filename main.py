@@ -6,7 +6,7 @@ import discord
 command_prefix = "$"
 emote_prefix = "!"
 
-prefixes = [command_prefix]
+prefixes = [command_prefix, emote_prefix]
 
 commands = {
     command_prefix + "ping": ping
@@ -25,7 +25,7 @@ async def on_message(message):
 
     if message.content[0] in prefixes:
         if message.content.split(" ")[0] in commands:
-           await commands[message.content.split(" ")[0]](message)
+           await commands[message.content.split(" ")[0]](message, client)
 
 
 
