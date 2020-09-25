@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 
 def sendEmail(receiverAddress, mail_body, subject):
     sender_address = 'bedibot2025@gmail.com'
-    sender_password = 'd4w7!GG8TPvA'
+    sender_password = ''
 
     receiver_address = receiverAddress
     #Setup the Miltipurpose Internet Mail Conection
