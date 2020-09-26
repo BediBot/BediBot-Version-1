@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 from commands import *
 import discord
 
@@ -30,7 +29,6 @@ async def on_message(message):
 
 
 #------------------------------main-----------------------------
-load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 print("starting now....")
