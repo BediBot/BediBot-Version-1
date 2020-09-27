@@ -1,21 +1,17 @@
-import os
+import re
 
-os.environ['UW_API_KEY'] = ''
-from uwaterloodriver import UW_Driver
-
-uw_driver = UW_Driver()
+from commands import _email
 
 
-async def emailTest(ctx):
-    email = ctx.content.split(" ")[1]
+async def verify(ctx):
+    email_address = ctx.content.split(" ")[1]
 
-    if email.endswith('@uwaterloo.ca'):
-        userID = email[:email.rfind('@')]
+    match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email_address) and \
+            email_address.endswith('@uwaterloo.ca')
 
+    if not match:
+        await ctx.channel.send("Invalid email!")
+        return
 
-
-
-
-    userData = uw_driver.directory_people_search(userID)
-
-    await ctx.channel.send(userData.get('department'))
+    _email.send_confirmation_email(email_address)
+    await ctx.channel.send("Verification Email sent!")

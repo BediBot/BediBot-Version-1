@@ -1,15 +1,20 @@
-#Tutorial Used: https://www.tutorialspoint.com/send-mail-from-your-gmail-account-using-python
-
+# Tutorial Used: https://www.tutorialspoint.com/send-mail-from-your-gmail-account-using-python
+import os
+import random
 import smtplib
+import string
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-def sendEmail(receiverAddress, mail_body, subject):
-    sender_address = 'bedibot2025@gmail.com'
-    sender_password = ''
+verificationCodes={}
 
-    receiver_address = receiverAddress
-    #Setup the Miltipurpose Internet Mail Conection
+
+def send_email(receiver_address, mail_body, subject):
+    sender_address = os.getenv("GMAIL_USER")
+    sender_password = os.getenv("GMAIL_PASS")
+
+    receiver_address = receiver_address
+    # Setup the Multipurpose Internet Mail Connection
 
     message = MIMEMultipart()
     message['From'] = sender_address
@@ -17,9 +22,9 @@ def sendEmail(receiverAddress, mail_body, subject):
     message['Subject'] = subject
     message.attach(MIMEText(mail_body, 'plain'))
 
-    GMAIL_SMTP_PORT = 587
-    session = smtplib.SMTP('smtp.gmail.com', GMAIL_SMTP_PORT)
-    session.starttls() #enable security
+    gmail_smtp_port = 587
+    session = smtplib.SMTP('smtp.gmail.com', gmail_smtp_port)
+    session.starttls()  # enable security
     session.login(sender_address, sender_password)
     text = message.as_string()
     session.sendmail(sender_address, receiver_address, text)
@@ -27,9 +32,18 @@ def sendEmail(receiverAddress, mail_body, subject):
     print('Mail Sent')
 
 
+def send_confirmation_email(receiver_address):
+    unique_key = get_unique_key()
 
-mail_content = '''Hey Zayd, 
-If you see this, please say hi
-'''
+    mail_body = '''Please verify your email address by typing $confirm {0} {1} in the #verification channel of the Tron 
+    2025 Discord server! '''
 
-sendEmail("z4tahir@uwaterloo.ca", mail_content, "HONK")
+    verificationCodes[receiver_address] = unique_key
+
+    send_email(receiver_address, mail_body.format(receiver_address, unique_key), 'Tron 2025 Discord Server Confirmation')
+
+
+def get_unique_key():
+    length = 10
+    letters = string.ascii_letters
+    return ''.join(random.choice(letters) for i in range(length))
