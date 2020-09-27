@@ -2,3 +2,4 @@ git+http://github.com/Rapptz/discord.py
 pymongo==3.5.1
 uwaterloodriver==1.1
 requests==2.24.0
+python-dotenv==0.14.0
