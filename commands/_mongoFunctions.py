@@ -26,6 +26,8 @@ def init():
 
     PendingVerificationUsers = UserInformation['PendingVerificationUsers']
 
+    PendingVerificationUsers.delete_many({})
+
 
 def is_email_linked_to_verified_user(email_address):
     if VerifiedUsers.find_one({"email_address": email_address}) is None:
