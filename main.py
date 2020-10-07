@@ -11,7 +11,8 @@ prefixes = [command_prefix]
 commands = {
     command_prefix + "ping": ping,
     command_prefix + "verify": verify,
-    command_prefix + "confirm": confirm
+    command_prefix + "confirm": confirm,
+    command_prefix + "unverify": unverify
 }
 
 client = discord.Client()
@@ -33,6 +34,9 @@ async def on_message(message):
 
 
 # ------------------------------main-----------------------------
+
+
+
 load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")

@@ -1,5 +1,6 @@
 import os
 import string
+from commands import _mongoFunctions
 
 import discord
 from dotenv import load_dotenv
@@ -13,26 +14,16 @@ uw_driver = UW_Driver()
 
 
 async def confirm(ctx):
-    email_address = ctx.content.split(" ")[1]
-    unique_key = ctx.content.split(" ")[2]
+    unique_key = ctx.content.split(" ")[1]
+
+    email_address = _mongoFunctions.get_email_from_pending_user_id(ctx.author.id)
 
     if unique_key == _email.verificationCodes.get(email_address):
         await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Verified"))
 
-        user_id = email_address[:email_address.rfind('@')]
-
-        department = uw_driver.directory_people_search(user_id).get('department').lower()
-
-        if "mechatronics" in department:
-            await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Tron"))
-            await ctx.channel.send("You have been verified and given the Tron role")
-
-        elif "mechanical" in department:
-            await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Mechanical"))
-            await ctx.channel.send("You have been verified and given the Mechanical role")
-        else:
-            await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Not Tron"))
-            await ctx.channel.send("You have been verified and given the Not Tron role")
+        _mongoFunctions.add_user_to_verified_users(ctx.author.id, email_address)
+        _mongoFunctions.remove_user_from_pending_verification_users(ctx.author.id)
+        await ctx.channel.send("You have been verified")
         return
 
     await ctx.channel.send("Invalid code!")
