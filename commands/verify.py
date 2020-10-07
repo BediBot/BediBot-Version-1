@@ -1,7 +1,8 @@
-#I totally stole that syntax validation thing from https://www.scottbrady91.com/Email-Verification/Python-Email-Verification-Script
+# I totally stole that syntax validation thing from https://www.scottbrady91.com/Email-Verification/Python-Email-Verification-Script
 import os
 import re
 from dotenv import load_dotenv
+from commands import _mongoFunctions
 
 from commands import _email
 
@@ -22,9 +23,14 @@ async def verify(ctx):
         await ctx.channel.send("Invalid email!")
         return
 
-    elif uw_driver.directory_people_search(email_address[:email_address.rfind('@')]) == {}:
+    if uw_driver.directory_people_search(email_address[:email_address.rfind('@')]) == {}:
         await ctx.channel.send("That's not a valid uWaterloo email!")
         return
 
+    if _mongoFunctions.is_email_linked_to_verified_user(email_address):
+        await ctx.channel.send("That email is already linked to a user!")
+        return
+
     _email.send_confirmation_email(email_address)
+    _mongoFunctions.add_user_to_pending_verification_users(ctx.author.id, email_address)
     await ctx.channel.send("Verification Email sent!")

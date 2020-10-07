@@ -35,12 +35,12 @@ def send_email(receiver_address, mail_body, subject):
 def send_confirmation_email(receiver_address):
     unique_key = get_unique_key()
 
-    mail_body = '''Please verify your email address by typing $confirm {0} {1} in the #verification channel of the Tron 
+    mail_body = '''Please verify your email address by typing $confirm {0} in the #verification channel of the Tron 
     2025 Discord server! '''
 
     verificationCodes[receiver_address] = unique_key
 
-    send_email(receiver_address, mail_body.format(receiver_address, unique_key), 'Tron 2025 Discord Server Confirmation')
+    send_email(receiver_address, mail_body.format(unique_key), 'Tron 2025 Discord Server Confirmation')
 
 
 def get_unique_key():
