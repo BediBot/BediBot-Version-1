@@ -1,10 +1,7 @@
 import os
-import string
-from commands import _mongoFunctions
-
+from commands import _mongoFunctions, _embedMessage, _email
 import discord
 from dotenv import load_dotenv
-from commands import _email
 
 load_dotenv()
 os.environ['UW_API_KEY'] = os.getenv('UW_API_KEY')
@@ -14,16 +11,26 @@ uw_driver = UW_Driver()
 
 
 async def confirm(ctx):
-    unique_key = ctx.content.split(" ")[1]
+	message_contents = ctx.content.split(" ")
 
-    email_address = _mongoFunctions.get_email_from_pending_user_id(ctx.author.id)
+	if len(message_contents) != 2:
+		await ctx.channel.send(embed = _embedMessage.create("Confirm Reply",
+															"The syntax is invalid! Make sure it is in the format $confirm <confirmcode>",
+															"blue"))
+		return
 
-    if unique_key == _email.verificationCodes.get(email_address):
-        await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name="Verified"))
+	unique_key = message_contents[1]
 
-        _mongoFunctions.add_user_to_verified_users(ctx.author.id, email_address)
-        _mongoFunctions.remove_user_from_pending_verification_users(ctx.author.id)
-        await ctx.channel.send("You have been verified")
-        return
+	email_address = _mongoFunctions.get_email_from_pending_user_id(ctx.author.id)
 
-    await ctx.channel.send("Invalid code!")
+	if unique_key == _email.verificationCodes.get(email_address):
+		await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = "Verified"))
+
+		_mongoFunctions.add_user_to_verified_users(ctx.author.id, email_address)
+		_mongoFunctions.remove_user_from_pending_verification_users(ctx.author.id)
+		await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "You have been verified", "blue"))
+		return
+
+	await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "Invalid Code!", "blue"))
+
+	return
