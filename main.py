@@ -12,7 +12,8 @@ commands = {
     command_prefix + "ping": ping,
     command_prefix + "verify": verify,
     command_prefix + "confirm": confirm,
-    command_prefix + "unverify": unverify
+    command_prefix + "unverify": unverify,
+    command_prefix + "help": helpCommand
 }
 
 client = discord.Client()
