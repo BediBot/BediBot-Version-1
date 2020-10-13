@@ -21,6 +21,4 @@ async def send_birthday_message(client, guild_id, channel_id):
 		await member.add_roles(role)
 
 	if len(birthday_mentions) != 0:
-		await guild.get_channel(channel_id).send(
-			embed = _embedMessage.create("Happy Birthday!", "Happy birthday to:\n" + ' '.join(birthday_mentions),
-										 "blue"))
+		await guild.get_channel(channel_id).send(embed = _embedMessage.create("Happy Birthday!", "Happy birthday to:\n" + ' '.join(birthday_mentions), "blue"))

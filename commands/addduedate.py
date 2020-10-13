@@ -23,7 +23,7 @@ async def addduedate(ctx):
 
 	if len(description) == 3 and len(date) == 3:
 		course = description[0]
-		type = description[1]
+		due_date_type = description[1]
 		title = description[2]
 		year = date[0]
 		month = date[1]
@@ -34,21 +34,16 @@ async def addduedate(ctx):
 		error_check = 1
 
 	if error_check == 1:
-		await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply",
-															"The syntax is invalid! Make sure it is in the format $addduedate type title YYYY MM DD",
-															"blue"))
+		await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate type title YYYY MM DD", "blue"))
 		return
 	if error_check == 2:
-		await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply",
-															"The date is invalid, please ensure that this is a valid date.",
-															"blue"))
+		await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "blue"))
 		return
 
 	due_date_string = '-'.join(date)
 
 	await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
-	_mongoFunctions.add_due_date_to_upcoming_due_dates(course, type, title,
-													   datetime.datetime.strptime(due_date_string, "%Y-%m-%d"))
+	_mongoFunctions.add_due_date_to_upcoming_due_dates(course, due_date_type, title, datetime.datetime.strptime(due_date_string, "%Y-%m-%d"))
 
 	return

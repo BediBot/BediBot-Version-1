@@ -4,6 +4,9 @@ import time
 import schedule
 from commands import _birthdayMessage
 
+GUILD_ID = 760615522130984980
+CHANNEL_ID = 760615523145875494
+
 schedule_stop = threading.Event()
 
 
@@ -20,7 +23,7 @@ schedule_thread.start()
 async def send_morning_announcement(client):
 	# TODO: Access guild ids and channel ids from database and loop through, running sendbirthdaymessage for each one
 	# TODO: delete all messages in channel before sending new morning announcement
-	await _birthdayMessage.send_birthday_message(client, 760615522130984980, 760615523145875494)
+	await _birthdayMessage.send_birthday_message(client, GUILD_ID, CHANNEL_ID)
 
 
 async def schedule_announcement(client):
