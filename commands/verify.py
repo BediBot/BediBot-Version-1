@@ -28,12 +28,12 @@ async def verify(ctx):
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That's not a valid uWaterloo email!", "blue"))
         return
 
-    if _mongoFunctions.is_email_linked_to_verified_user(email_address):
+    if _mongoFunctions.is_email_linked_to_verified_user(ctx.guild.id, email_address):
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That email is already linked to a user!", "blue"))
         return
 
     _email.send_confirmation_email(email_address, ctx.author.id)
-    _mongoFunctions.add_user_to_pending_verification_users(ctx.author.id, email_address)
+    _mongoFunctions.add_user_to_pending_verification_users(ctx.guild.id, ctx.author.id, email_address)
     await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Verification Email sent!", "blue"))
 
     return

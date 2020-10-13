@@ -8,78 +8,81 @@ load_dotenv()
 CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING")
 
 mClient = None
-UserInformation = None
 GuildInformation = None
-VerifiedUsers = None
-PendingVerificationUsers = None
-UpcomingDueDates = None
+Guilds = None
 
 
 def init():
     global mClient
-    global UserInformation
-    global VerifiedUsers
-    global PendingVerificationUsers
+    global Guilds
     global GuildInformation
-    global UpcomingDueDates
 
     mClient = pymongo.MongoClient(CONNECTION_STRING)
 
-    UserInformation = mClient['UserInformation']
-
     GuildInformation = mClient['GuildInformation']
 
-    VerifiedUsers = UserInformation['VerifiedUsers']
+    Guilds = GuildInformation['Guilds']
 
-    PendingVerificationUsers = UserInformation['PendingVerificationUsers']
+    guild_list = list(Guilds.find({}))
 
-    UpcomingDueDates = GuildInformation['UpcomingDueDates']
+    for guild in guild_list:
+        for key, value in guild.items():
+            if key == 'guild_id':
+                coll = GuildInformation["a" + value + ".PendingVerificationUsers"]
+                coll.delete_many({})
 
-    PendingVerificationUsers.delete_many({})
 
-
-def is_email_linked_to_verified_user(email_address):
-    if VerifiedUsers.find_one({"email_address": email_address}) is None:
+def is_email_linked_to_verified_user(guild_id, email_address):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    if coll.find_one({"email_address": email_address}) is None:
         return False
     return True
 
 
-def is_user_id_linked_to_verified_user(user_id):
-    if VerifiedUsers.find_one({"user_id": user_id}) is None:
+def is_user_id_linked_to_verified_user(guild_id, user_id):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    if coll.find_one({"user_id": user_id}) is None:
         return False
     return True
 
 
-def remove_verified_user(user_id):
-    if VerifiedUsers.find_one_and_delete({"user_id": user_id}) is None:
+def remove_verified_user(guild_id, user_id):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    if coll.find_one_and_delete({"user_id": user_id}) is None:
         return False
     return True
 
 
-def add_user_to_verified_users(user_id, email):
-    VerifiedUsers.insert_one({'user_id': user_id, 'email_address': email})
+def add_user_to_verified_users(guild_id, user_id, email):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    coll.insert_one({'user_id': user_id, 'email_address': email})
 
 
-def add_user_to_pending_verification_users(user_id, email):
-    PendingVerificationUsers.insert_one({'user_id': user_id, 'email_address': email})
+def add_user_to_pending_verification_users(guild_id, user_id, email):
+    coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
+    coll.insert_one({'user_id': user_id, 'email_address': email})
 
 
-def remove_user_from_pending_verification_users(user_id):
-    PendingVerificationUsers.find_one_and_delete({'user_id': user_id})
+def remove_user_from_pending_verification_users(guild_id, user_id):
+    coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
+    coll.find_one_and_delete({'user_id': user_id})
 
 
-def get_email_from_pending_user_id(user_id):
-    document = PendingVerificationUsers.find_one({'user_id': user_id})
+def get_email_from_pending_user_id(guild_id, user_id):
+    coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
+    document = coll.find_one({'user_id': user_id})
     if document is not None:
         return document['email_address']
 
 
-def set_users_birthday(user_id, birth_date):
-    VerifiedUsers.update_one({'user_id': user_id}, {'$set': {'birth_date': birth_date}})
+def set_users_birthday(guild_id, user_id, birth_date):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    coll.update_one({'user_id': user_id}, {'$set': {'birth_date': birth_date}})
 
 
-def get_all_birthdays_today():
-    return list(VerifiedUsers.aggregate([
+def get_all_birthdays_today(guild_id):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    return list(coll.aggregate([
         {'$match':
             {'$expr':
                 {'$and': [
@@ -89,9 +92,15 @@ def get_all_birthdays_today():
         }]))
 
 
-def add_due_date_to_upcoming_due_dates(course, due_date_type, title, date):
-    UpcomingDueDates.insert_one({'course': course, 'type': due_date_type, 'title': title, 'date': date})
+def add_due_date_to_upcoming_due_dates(guild_id, course, due_date_type, title, date):
+    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
+    coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'date': date})
 
 
-def get_all_upcoming_due_dates():
-    return list(UpcomingDueDates.aggregate())
+def get_all_upcoming_due_dates(guild_id):
+    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
+    return list(coll.find({}))
+
+
+def get_guilds_information():
+    return list(Guilds.find({}))

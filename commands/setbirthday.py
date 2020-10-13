@@ -3,7 +3,7 @@ from commands import _mongoFunctions, _embedMessage, _dateFunctions
 
 
 async def setbirthday(ctx):
-    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.author.id):
+    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
         await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "You are not verified", "blue"))
         return
 
@@ -34,6 +34,6 @@ async def setbirthday(ctx):
 
     await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "Your birthday has been set!", "blue"))
 
-    _mongoFunctions.set_users_birthday(ctx.author.id, datetime.datetime.strptime(birth_date_string, "%Y-%m-%d"))
+    _mongoFunctions.set_users_birthday(ctx.guild.id, ctx.author.id, datetime.datetime.strptime(birth_date_string, "%Y-%m-%d"))
 
     return
