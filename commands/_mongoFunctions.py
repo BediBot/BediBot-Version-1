@@ -4,7 +4,7 @@ mClient = None
 db = None
 guilds = None
 
-#perPage = 
+perPage = 5
 
 def init():
     global mClient
@@ -20,7 +20,7 @@ def init():
 def insertQuote(guildId: int, quote: str, quotedPerson: str):
     doc = {
         'quote': quote,
-        'name': quotedPerson
+        'name': quotedPerson.upper()
     }
     coll = db["a" + str(guildId) + ".quotes"]
     try:
@@ -34,17 +34,22 @@ def deleteQuote(guildId, quote, quotedPerson):
     coll.delete_one({"quote": quote, "name": quotedPerson})
     
 def findQuotes(guildId, quotedPerson, page):
+
+   skip = perPage * (page - 1)
    quotes = []
-
    coll = db["a"+guildId+".quotes"]
-   count = 0
-   for x in coll.find({"name": quotedPerson}):
-        quotes.append("'" + x["quote"] + "' -" + x["name"])
-        count += 1
-        if count >= amount:
-           break 
-
-   return quotes
+   filter = {
+       "name": {"$regex" : "^.*"+quotedPerson+".*$"}
+   }
+   pipeline = [
+       {"$match": filter},
+       {"$limit": perPage},
+       {"$skip": skip}
+   ]
+   try:
+       return list(coll.aggregate(pipeline))
+   except:
+       return None
 
 
 
