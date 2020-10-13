@@ -63,7 +63,7 @@ def add_user_to_verified_users(guild_id, user_id, email_address_hash):
 
 def add_user_to_pending_verification_users(guild_id, user_id, email):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
-    email_address_hash = str(_hashingFunctions.hash_email(email))
+    email_address_hash = _hashingFunctions.hash_email(email)
     print(email_address_hash)
     coll.insert_one({'user_id': user_id, 'email_address_hash': email_address_hash})
 
