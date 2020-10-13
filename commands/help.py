@@ -12,5 +12,4 @@ async def helpCommand(ctx):
     _embedMessage.addField(helpMessage, "$verify <userID@uwaterloo.ca>", "Allows you to verify yourself as a UWaterloo Student and access the server", False)
     _embedMessage.setFooter(helpMessage, "For any concerns, contact a BediBot dev")
 
-    #780 233 2993
     await ctx.channel.send(embed=helpMessage)
