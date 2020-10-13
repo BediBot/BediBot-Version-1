@@ -2,6 +2,7 @@ import os
 import pymongo
 import datetime
 from dotenv import load_dotenv
+from commands import _hashingFunctions
 
 load_dotenv()
 
@@ -34,7 +35,9 @@ def init():
 
 def is_email_linked_to_verified_user(guild_id, email_address):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    if coll.find_one({"email_address": email_address}) is None:
+    email_address_hash = _hashingFunctions.hash_email(email_address)
+    print(email_address_hash)
+    if coll.find_one({"email_address_hash": email_address_hash}) is None:
         return False
     return True
 
@@ -53,14 +56,16 @@ def remove_verified_user(guild_id, user_id):
     return True
 
 
-def add_user_to_verified_users(guild_id, user_id, email):
+def add_user_to_verified_users(guild_id, user_id, email_address_hash):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    coll.insert_one({'user_id': user_id, 'email_address': email})
+    coll.insert_one({'user_id': user_id, 'email_address_hash': email_address_hash})
 
 
 def add_user_to_pending_verification_users(guild_id, user_id, email):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
-    coll.insert_one({'user_id': user_id, 'email_address': email})
+    email_address_hash = str(_hashingFunctions.hash_email(email))
+    print(email_address_hash)
+    coll.insert_one({'user_id': user_id, 'email_address_hash': email_address_hash})
 
 
 def remove_user_from_pending_verification_users(guild_id, user_id):
@@ -68,11 +73,11 @@ def remove_user_from_pending_verification_users(guild_id, user_id):
     coll.find_one_and_delete({'user_id': user_id})
 
 
-def get_email_from_pending_user_id(guild_id, user_id):
+def get_email_hash_from_pending_user_id(guild_id, user_id):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
     document = coll.find_one({'user_id': user_id})
     if document is not None:
-        return document['email_address']
+        return document['email_address_hash']
 
 
 def set_users_birthday(guild_id, user_id, birth_date):
