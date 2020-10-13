@@ -1,4 +1,5 @@
-async def ping(msg, bot):
+
+async def ping(ctx, client):
     print("pong")
-    await msg.channel.send("pong!")
+    await ctx.channel.send("pong!")
     
