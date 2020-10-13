@@ -38,9 +38,6 @@ async def on_message(message):
 
 
 load_dotenv()
-
 TOKEN = os.getenv("BOT_TOKEN")
-# print(TOKEN)
-# commands["$ping"]()
 print("starting now....")
 client.run(TOKEN)
