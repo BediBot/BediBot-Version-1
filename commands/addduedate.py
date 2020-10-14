@@ -1,4 +1,5 @@
 import datetime
+import re
 
 import discord
 
@@ -13,15 +14,18 @@ async def addduedate(ctx):
     message_contents = ctx.content.split(" ", 1)
     message_contents.pop(0)
 
-    message_contents = message_contents[0].split(' ')
+    if len(message_contents) < 7:
 
-    description = message_contents[0:2]
+        message_contents = message_contents[0].split(' ')
 
-    description.append(' '.join(message_contents[2:-3]))
+        description = message_contents[0:2]
 
-    date = message_contents[-3:]
+        description.append(' '.join(message_contents[2:-4]))
 
-    if len(description) == 3 and len(date) == 3:
+        date = message_contents[-4:-1]
+
+        time = message_contents[-1]
+
         course = description[0]
         due_date_type = description[1]
         title = description[2]
@@ -34,16 +38,23 @@ async def addduedate(ctx):
         error_check = 1
 
     if error_check == 1:
-        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate type title YYYY MM DD", "blue"))
+        await ctx.channel.send(
+            embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate course type title YYYY MM DD HH:MM"
+                                                             "\n If there is no related time, enter none instead of HH:MM. Time in 24 hour format", "blue"))
         return
     if error_check == 2:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "blue"))
         return
 
-    due_date_string = '-'.join(date)
-
     await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
-    _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, datetime.datetime.strptime(due_date_string, "%Y-%m-%d"))
+    match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
+
+    if not match:
+        time = '0:0'
+
+    time = time.split(':')
+
+    _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])))
 
     return

@@ -102,9 +102,19 @@ def add_due_date_to_upcoming_due_dates(guild_id, course, due_date_type, title, d
     coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'date': date})
 
 
-def get_all_upcoming_due_dates(guild_id):
-    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    return list(coll.find({}))
+def get_all_upcoming_due_dates(guildId, course):
+    coll = GuildInformation["a" + guildId + ".quotes"]
+    filter = {
+        "course": course
+    }
+    pipeline = [
+        {"$match": filter},
+        {'$sort': {'date': 1}}
+    ]
+    try:
+        return list(coll.aggregate(pipeline))
+    except:
+        return None
 
 
 def get_guilds_information():
