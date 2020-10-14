@@ -13,7 +13,7 @@ def hash_email(email):
     return sha256.hexdigest()
 
 
-# Function may be unnecessary
+
 def check_hash(email, stored_hash):
     """
     :param email: Uwaterloo email as string
