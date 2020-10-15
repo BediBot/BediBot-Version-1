@@ -2,7 +2,7 @@ import asyncio
 import threading
 import time
 import schedule
-from commands import _birthdayMessage, _mongoFunctions
+from commands import _birthdayMessage, _mongoFunctions, _setBotStatus
 
 GUILD_ID = 760615522130984980
 CHANNEL_ID = 760615523145875494
@@ -22,6 +22,7 @@ schedule_thread.start()
 
 async def send_morning_announcement(client):
     guild_list = _mongoFunctions.get_guilds_information()
+    await _setBotStatus.setBotStatusRandomly(client)
 
     for guild in guild_list:
         for key, value in guild.items():
