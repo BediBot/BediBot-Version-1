@@ -97,25 +97,33 @@ def get_all_birthdays_today(guild_id):
         }]))
 
 
-def add_due_date_to_upcoming_due_dates(guild_id, course, due_date_type, title, date):
+def add_due_date_to_upcoming_due_dates(guild_id, course, due_date_type, title, stream, date, timeIncluded):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'date': date})
+    coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'stream': stream, 'date': date, "time_included": timeIncluded})
 
 
-def get_all_upcoming_due_dates(guildId, course):
-    coll = GuildInformation["a" + guildId + ".quotes"]
+def get_all_upcoming_due_dates(guildId, stream, course):
+    coll = GuildInformation["a" + str(guildId) + ".UpcomingDueDates"]
+
     filter = {
+        "stream": str(stream),
         "course": course
     }
     pipeline = [
         {"$match": filter},
         {'$sort': {'date': 1}}
     ]
-    try:
-        return list(coll.aggregate(pipeline))
-    except:
-        return None
+
+    return list(coll.aggregate(pipeline))
+
+
+def get_list_of_courses(guild_id):
+    return Guilds.find_one({'guild_id': str(guild_id)})['courses']
 
 
 def get_guilds_information():
     return list(Guilds.find({}))
+
+
+def get_due_date_channel_id(guild_id, stream):
+    return Guilds.find_one({'guild_id': str(guild_id)})['stream_' + str(stream) + '_message_id']

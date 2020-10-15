@@ -2,7 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from commands import *
-from commands import _morningAnnouncement, _mongoFunctions
+from commands import _morningAnnouncement, _mongoFunctions, _dueDateMessage
 
 command_prefix = "$"
 emote_prefix = "!"
@@ -27,6 +27,7 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     _mongoFunctions.init()
     await _morningAnnouncement.schedule_announcement(client)
+    await _dueDateMessage.send_due_date_message(client, 760615522130984980, 766061160336195631)
 
 
 @client.event

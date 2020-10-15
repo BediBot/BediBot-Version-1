@@ -1,4 +1,5 @@
 import datetime
+import enum
 import re
 
 import discord
@@ -14,13 +15,13 @@ async def addduedate(ctx):
     message_contents = ctx.content.split(" ", 1)
     message_contents.pop(0)
 
-    if len(message_contents) < 7:
+    message_contents = message_contents[0].split(' ')
 
-        message_contents = message_contents[0].split(' ')
+    if len(message_contents) > 8:
 
-        description = message_contents[0:2]
+        description = [' '.join(message_contents[0:2]), message_contents[2], ' '.join(message_contents[3:-5])]
 
-        description.append(' '.join(message_contents[2:-4]))
+        stream = message_contents[-5]
 
         date = message_contents[-4:-1]
 
@@ -39,7 +40,7 @@ async def addduedate(ctx):
 
     if error_check == 1:
         await ctx.channel.send(
-            embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate course type title YYYY MM DD HH:MM"
+            embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate course type title stream YYYY MM DD HH:MM"
                                                              "\n If there is no related time, enter none instead of HH:MM. Time in 24 hour format", "blue"))
         return
     if error_check == 2:
@@ -51,10 +52,16 @@ async def addduedate(ctx):
     match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
 
     if not match:
-        time = '0:0'
+        time = None
 
-    time = time.split(':')
+    if time == None:
+        _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream,
+                                                           datetime.datetime(int(year), int(month), int(day)), False)
 
-    _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])))
+    else:
+        time = time.split(':')
+
+        _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream,
+                                                           datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])), True)
 
     return
