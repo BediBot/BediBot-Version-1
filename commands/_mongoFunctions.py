@@ -36,7 +36,6 @@ def init():
 def is_email_linked_to_verified_user(guild_id, email_address):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
     email_address_hash = _hashingFunctions.hash_email(email_address)
-    print(email_address_hash)
     if coll.find_one({"email_address_hash": email_address_hash}) is None:
         return False
     return True
@@ -134,3 +133,19 @@ def remove_due_dates_passed(guild_id):
     query = {"date": {"$lte": datetime.datetime.now()}}
 
     coll.delete_many(query)
+
+
+def does_assignment_exist_already(guild_id, course, due_date_type, title, stream, date, time_included):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    print(course)
+    print(due_date_type)
+    print(title)
+    print(stream)
+    print(date)
+    print(time_included)
+
+    print(coll.find_one({'course': course, 'type': due_date_type, 'title': title, 'stream': str(stream), 'date': date, 'time_included': bool(time_included)}))
+
+    if coll.find_one({'course': course, 'type': due_date_type, 'title': title, 'stream': str(stream), 'date': date, 'time_included': bool(time_included)}) is None:
+        return False
+    return True

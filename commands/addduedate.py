@@ -55,11 +55,19 @@ async def addduedate(ctx, client):
         time = None
 
     if time == None:
-        _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream,
-                                                           datetime.datetime(int(year), int(month), int(day)), False)
+        if _mongoFunctions.does_assignment_exist_already(ctx.guild.id, course, due_date_type, title, stream, datetime.datetime(int(year), int(month), int(day)), False):
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date already exists!", "blue"))
+            return
+
+        _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream, datetime.datetime(int(year), int(month), int(day)), False)
 
     else:
         time = time.split(':')
+
+        if _mongoFunctions.does_assignment_exist_already(ctx.guild.id, course, due_date_type, title, stream,
+                                                         datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])), True):
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date already exists!", "blue"))
+            return
 
         _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream,
                                                            datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])), True)
