@@ -9,7 +9,7 @@ os.environ['UW_API_KEY'] = os.getenv('UW_API_KEY')
 uw_driver = UW_Driver()
 
 
-async def verify(ctx):
+async def verify(ctx, client):
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:
