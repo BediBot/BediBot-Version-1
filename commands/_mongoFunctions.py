@@ -137,12 +137,6 @@ def remove_due_dates_passed(guild_id):
 
 def does_assignment_exist_already(guild_id, course, due_date_type, title, stream, date, time_included):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    print(course)
-    print(due_date_type)
-    print(title)
-    print(stream)
-    print(date)
-    print(time_included)
 
     print(coll.find_one({'course': course, 'type': due_date_type, 'title': title, 'stream': str(stream), 'date': date, 'time_included': bool(time_included)}))
 
