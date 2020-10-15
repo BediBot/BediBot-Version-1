@@ -11,6 +11,5 @@ async def helpCommand(ctx, client):
     _embedMessage.addField(helpMessage, "$setbirthday <YYYY> <MM> <DD>", "Allows you to set your birthday and let the server know when to embarass you :D", False)
     _embedMessage.addField(helpMessage, "$unverify", "Unverifies you from the server. Note that this does NOT remove the associated email address from your discord user ID", False)
     _embedMessage.addField(helpMessage, "$verify <userID@uwaterloo.ca>", "Allows you to verify yourself as a UWaterloo Student and access the server", False)
-    _embedMessage.setFooter(helpMessage, "For any concerns, contact a BediBot dev")
 
     await ctx.channel.send(embed = helpMessage)
