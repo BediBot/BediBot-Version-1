@@ -7,9 +7,9 @@ async def edit_due_date_message(client):
     for guild in guild_list:
         for key, value in guild.items():
             if key == 'guild_id':
-                guild_id = int(value)
+                guild_id = value
             if key == 'channel_id':
-                channel_id = int(value)
+                channel_id = value
 
         guild = client.get_guild(guild_id)
 

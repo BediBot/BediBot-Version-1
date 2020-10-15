@@ -16,7 +16,8 @@ commands = {
     command_prefix + "unverify": unverify,
     command_prefix + "setbirthday": setbirthday,
     command_prefix + "addduedate": addduedate,
-    command_prefix + "help": helpCommand
+    command_prefix + "help": helpCommand,
+    command_prefix + "setbedibotchannel": setbedibotchannel
 }
 
 client = discord.Client()
