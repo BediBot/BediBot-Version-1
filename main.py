@@ -27,7 +27,7 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     _mongoFunctions.init()
     await _morningAnnouncement.schedule_announcement(client)
-    await _dueDateMessage.send_due_date_message(client, 760615522130984980, 766061160336195631)
+    _mongoFunctions.remove_due_dates_passed(760615522130984980)
 
 
 @client.event
@@ -37,7 +37,7 @@ async def on_message(message):
 
     if message.content[0] in prefixes:
         if message.content.split(" ")[0] in commands:
-            await commands[message.content.split(" ")[0]](message)
+            await commands[message.content.split(" ")[0]](message, client)
 
 
 # ------------------------------main-----------------------------

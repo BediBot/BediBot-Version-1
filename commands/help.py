@@ -1,7 +1,7 @@
 from commands import _embedMessage
 
 
-async def helpCommand(ctx):
+async def helpCommand(ctx, client):
     helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each <> represents an arguement", "green")
     _embedMessage.addField(helpMessage, "$addduedate <course> <type> <title> <YYYY> <MM> <DD> <HH:DD>", "Add's an assignment's due date to be counted down to", False)
     _embedMessage.addField(helpMessage, "$addQuote <quote with spaces>", "Add's a quote from Professor Bedi", False)

@@ -102,8 +102,8 @@ def add_due_date_to_upcoming_due_dates(guild_id, course, due_date_type, title, s
     coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'stream': stream, 'date': date, "time_included": timeIncluded})
 
 
-def get_all_upcoming_due_dates(guildId, stream, course):
-    coll = GuildInformation["a" + str(guildId) + ".UpcomingDueDates"]
+def get_all_upcoming_due_dates(guild_id, stream, course):
+    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
 
     filter = {
         "stream": str(stream),
@@ -127,3 +127,10 @@ def get_guilds_information():
 
 def get_due_date_channel_id(guild_id, stream):
     return Guilds.find_one({'guild_id': str(guild_id)})['stream_' + str(stream) + '_message_id']
+
+
+def remove_due_dates_passed(guild_id):
+    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
+    query = {"date": {"$lte": datetime.datetime.now()}}
+
+    coll.delete_many(query)

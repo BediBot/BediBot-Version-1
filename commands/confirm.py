@@ -10,7 +10,7 @@ from uwaterloodriver import UW_Driver
 uw_driver = UW_Driver()
 
 
-async def confirm(ctx):
+async def confirm(ctx, client):
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:
@@ -25,7 +25,7 @@ async def confirm(ctx):
         _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, email_address_hash)
         _mongoFunctions.remove_user_from_pending_verification_users(ctx.guild.id, ctx.author.id)
         await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "You have been verified", "blue"))
-        
+
         return
 
     await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "Invalid Code!", "blue"))

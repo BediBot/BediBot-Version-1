@@ -4,10 +4,10 @@ import re
 
 import discord
 
-from commands import _embedMessage, _mongoFunctions, _dateFunctions
+from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage
 
 
-async def addduedate(ctx):
+async def addduedate(ctx, client):
     if discord.utils.get(ctx.guild.roles, name = "admin") not in ctx.author.roles:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You are not an admin", "blue"))
         return
@@ -63,5 +63,7 @@ async def addduedate(ctx):
 
         _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream,
                                                            datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])), True)
+
+    await _dueDateMessage.edit_due_date_message(client)
 
     return

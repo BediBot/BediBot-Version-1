@@ -1,19 +1,26 @@
 from commands import _embedMessage, _mongoFunctions
 
 
-async def send_due_date_message(client, guild_id, channel_id):
-    guild_id = int(guild_id)
-    channel_id = int(channel_id)
-    guild = client.get_guild(guild_id)
+async def edit_due_date_message(client):
+    guild_list = _mongoFunctions.get_guilds_information()
 
-    courses = _mongoFunctions.get_list_of_courses(guild_id)
+    for guild in guild_list:
+        for key, value in guild.items():
+            if key == 'guild_id':
+                guild_id = int(value)
+            if key == 'channel_id':
+                channel_id = int(value)
 
-    await send_schedule_embed(4, courses, guild_id, guild, channel_id)
+        guild = client.get_guild(guild_id)
 
-    await send_schedule_embed(8, courses, guild_id, guild, channel_id)
+        courses = _mongoFunctions.get_list_of_courses(guild_id)
+
+        await edit_schedule_embed(4, courses, guild_id, guild, channel_id)
+
+        await edit_schedule_embed(8, courses, guild_id, guild, channel_id)
 
 
-async def send_schedule_embed(stream, courses, guild_id, guild, channel_id):
+async def edit_schedule_embed(stream, courses, guild_id, guild, channel_id):
     channel = guild.get_channel(channel_id)
     message_id = _mongoFunctions.get_due_date_channel_id(guild_id, stream)
     msg = await channel.fetch_message(message_id)
@@ -37,3 +44,7 @@ async def send_schedule_embed(stream, courses, guild_id, guild, channel_id):
 
             messageEmbed.add_field(name = title, value = current_due_date, inline = False)
     await msg.edit(embed = messageEmbed)
+
+
+def update_due_dates(guild_id):
+    _mongoFunctions.remove_due_dates_passed(guild_id)
