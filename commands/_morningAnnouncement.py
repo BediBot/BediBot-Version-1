@@ -6,9 +6,6 @@ from datetime import date, datetime
 import schedule
 from commands import _birthdayMessage, _mongoFunctions
 
-GUILD_ID = 760615522130984980
-CHANNEL_ID = 760615523145875494
-
 schedule_stop = threading.Event()
 
 
