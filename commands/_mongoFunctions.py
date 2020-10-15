@@ -29,63 +29,61 @@ def init():
     for guild in guild_list:
         for key, value in guild.items():
             if key == 'guild_id':
-                coll = GuildInformation["a" + value + ".PendingVerificationUsers"]
+                coll = GuildInformation["a" + str(value) + ".PendingVerificationUsers"]
                 coll.delete_many({})
 
 
-def is_email_linked_to_verified_user(guild_id, email_address):
+def is_email_linked_to_verified_user(guild_id: int, email_address):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
     email_address_hash = _hashingFunctions.hash_email(email_address)
-    print(email_address_hash)
     if coll.find_one({"email_address_hash": email_address_hash}) is None:
         return False
     return True
 
 
-def is_user_id_linked_to_verified_user(guild_id, user_id):
+def is_user_id_linked_to_verified_user(guild_id: int, user_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    if coll.find_one({"user_id": user_id}) is None:
+    if coll.find_one({"user_id": int(user_id)}) is None:
         return False
     return True
 
 
-def remove_verified_user(guild_id, user_id):
+def remove_verified_user(guild_id: int, user_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    if coll.find_one_and_delete({"user_id": user_id}) is None:
+    if coll.find_one_and_delete({"user_id": int(user_id)}) is None:
         return False
     return True
 
 
-def add_user_to_verified_users(guild_id, user_id, email_address_hash):
+def add_user_to_verified_users(guild_id: int, user_id: int, email_address_hash):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    coll.insert_one({'user_id': user_id, 'email_address_hash': email_address_hash})
+    coll.insert_one({'user_id': int(user_id), 'email_address_hash': email_address_hash})
 
 
-def add_user_to_pending_verification_users(guild_id, user_id, email):
+def add_user_to_pending_verification_users(guild_id: int, user_id: int, email):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
     email_address_hash = _hashingFunctions.hash_email(email)
-    print(email_address_hash)
-    coll.insert_one({'user_id': user_id, 'email_address_hash': email_address_hash})
+    coll.insert_one({'user_id': int(user_id), 'email_address_hash': email_address_hash})
 
 
-def remove_user_from_pending_verification_users(guild_id, user_id):
+def remove_user_from_pending_verification_users(guild_id: int, user_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
-    coll.find_one_and_delete({'user_id': user_id})
+    coll.find_one_and_delete({'user_id': int(user_id)})
 
 
-def get_email_hash_from_pending_user_id(guild_id, user_id):
+def get_email_hash_from_pending_user_id(guild_id: int, user_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
-    document = coll.find_one({'user_id': user_id})
+    document = coll.find_one({'user_id': int(user_id)})
     if document is not None:
         return document['email_address_hash']
 
 
-def set_users_birthday(guild_id, user_id, birth_date):
+def set_users_birthday(guild_id: int, user_id: int, birth_date: datetime.datetime):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    coll.update_one({'user_id': user_id}, {'$set': {'birth_date': birth_date}})
+    coll.update_one({'user_id': int(user_id)}, {'$set': {'birth_date': birth_date}})
 
 
-def get_all_birthdays_today(guild_id):
+def get_all_birthdays_today(guild_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
     return list(coll.aggregate([
         {'$match':
@@ -97,14 +95,28 @@ def get_all_birthdays_today(guild_id):
         }]))
 
 
-def add_due_date_to_upcoming_due_dates(guild_id, course, due_date_type, title, date):
+def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'date': date})
+    coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)})
 
 
-def get_all_upcoming_due_dates(guild_id):
+def get_all_upcoming_due_dates(guild_id: int, stream: int, course):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    return list(coll.find({}))
+
+    filter = {
+        "stream": int(stream),
+        "course": course
+    }
+    pipeline = [
+        {"$match": filter},
+        {'$sort': {'date': 1}}
+    ]
+
+    return list(coll.aggregate(pipeline))
+
+
+def get_list_of_courses(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['courses']
 
 
 def get_guilds_information():
@@ -133,10 +145,10 @@ def set_bedi_bot_channel_id(guild_id: int, channel_id: int):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'channel_id': int(channel_id)}})
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': None}})
 
-
+    
 def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'stream_' + str(stream) + '_message_id': message_id}})
-
+    
 
 def set_last_announcement_time(guild_id: int, time: datetime.datetime):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})

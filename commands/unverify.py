@@ -2,7 +2,7 @@ import discord
 from commands import _mongoFunctions, _embedMessage
 
 
-async def unverify(ctx):
+async def unverify(ctx, client):
     user_id = ctx.author.id
 
     if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, user_id):
