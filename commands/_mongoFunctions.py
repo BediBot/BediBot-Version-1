@@ -142,8 +142,17 @@ def does_assignment_exist_already(guild_id: int, course, due_date_type, title, s
 
 
 def set_bedi_bot_channel_id(guild_id: int, channel_id: int):
-    Guilds.update_one({'guild_id': guild_id}, {'$set': {'channel_id': channel_id}})
+    Guilds.update_one({'guild_id': guild_id}, {'$set': {'channel_id': int(channel_id)}})
+    Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': None}})
 
-
+    
 def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'stream_' + str(stream) + '_message_id': message_id}})
+    
+
+def set_last_announcement_time(guild_id: int, time: datetime.datetime):
+    Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})
+
+
+def get_last_announcement_time(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['last_announcement_time']
