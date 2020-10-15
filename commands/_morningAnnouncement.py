@@ -4,7 +4,7 @@ import time
 from datetime import date, datetime
 
 import schedule
-from commands import _birthdayMessage, _mongoFunctions, _dueDateMessage
+from commands import _birthdayMessage, _mongoFunctions, _setBotStatus, _dueDateMessage
 
 schedule_stop = threading.Event()
 
@@ -21,6 +21,7 @@ schedule_thread.start()
 
 async def send_morning_announcement(client):
     guild_list = _mongoFunctions.get_guilds_information()
+    await _setBotStatus.setBotStatusRandomly(client)
 
     for guild in guild_list:
         for key, value in guild.items():
