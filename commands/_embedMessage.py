@@ -13,13 +13,16 @@ class DiscordColours(enum.Enum):
 
 # returns the embed object
 def create(titleString, descriptionString, colourString):
-	return discord.Embed(
+	returnMessage = discord.Embed(
 		title = titleString,
 		description = descriptionString,
 		colour = DiscordColours[colourString].value,
 		timestamp = datetime.datetime.utcnow()
 	)
 
+	returnMessage.set_footer(text = "For any concerns, contact a BediBot dev: Aadi, Carson, Sahil, & Zayd")
+
+	return returnMessage
 
 # Adds a field. Pass in the message, title of the field, value, and if it's inline or not
 def addField(embedMsg, titleString, valueString, inlineBool):
@@ -29,8 +32,3 @@ def addField(embedMsg, titleString, valueString, inlineBool):
 # Adds an image. Pass in the url
 def addImage(embedMsg, url):
 	embedMsg.set_image(url = url)
-
-
-# Adds a footer. Pass in a value for the footer
-def setFooter(embedMsg, valueString):
-	embedMsg.set_footer(text = valueString)
