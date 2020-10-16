@@ -12,7 +12,8 @@ prefixes = [command_prefix, emote_prefix]
 commands = {
     command_prefix + "ping"     : ping,
     command_prefix + "parse"    : parseCommand,
-    command_prefix + "addQuote" : addQuote
+    command_prefix + "addQuote" : addQuote,
+    command_prefix + "getQuotes" : getQuotes,
 }
 
 reactionHandlers = {

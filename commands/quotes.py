@@ -1,5 +1,6 @@
 from ._mongoFunctions import *
 from ._util import parseMessage
+from ._embedMessage import *
 import discord
 
 sweat_smile = "😅"
@@ -18,13 +19,23 @@ async def addQuote(ctx: discord.message, client:discord.client):
     # await ctx.channel.send("Quote Recorded!")
 
 
-async def getQuotes(ctx):
+async def getQuotes(ctx: discord.message, client:discord.client):
     args = parseMessage(ctx.content)
     if len(args) != 3:
         await ctx.channel.send("you need 2 arguments for this function")
     try:
-        perPage = int(args[1])
+        person = str(args[1])
         page = int(args[2])
+        quotes = findQuotes(ctx.guild.id, person, page)
+        try:
+            print(quotes)
+            embed = create("Quotes from: " + person, "Page: "+str(page), "green")
+            for quote in quotes:
+                addField(embedMsg=embed, titleString=quote["quote"], valueString=quote["name"],inlineBool=False)
+            await ctx.channel.send(embed=embed)
+        except Exception as e:
+            print(e)
+            await ctx.channel.send("error sending response")
     except:
         await ctx.channel.send("input error: you need integers")
 

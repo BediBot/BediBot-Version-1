@@ -8,3 +8,6 @@ async def parseCommand(ctx, client):
         msg += "arg " + str(num) + " : " + arg + "\n"
         num += 1
     await ctx.channel.send(msg)
+
+
+

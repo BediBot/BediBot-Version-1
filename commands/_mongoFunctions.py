@@ -20,7 +20,7 @@ def init():
 def insertQuote(guildId: int, quote: str, quotedPerson: str):
     doc = {
         'quote': quote,
-        'name': quotedPerson.upper()
+        'name': quotedPerson.lower()
     }
     coll = db["a" + str(guildId) + ".quotes"]
     try:
@@ -37,18 +37,23 @@ def findQuotes(guildId, quotedPerson, page):
 
    skip = perPage * (page - 1)
    quotes = []
-   coll = db["a"+guildId+".quotes"]
+   coll = db["a"+str(guildId)+".quotes"]
    filter = {
-       "name": {"$regex" : "^.*"+quotedPerson+".*$"}
+       "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
    }
+   print(skip)
+   print(perPage)
+   print(quotedPerson)
    pipeline = [
        {"$match": filter},
+       {"$skip": skip},
        {"$limit": perPage},
-       {"$skip": skip}
+
    ]
    try:
        return list(coll.aggregate(pipeline))
-   except:
+   except Exception as e:
+       print(e)
        return None
 
 
@@ -65,3 +70,11 @@ def findQuotes(guildId, quotedPerson, page):
 #quotes = findQuotes("758817188710449183","Aadi",4)
 #for quote in quotes:
  #   print(quote)
+
+'''init()
+insertQuote(760615522130984980, "hi im bedi", "bedi")
+insertQuote(760615522130984980, "Life is really really good", "bedi")
+insertQuote(760615522130984980, "Aadi is my favorite tron student", "bedi")
+
+quotes = findQuotes(760615522130984980, "bedi", 1)
+print(quotes) '''
