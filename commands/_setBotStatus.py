@@ -8,6 +8,7 @@ botStatusList = [
     discord.Activity(type=discord.ActivityType.streaming, name="EGAD videos | $help"),
     discord.Activity(type=discord.ActivityType.listening, name="115 ASMR | $help"),
     discord.Activity(type=discord.ActivityType.playing, name="Solidworks | $help"),
+    discord.Activity(type=discord.ActivityType.playing, name="Among Us | $help"),
     discord.Activity(type=discord.ActivityType.watching, name="Crowdmark | $help")
 ]
 

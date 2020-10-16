@@ -12,7 +12,7 @@ class DiscordColours(enum.Enum):
 
 
 # returns the embed object
-def create(titleString, descriptionString, colourString):
+def create(titleString:str, descriptionString:str, colourString:str):
 	returnMessage = discord.Embed(
 		title = titleString,
 		description = descriptionString,
@@ -25,10 +25,10 @@ def create(titleString, descriptionString, colourString):
 	return returnMessage
 
 # Adds a field. Pass in the message, title of the field, value, and if it's inline or not
-def addField(embedMsg, titleString, valueString, inlineBool):
+def addField(embedMsg:discord.embeds.Embed, titleString:str, valueString:str, inlineBool:bool):
 	embedMsg.add_field(name = titleString, value = valueString, inline = inlineBool)
 
 
 # Adds an image. Pass in the url
-def addImage(embedMsg, url):
+def addImage(embedMsg:discord.embeds.Embed, url:str):
 	embedMsg.set_image(url = url)
