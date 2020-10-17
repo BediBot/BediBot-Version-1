@@ -14,10 +14,10 @@ def _import_all_modules():
         # with underscore (which also prevents this module from
         # importing itself).
         if filename[0] != '_' and filename.split('.')[-1] in ('py', 'pyw'):
-            modulename = filename.split('.')[0]  # Filename sans extension.
-            package_module = '.'.join([__name__, modulename])
+            module_name = filename.split('.')[0]  # Filename sans extension.
+            package_module = '.'.join([__name__, module_name])
             try:
-                module = __import__(package_module, globals_, locals_, [modulename])
+                module = __import__(package_module, globals_, locals_, [module_name])
             except:
                 traceback.print_exc()
                 raise
@@ -25,6 +25,7 @@ def _import_all_modules():
                 if not name.startswith('_'):
                     globals_[name] = module.__dict__[name]
                     __all__.append(name)
+
 
 _import_all_modules()
 init()

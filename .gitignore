@@ -8,6 +8,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Intellij IDEA Files
+.idea/
+
 # Distribution / packaging
 .Python
 build/
@@ -129,3 +132,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.vscode/settings.json

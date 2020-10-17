@@ -1,1 +1,1 @@
-# tron-discord-bot
+# BediBot

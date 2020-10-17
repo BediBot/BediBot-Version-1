@@ -25,10 +25,10 @@ def create(titleString:str, descriptionString:str, colourString:str):
 	return returnMessage
 
 # Adds a field. Pass in the message, title of the field, value, and if it's inline or not
-def addField(embedMsg: discord.embeds.Embed, titleString: str, valueString: str, inlineBool:bool):
+def addField(embedMsg:discord.embeds.Embed, titleString:str, valueString:str, inlineBool:bool):
 	embedMsg.add_field(name = titleString, value = valueString, inline = inlineBool)
 
 
 # Adds an image. Pass in the url
-def addImage(embedMsg: discord.embeds.Embed, url:str):
+def addImage(embedMsg:discord.embeds.Embed, url:str):
 	embedMsg.set_image(url = url)
