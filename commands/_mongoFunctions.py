@@ -119,6 +119,14 @@ def get_list_of_courses(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['courses']
 
 
+def get_list_of_due_date_types(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['due_date_types']
+
+
+def get_list_of_streams(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['streams']
+
+
 def get_guilds_information():
     return list(Guilds.find({}))
 
@@ -135,8 +143,9 @@ def remove_due_dates_passed(guild_id: int):
 
 
 def does_assignment_exist_already(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, time_included: bool):
-    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    if coll.find_one({'course': course, 'type': due_date_type, 'title': title, 'stream': stream, 'date': date, 'time_included': time_included}) is None:
+    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
+    if coll.find_one(
+            {'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, 'time_included': bool(time_included)}) is None:
         return False
     return True
 
@@ -145,10 +154,10 @@ def set_bedi_bot_channel_id(guild_id: int, channel_id: int):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'channel_id': int(channel_id)}})
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': None}})
 
-    
+
 def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'stream_' + str(stream) + '_message_id': message_id}})
-    
+
 
 def set_last_announcement_time(guild_id: int, time: datetime.datetime):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})
@@ -156,3 +165,55 @@ def set_last_announcement_time(guild_id: int, time: datetime.datetime):
 
 def get_last_announcement_time(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['last_announcement_time']
+
+def insertQuote(guildId: int, quote: str, quotedPerson: str):
+    doc = {
+        'quote': quote,
+        'name': quotedPerson.lower()
+    }
+    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+    coll.insert_one(doc)
+    try:
+        return True
+    except:
+        return False
+
+def deleteQuote(guildId, quote, quotedPerson):
+    coll = GuildInformation["a"+guildId + ".quotes"]
+    coll.delete_one({"quote": quote, "name": quotedPerson})
+
+perPage = 5
+def findQuotes(guildId, quotedPerson, page):
+   skip = perPage * (page - 1)
+   coll = GuildInformation["a"+str(guildId)+".quotes"]
+   filter = {
+       "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
+   }
+   pipeline = [
+       {"$match": filter},
+       {"$skip": skip},
+       {"$limit": perPage},
+   ]
+   try:
+       return list(coll.aggregate(pipeline))
+   except Exception as e:
+       print(e)
+       return None
+
+def randomQuote(guildId, quotedPerson):
+   coll = GuildInformation["a"+str(guildId)+".quotes"]
+   filter = {
+       "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
+   }
+
+   #print(quotedPerson)
+   pipeline = [
+       {"$match": filter},
+       {"$sample": {"size": 1}},
+   ]
+   try:
+       quote = list(coll.aggregate(pipeline))[0]
+       return '"'+quote["quote"]+'"  - ' + quote["name"]
+   except Exception as e:
+       print(e)
+       return None

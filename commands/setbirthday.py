@@ -3,8 +3,9 @@ from commands import _mongoFunctions, _embedMessage, _dateFunctions
 
 
 async def setbirthday(ctx, client):
-    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
-        await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "You are not verified", "blue"))
+    if not _checkrole.checkIfAuthorHasRole(ctx, "Verified"):
+        replyEmbed = _embedMessage.create("SetBirthday Reply", "Invalid Permissions", "blue")
+        await ctx.channel.send(embed = replyEmbed)
         return
 
     message_contents = ctx.content.split(" ")

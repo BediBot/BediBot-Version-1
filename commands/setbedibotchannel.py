@@ -1,9 +1,16 @@
 import asyncio
+import discord
 
-from commands import _embedMessage, _mongoFunctions, _dueDateMessage
+from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole
 
 
 async def setbedibotchannel(ctx, client):
+    if not _checkrole.checkIfAuthorHasRole(ctx, "admin"):
+        replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "blue")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
+
     await ctx.channel.purge(limit = None)
     replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue")
     await ctx.channel.send(embed = replyEmbed)
@@ -26,3 +33,4 @@ async def setbedibotchannel(ctx, client):
     await asyncio.sleep(5)
 
     await ctx.channel.purge(limit = None, check = lambda msg: not msg.pinned)
+    

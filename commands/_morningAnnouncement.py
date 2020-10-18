@@ -32,7 +32,7 @@ async def send_morning_announcement(client):
                 channel_id = value
         await client.get_guild(guild_id).get_channel(channel_id).purge(limit = None, check = lambda msg: not msg.pinned)
         role = discord.utils.get(client.get_guild(guild_id).roles, name = 'Bedi Follower')
-        await client.get_guild(guild_id).get_channel(channel_id).send(role.mention, embed = _embedMessage.create("Good Morning Trons!", "Have a good day", "blue"))
+        await client.get_guild(guild_id).get_channel(channel_id).send(role.mention, embed = _embedMessage.create("Good Morning Trons!", _mongoFunctions.randomQuote(guild_id, "bedi"), "blue"))
         await _birthdayMessage.send_birthday_message(client, guild_id, channel_id)
         _mongoFunctions.set_last_announcement_time(guild_id, datetime.now())
 
