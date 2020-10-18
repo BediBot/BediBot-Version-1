@@ -2,8 +2,10 @@ from commands import _embedMessage
 
 
 async def helpCommand(ctx, client):
-    helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each <> represents an arguement", "green")
-    _embedMessage.addField(helpMessage, "$addduedate <course> <type> <title> <YYYY> <MM> <DD> <HH:DD>", "Add's an assignment's due date to be counted down to", False)
+    helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each <> represents an argument", "green")
+    _embedMessage.addField(helpMessage, "$addduedate <course> <type> <title> <YYYY> <MM> <DD> <HH:DD>", "Add's an assignment's due date to be counted down to"
+                                                                                                        "\n\n Course name should have a space in between e.g. MTE 100"
+                                                                                                        "\n Enter time as 'None' if there is no time", False)
     _embedMessage.addField(helpMessage, "$addQuote <quote with spaces>", "Add's a quote from Professor Bedi", False)
     _embedMessage.addField(helpMessage, "$confirm <code>", "Allows you to enter in your 2FA verification code after you run the verify command", False)
     _embedMessage.addField(helpMessage, "$help", "Allows you to view commands!", False)
