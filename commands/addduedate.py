@@ -4,7 +4,7 @@ import re
 
 import discord
 
-from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage
+from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage, _checkrole
 
 
 async def addduedate(ctx, client):
