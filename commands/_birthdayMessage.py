@@ -16,10 +16,9 @@ async def send_birthday_message(client, guild_id, channel_id):
     birthday_mentions = []
 
     user_documents = _mongoFunctions.get_all_birthdays_today(guild_id)
-    print(user_documents)
+    print(guild.members)
 
     for document in user_documents:
-        print(guild.users)
         member = discord.utils.get(guild.members, id=document['user_id'])
         birthday_mentions.append(member.mention)
         await member.add_roles(role)
