@@ -6,6 +6,7 @@ async def send_birthday_message(client, guild_id, channel_id):
     guild_id = int(guild_id)
     channel_id = int(channel_id)
     guild = client.get_guild(guild_id)
+    print(guild)
 
     role = discord.utils.get(guild.roles, name = "Bedi's Favorite")
 
