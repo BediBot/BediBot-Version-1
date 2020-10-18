@@ -1,6 +1,7 @@
 from ._mongoFunctions import *
 from ._util import parseMessage
 from ._embedMessage import *
+from ._checkrole import *
 import discord
 
 sweat_smile = "😅"
