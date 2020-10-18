@@ -5,7 +5,7 @@ from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole
 
 
 async def setbedibotchannel(ctx, client):
-    if(not _checkrole.checkIfAuthorHasRole(ctx, "admin")):
+    if not _checkrole.checkIfAuthorHasRole(ctx, "admin"):
         replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "blue")
         await ctx.channel.send(embed = replyEmbed)
         return

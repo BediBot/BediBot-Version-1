@@ -1,3 +1,5 @@
+from ._mongoFunctions import init
+
 def _import_all_modules():
     """ Dynamically imports all modules in this package. """
     import traceback
@@ -26,3 +28,4 @@ def _import_all_modules():
 
 
 _import_all_modules()
+init()
