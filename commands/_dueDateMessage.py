@@ -10,7 +10,8 @@ async def edit_due_date_message(client):
                 guild_id = value
             if key == 'channel_id':
                 channel_id = value
-
+        
+        update_due_dates(guild_id)
         guild = client.get_guild(guild_id)
 
         courses = _mongoFunctions.get_list_of_courses(guild_id)
