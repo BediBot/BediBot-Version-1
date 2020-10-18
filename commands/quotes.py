@@ -7,7 +7,11 @@ sweat_smile = "😅"
 amount_emoji_needed = 5
 
 async def addQuote(ctx: discord.message, client:discord.client):
-    print("add quote command called")
+    if not _checkrole.checkIfAuthorHasRole(ctx, "Verified"):
+        replyEmbed = _embedMessage.create("AddQuote Reply", "Invalid Permissions", "blue")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     args = parseMessage(ctx.content)
     
     if len(args) != 3:
