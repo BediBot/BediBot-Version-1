@@ -1,7 +1,7 @@
 import os
 import re
 from dotenv import load_dotenv
-from commands import _mongoFunctions, _embedMessage, _email
+from commands import _mongoFunctions, _embedMessage, _email, _checkrole
 from uwaterloodriver import UW_Driver
 
 load_dotenv()
