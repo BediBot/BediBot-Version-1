@@ -14,7 +14,7 @@ async def confirm(ctx, client):
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:
-        await ctx.channel.send(embed = _embedMessage.create("Confirm Reply", "The syntax is invalid! Make sure it is in the format $confirm <confirmcode>", "blue"))
+        await ctx.channel.send(embed = _embedMessage.create("Confirm Reply", "The syntax is invalid! Make sure it is in the format $confirm <confirmcode>", "red"))
         return
     email_address_hash = _mongoFunctions.get_email_hash_from_pending_user_id(ctx.guild.id, ctx.author.id)
 
@@ -28,6 +28,6 @@ async def confirm(ctx, client):
 
         return
 
-    await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "Invalid Code!", "blue"))
+    await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "Invalid Code!", "red"))
 
     return

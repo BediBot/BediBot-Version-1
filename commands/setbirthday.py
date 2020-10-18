@@ -4,7 +4,7 @@ from commands import _mongoFunctions, _embedMessage, _dateFunctions, _checkrole
 
 async def setbirthday(ctx, client):
     if not _checkrole.checkIfAuthorHasRole(ctx, "Verified"):
-        replyEmbed = _embedMessage.create("SetBirthday Reply", "Invalid Permissions", "blue")
+        replyEmbed = _embedMessage.create("SetBirthday Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
@@ -25,10 +25,10 @@ async def setbirthday(ctx, client):
 
     if error_check == 1:
         await ctx.channel.send(
-            embed = _embedMessage.create("SetBirthday Reply", "The syntax is invalid! Make sure it is in the format YYYY MM DD\nEx: $setbirthday 2002 01 01", "blue"))
+            embed = _embedMessage.create("SetBirthday Reply", "The syntax is invalid! Make sure it is in the format YYYY MM DD\nEx: $setbirthday 2002 01 01", "red"))
         return
     if error_check == 2:
-        await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "The date is invalid, please ensure that this is a valid date.", "blue"))
+        await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "The date is invalid, please ensure that this is a valid date.", "red"))
         return
 
     birth_date_string = '-'.join(message_contents)

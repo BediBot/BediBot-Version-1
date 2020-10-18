@@ -9,7 +9,7 @@ amount_emoji_needed = 5
 
 async def addQuote(ctx: discord.message, client:discord.client):
     if not checkIfAuthorHasRole(ctx, "Verified"):
-        replyEmbed = create("AddQuote Reply", "Invalid Permissions", "blue")
+        replyEmbed = create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
