@@ -8,7 +8,7 @@ from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMes
 
 
 async def addduedate(ctx, client):
-    if discord.utils.get(ctx.guild.roles, name = "admin") not in ctx.author.roles:
+    if not _checkrole.checkIfAuthorHasRole(ctx, "admin"):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You are not an admin", "blue"))
         return
 
