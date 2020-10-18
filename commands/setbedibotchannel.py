@@ -6,7 +6,7 @@ from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole
 
 async def setbedibotchannel(ctx, client):
     if not _checkrole.checkIfAuthorHasRole(ctx, "admin"):
-        replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "blue")
+        replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
@@ -15,8 +15,8 @@ async def setbedibotchannel(ctx, client):
     replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue")
     await ctx.channel.send(embed = replyEmbed)
 
-    dueDatesStream4Embed = _embedMessage.create("Stream 4 Due Dates Message", "Temporary Message", "blue")
-    dueDatesStream8Embed = _embedMessage.create("Stream 4 Due Dates Message", "Temporary Message", "blue")
+    dueDatesStream4Embed = _embedMessage.create("Stream 4 Due Dates Message", "Temporary Message", "green")
+    dueDatesStream8Embed = _embedMessage.create("Stream 4 Due Dates Message", "Temporary Message", "green")
 
     dueDatesStream4Message = await ctx.channel.send(embed = dueDatesStream4Embed)
     dueDatesStream8Message = await ctx.channel.send(embed = dueDatesStream8Embed)

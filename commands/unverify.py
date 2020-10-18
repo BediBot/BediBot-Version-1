@@ -4,7 +4,7 @@ from commands import _mongoFunctions, _embedMessage
 
 async def unverify(ctx, client):
     if not _checkrole.checkIfAuthorHasRole(ctx, "Verified"):
-        replyEmbed = _embedMessage.create("Unverify Reply", "Invalid Permissions", "blue")
+        replyEmbed = _embedMessage.create("Unverify Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
@@ -15,7 +15,5 @@ async def unverify(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("Unverify Reply", "You have been unverified", "blue"))
         await ctx.author.remove_roles(discord.utils.get(ctx.guild.roles, name = "Verified"))
         return
-
-    await ctx.channel.send(embed = _embedMessage.create("Unverify Reply", "You are not verified", "blue"))
 
     return
