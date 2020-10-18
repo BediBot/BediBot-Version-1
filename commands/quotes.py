@@ -12,6 +12,7 @@ async def addQuote(ctx: discord.message, client:discord.client):
     
     if len(args) != 3:
         await ctx.channel.send("you need 2 arguments for this function")
+        return
     message = await ctx.channel.send("|addQuote quote: \"" +args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ")
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = "bedi"))
 
@@ -22,6 +23,7 @@ async def getQuotes(ctx: discord.message, client:discord.client):
     args = parseMessage(ctx.content)
     if len(args) != 3:
         await ctx.channel.send("you need 2 arguments for this function")
+        return
     try:
         person = str(args[1])
         page = int(args[2])
