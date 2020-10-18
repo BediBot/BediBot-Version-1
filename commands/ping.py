@@ -1,4 +1,10 @@
+from commands import _embedMessage
 
-async def ping(msg):
+
+async def ping(ctx, client):
     print("pong")
-    await msg.channel.send("pong!")
+    message = _embedMessage.create("Ping Reply", "Pong!", "blue")
+    # _embedMessage.addField(message, "Imposter", "Red Sus", False)
+    await ctx.channel.send(embed = message)
+
+    return
