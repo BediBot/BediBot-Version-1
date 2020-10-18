@@ -33,13 +33,13 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message):
-    if message.author == client.user:
+async def on_message(ctx):
+    if ctx.author == client.user:
         return
 
-    if message.content[0] in prefixes:
-        if message.content.split(" ")[0] in commands:
-            await commands[message.content.split(" ")[0]](message, client)
+    if ctx.content[0] in prefixes:
+        if ctx.content.split(" ")[0] in commands:
+            await commands[ctx.content.split(" ")[0]](ctx, client)
 
 
 # ------------------------------main-----------------------------
