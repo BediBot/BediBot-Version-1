@@ -180,9 +180,6 @@ def findQuotes(guildId, quotedPerson, page):
    filter = {
        "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
    }
-   print(skip)
-   print(perPage)
-   print(quotedPerson)
    pipeline = [
        {"$match": filter},
        {"$skip": skip},
