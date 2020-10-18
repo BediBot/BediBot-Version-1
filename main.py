@@ -55,8 +55,8 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if reaction.message.author == client.user:
-        if reaction.message.content.split(" ")[0] in reactionHandlers:
-           await reactionHandlers[reaction.message.content.split(" ")[0]](reaction, user)
+        if reaction.message.embeds[0].description.split(" ")[0] in reactionHandlers:
+           await reactionHandlers[reaction.message.embeds[0].description.split(" ")[0]](reaction, user)
 
 # ------------------------------main-----------------------------
 
