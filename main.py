@@ -29,7 +29,8 @@ reactionHandlers = {
     reaction_handler_prefix + "addQuote" : quotesReactionHandler,
 }
 
-client = discord.Client()
+intents = discord.Intents.all()
+client = discord.Client(intents = intents)
 
 
 @client.event
