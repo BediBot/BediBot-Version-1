@@ -19,6 +19,7 @@ async def send_birthday_message(client, guild_id, channel_id):
     print(user_documents)
 
     for document in user_documents:
+        print(guild.members)
         member = discord.utils.get(guild.members, id=document['user_id'])
         birthday_mentions.append(member.mention)
         await member.add_roles(role)
