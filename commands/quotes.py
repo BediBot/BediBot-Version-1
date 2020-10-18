@@ -5,7 +5,7 @@ from ._checkrole import *
 import discord
 
 sweat_smile = "😅"
-amount_emoji_needed = 5
+amount_emoji_needed = 4
 
 async def addQuote(ctx: discord.message, client:discord.client):
     if not checkIfAuthorHasRole(ctx, "Verified"):
@@ -16,9 +16,9 @@ async def addQuote(ctx: discord.message, client:discord.client):
     args = parseMessage(ctx.content)
     
     if len(args) != 3:
-        await ctx.channel.send("you need 2 arguments for this function")
+        await ctx.channel.send(embed = create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
         return
-    embed = create("Quote Reply", "|addQuote quote: \"" +args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
+    embed = create("AddQuote Reply", "|addQuote quote: \"" +args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
     message = await ctx.channel.send(embed = embed)
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = "bedi"))
 
@@ -28,7 +28,7 @@ async def addQuote(ctx: discord.message, client:discord.client):
 async def getQuotes(ctx: discord.message, client:discord.client):
     args = parseMessage(ctx.content)
     if len(args) != 3:
-        await ctx.channel.send("you need 2 arguments for this function")
+        await ctx.channel.send(embed = create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
         return
     try:
         person = str(args[1])
@@ -42,9 +42,9 @@ async def getQuotes(ctx: discord.message, client:discord.client):
             await ctx.channel.send(embed=embed)
         except Exception as e:
             print(e)
-            await ctx.channel.send("error sending response")
+            await ctx.channel.send(embed = create("GetQuotes Reply", "Error sending response", "red"))
     except:
-        await ctx.channel.send("input error: you need integers")
+        await ctx.channel.send(embed = create("GetQuotes Reply", "Invalid Syntax! You need integers", "red"))
 
 async def quotesReactionHandler(reaction: discord.reaction, user:discord.User):
 

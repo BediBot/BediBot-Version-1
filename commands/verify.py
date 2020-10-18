@@ -10,6 +10,11 @@ uw_driver = UW_Driver()
 
 
 async def verify(ctx, client):
+    if _checkrole.checkIfAuthorHasRole(ctx, "Verified"):
+        replyEmbed = _embedMessage.create("Unverify Reply", "Invalid Permissions", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:
