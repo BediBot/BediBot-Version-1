@@ -8,7 +8,7 @@ from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMes
 
 
 async def addduedate(ctx, client):
-    if discord.utils.get(ctx.guild.roles, name = "admin") not in ctx.author.roles:
+    if not _checkrole.checkIfAuthorHasRole(ctx, "admin"):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You are not an admin", "blue"))
         return
 
@@ -38,16 +38,33 @@ async def addduedate(ctx, client):
     else:
         error_check = 1
 
+    if course not in _mongoFunctions.get_list_of_courses(ctx.guild.id):
+        error_check = 3
+
+    if due_date_type not in _mongoFunctions.get_list_of_due_date_types(ctx.guild.id):
+        error_check = 4
+
+    if stream not in _mongoFunctions.get_list_of_streams(ctx.guild.id):
+        error_check = 5
+
     if error_check == 1:
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate course type title stream YYYY MM DD HH:MM"
-                                                             "\n If there is no related time, enter none instead of HH:MM. Time in 24 hour format", "blue"))
+                                                             "\n If there is no related time, enter none instead of HH:MM. Time in 24 hour format"
+                                                             "\n Ensure there is a space in between the course name: eg. MTE 100", "blue"))
         return
     if error_check == 2:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "blue"))
         return
-
-    await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
+    if error_check == 3:
+        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The course name is invalid!", "blue"))
+        return
+    if error_check == 4:
+        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The due date type is invalid!", "blue"))
+        return
+    if error_check == 5:
+        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The stream is invalid!", "blue"))
+        return
 
     match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
 
@@ -60,6 +77,7 @@ async def addduedate(ctx, client):
             return
 
         _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream, datetime.datetime(int(year), int(month), int(day)), False)
+        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
     else:
         time = time.split(':')
@@ -71,6 +89,7 @@ async def addduedate(ctx, client):
 
         _mongoFunctions.add_due_date_to_upcoming_due_dates(ctx.guild.id, course, due_date_type, title, stream,
                                                            datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])), True)
+        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
     await _dueDateMessage.edit_due_date_message(client)
 

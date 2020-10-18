@@ -17,5 +17,4 @@ async def helpCommand(ctx, client):
     _embedMessage.addField(helpMessage, commandPrefix2 + "setbedibotchannel", "Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
 
 
-
     await ctx.channel.send(embed = helpMessage)
