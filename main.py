@@ -39,6 +39,7 @@ async def on_ready():
     # await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="115 ASMR | $help"))
     await _setBotStatus.setBotStatusRandomly(client)
     await _morningAnnouncement.schedule_announcement(client)
+    await _morningAnnouncement.send_morning_announcement(client)
 
 
 @client.event
