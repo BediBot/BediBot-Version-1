@@ -18,6 +18,7 @@ async def send_birthday_message(client, guild_id, channel_id):
     user_documents = _mongoFunctions.get_all_birthdays_today(guild_id)
 
     for document in user_documents:
+        print(document['user_id'])
         member = guild.get_member(document['user_id'])
         print(member)
         print(guild)
