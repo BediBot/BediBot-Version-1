@@ -162,36 +162,52 @@ def insertQuote(guildId: int, quote: str, quotedPerson: str):
         'quote': quote,
         'name': quotedPerson.lower()
     }
-    coll = db["a" + str(guildId) + ".quotes"]
-        coll.insert_one(doc)
+    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+    coll.insert_one(doc)
     try:
         return True
     except:
         return False
 
 def deleteQuote(guildId, quote, quotedPerson):
-    coll = db["a"+guildId + ".quotes"]
+    coll = GuildInformation["a"+guildId + ".quotes"]
     coll.delete_one({"quote": quote, "name": quotedPerson})
-def findQuotes(guildId, quotedPerson, page):
 
-    
+perPage = 5
+def findQuotes(guildId, quotedPerson, page):
    skip = perPage * (page - 1)
-   quotes = []
-   coll = db["a"+str(guildId)+".quotes"]
+   coll = GuildInformation["a"+str(guildId)+".quotes"]
    filter = {
        "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
    }
    print(skip)
    print(perPage)
-   pipeline = [
    print(quotedPerson)
+   pipeline = [
        {"$match": filter},
        {"$skip": skip},
        {"$limit": perPage},
-
    ]
    try:
        return list(coll.aggregate(pipeline))
+   except Exception as e:
+       print(e)
+       return None
+
+def randomQuote(guildId, quotedPerson):
+   coll = GuildInformation["a"+str(guildId)+".quotes"]
+   filter = {
+       "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
+   }
+
+   #print(quotedPerson)
+   pipeline = [
+       {"$match": filter},
+       {"$sample": {"size": 1}},
+   ]
+   try:
+       quote = list(coll.aggregate(pipeline))[0]
+       return '"'+quote["quote"]+'"  - ' + quote["name"]
    except Exception as e:
        print(e)
        return None
