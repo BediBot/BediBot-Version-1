@@ -1,5 +1,5 @@
 import discord
-from commands import _mongoFunctions, _embedMessage
+from commands import _mongoFunctions, _embedMessage, _checkrole
 
 
 async def unverify(ctx, client):
