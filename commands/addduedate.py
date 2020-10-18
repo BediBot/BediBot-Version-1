@@ -13,39 +13,35 @@ async def addduedate(ctx, client):
         return
 
     message_contents = ctx.content.split(" ", 1)
-    message_contents.pop(0)
 
-    message_contents = message_contents[0].split(' ')
+    if len(message_contents) > 1:
+        message_contents.pop(0)
 
-    if len(message_contents) > 8:
+        message_contents = message_contents[0].split(' ')
 
-        description = [' '.join(message_contents[0:2]), message_contents[2], ' '.join(message_contents[3:-5])]
+        if len(message_contents) > 8:
 
-        stream = message_contents[-5]
+            description = [' '.join(message_contents[0:2]), message_contents[2], ' '.join(message_contents[3:-5])]
 
-        date = message_contents[-4:-1]
+            stream = message_contents[-5]
 
-        time = message_contents[-1]
+            date = message_contents[-4:-1]
 
-        course = description[0]
-        due_date_type = description[1]
-        title = description[2]
-        year = date[0]
-        month = date[1]
-        day = date[2]
+            time = message_contents[-1]
 
-        error_check = _dateFunctions.check_for_errors_in_date(year, month, day)
+            course = description[0]
+            due_date_type = description[1]
+            title = description[2]
+            year = date[0]
+            month = date[1]
+            day = date[2]
+
+            error_check = _dateFunctions.check_for_errors_in_date(year, month, day)
+        else:
+            error_check = 1
     else:
         error_check = 1
 
-    if course not in _mongoFunctions.get_list_of_courses(ctx.guild.id):
-        error_check = 3
-
-    if due_date_type not in _mongoFunctions.get_list_of_due_date_types(ctx.guild.id):
-        error_check = 4
-
-    if stream not in _mongoFunctions.get_list_of_streams(ctx.guild.id):
-        error_check = 5
 
     if error_check == 1:
         await ctx.channel.send(
@@ -56,6 +52,16 @@ async def addduedate(ctx, client):
     if error_check == 2:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "red"))
         return
+
+    if course not in _mongoFunctions.get_list_of_courses(ctx.guild.id):
+        error_check = 3
+
+    if due_date_type not in _mongoFunctions.get_list_of_due_date_types(ctx.guild.id):
+        error_check = 4
+
+    if stream not in _mongoFunctions.get_list_of_streams(ctx.guild.id):
+        error_check = 5
+
     if error_check == 3:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The course name is invalid!", "red"))
         return
