@@ -4,7 +4,8 @@ commandPrefix2 = "$"
 
 async def helpCommand(ctx, client):
     helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each word or represents an arguement", "green")
-    _embedMessage.addField(helpMessage, commandPrefix2 + "addduedate course type title YYYY MM DD HH:DD", "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate MATH116 Assignment Crowdmark 2020 10 17", False)
+    _embedMessage.addField(helpMessage, commandPrefix2 + "addduedate course type title stream YYYY MM DD HH:DD", "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
+                                                                                                                 "\n If no relevant time exists, use 'None' as the time argument", False)
     _embedMessage.addField(helpMessage, commandPrefix2 + "addQuote \"quote with spaces\" Name", "Add's a quote from Professor Bedi\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
     _embedMessage.addField(helpMessage, commandPrefix2 + "confirm code", "Allows you to enter in your 2FA verification code after you run the verify command\nEx: " + commandPrefix2 + "confirm 123456789", False)
     _embedMessage.addField(helpMessage, commandPrefix2 + "getQuotes person pagenumber", "Gets a person's quotes with a page number, with each page in 5 days\nEx: " + commandPrefix2 + "getQuote Bedi 2", False)
