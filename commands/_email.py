@@ -20,7 +20,7 @@ def send_email(receiver_address, mail_body, subject):
     message['From'] = sender_address
     message['To'] = receiver_address
     message['Subject'] = subject
-    message.attach(MIMEText(mail_body))
+    message.attach(MIMEText(mail_body, 'html'))
 
     gmail_smtp_port = 587
     session = smtplib.SMTP('smtp.gmail.com', gmail_smtp_port)
@@ -37,9 +37,24 @@ def send_confirmation_email(receiver_address, user_id):
 
     mail_body = '''Please verify your email address by typing $confirm {0} in the #verification channel of the Tron 2025 Discord server! '''
 
+    mail_body_html = """\
+<html>
+  <head></head>
+  <body>
+    <p>HONK!<br>
+        Please verify your email address by typing <b>$confirm {0}</b> in the #verification channel of the Tron 2025 Discord server!<br>
+        If you have time, please reply with something to prevent this message from being flagged as spam.<br>
+        <br>
+        For any concerns, please contact a BediBot Dev :)<br>
+    </p>
+  </body>
+</html>
+
+    """
+
     verificationCodes[user_id] = unique_key
 
-    send_email(receiver_address, mail_body.format(unique_key), 'Tron 2025 Discord Server Confirmation')
+    send_email(receiver_address, mail_body_html.format(unique_key), 'Tron 2025 Discord Server Confirmation')
 
 
 def get_unique_key():
