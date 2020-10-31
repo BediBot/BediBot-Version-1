@@ -20,7 +20,7 @@ def init():
 
     mClient = pymongo.MongoClient(CONNECTION_STRING)
 
-    GuildInformation = mClient['GuildInformation']
+    GuildInformation = mClient['GuildInformationTesting']
 
     Guilds = GuildInformation['Guilds']
 
@@ -33,10 +33,10 @@ def init():
                 coll.delete_many({})
 
 
-def is_email_linked_to_verified_user(guild_id: int, email_address):
+def is_uw_id_linked_to_verified_user(guild_id: int, uw_id):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    email_address_hash = _hashingFunctions.hash_email(email_address)
-    if coll.find_one({"email_address_hash": email_address_hash}) is None:
+    uw_id_hash = _hashingFunctions.hash_user_id(uw_id)
+    if coll.find_one({"uw_id": uw_id_hash}) is None:
         return False
     return True
 
@@ -55,15 +55,14 @@ def remove_verified_user(guild_id: int, user_id: int):
     return True
 
 
-def add_user_to_verified_users(guild_id: int, user_id: int, email_address_hash):
+def add_user_to_verified_users(guild_id: int, user_id: int, uw_id_hash):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    coll.insert_one({'user_id': int(user_id), 'email_address_hash': email_address_hash})
+    coll.insert_one({'user_id': int(user_id), 'uw_id': uw_id_hash})
 
 
-def add_user_to_pending_verification_users(guild_id: int, user_id: int, email):
+def add_user_to_pending_verification_users(guild_id: int, user_id: int, uw_id):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
-    email_address_hash = _hashingFunctions.hash_email(email)
-    coll.insert_one({'user_id': int(user_id), 'email_address_hash': email_address_hash})
+    coll.insert_one({'user_id': int(user_id), 'uw_id': uw_id})
 
 
 def remove_user_from_pending_verification_users(guild_id: int, user_id: int):
@@ -71,11 +70,11 @@ def remove_user_from_pending_verification_users(guild_id: int, user_id: int):
     coll.find_one_and_delete({'user_id': int(user_id)})
 
 
-def get_email_hash_from_pending_user_id(guild_id: int, user_id: int):
+def get_uw_id_from_pending_user_id(guild_id: int, user_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
     document = coll.find_one({'user_id': int(user_id)})
     if document is not None:
-        return document['email_address_hash']
+        return document['uw_id']
 
 
 def set_users_birthday(guild_id: int, user_id: int, birth_date: datetime.datetime):

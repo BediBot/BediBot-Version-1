@@ -10,7 +10,7 @@ async def edit_due_date_message(client):
                 guild_id = value
             if key == 'channel_id':
                 channel_id = value
-        
+
         update_due_dates(guild_id)
         guild = client.get_guild(guild_id)
 
@@ -33,15 +33,28 @@ async def edit_schedule_embed(stream, courses, guild_id, guild, channel_id):
         duedates = _mongoFunctions.get_all_upcoming_due_dates(guild_id, stream, course)
 
         for duedate in duedates:
+            if duedate['type'] == "Assignment":
+                emoji = ":pushpin:"
+            elif duedate['type'] == "Test":
+                emoji = ":bulb:"
+            elif duedate['type'] == "Exam":
+                emoji = ":pen_ballpoint:"
+            elif duedate['type'] == "Project":
+                emoji = ":books:"
+            elif duedate['type'] == "Quiz":
+                emoji = ":pencil:"
+            else:
+                emoji = ":placard:"
+
             if duedate['time_included']:
                 current_due_date = " **Type:** " + duedate['type'].rjust(10) + " **Date:** " + duedate['date'].strftime("%m/%d/%Y, %H:%M:%S").rjust(10) + '\n​'
             else:
                 current_due_date = " **Type:** " + duedate['type'].rjust(10) + " **Date:** " + duedate['date'].strftime("%m/%d/%Y").rjust(10) + '\n​'
 
             if duedate == duedates[0]:
-                title = "**" + course + "**\n" + duedate['title']
+                title = "**" + course + "**\n" + emoji + "   " + duedate['title']
             else:
-                title = duedate['title']
+                title = emoji + "   " + duedate['title']
 
             messageEmbed.add_field(name = title, value = current_due_date, inline = False)
     await msg.edit(embed = messageEmbed)
