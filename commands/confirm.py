@@ -11,6 +11,11 @@ uw_driver = UW_Driver()
 
 
 async def confirm(ctx, client):
+    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
+        replyEmbed = _embedMessage.create("Unverify Reply", "Invalid Permissions", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:

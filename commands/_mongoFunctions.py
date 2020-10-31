@@ -166,6 +166,7 @@ def set_last_announcement_time(guild_id: int, time: datetime.datetime):
 def get_last_announcement_time(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['last_announcement_time']
 
+
 def insertQuote(guildId: int, quote: str, quotedPerson: str):
     doc = {
         'quote': quote,
@@ -178,42 +179,47 @@ def insertQuote(guildId: int, quote: str, quotedPerson: str):
     except:
         return False
 
+
 def deleteQuote(guildId, quote, quotedPerson):
-    coll = GuildInformation["a"+guildId + ".quotes"]
+    coll = GuildInformation["a" + guildId + ".quotes"]
     coll.delete_one({"quote": quote, "name": quotedPerson})
 
+
 perPage = 5
+
+
 def findQuotes(guildId, quotedPerson, page):
-   skip = perPage * (page - 1)
-   coll = GuildInformation["a"+str(guildId)+".quotes"]
-   filter = {
-       "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
-   }
-   pipeline = [
-       {"$match": filter},
-       {"$skip": skip},
-       {"$limit": perPage},
-   ]
-   try:
-       return list(coll.aggregate(pipeline))
-   except Exception as e:
-       print(e)
-       return None
+    skip = perPage * (page - 1)
+    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+    filter = {
+        "name": {"$regex": "^.*" + quotedPerson.lower() + ".*$"}
+    }
+    pipeline = [
+        {"$match": filter},
+        {"$skip": skip},
+        {"$limit": perPage},
+    ]
+    try:
+        return list(coll.aggregate(pipeline))
+    except Exception as e:
+        print(e)
+        return None
+
 
 def randomQuote(guildId, quotedPerson):
-   coll = GuildInformation["a"+str(guildId)+".quotes"]
-   filter = {
-       "name": {"$regex" : "^.*"+quotedPerson.lower()+".*$"}
-   }
+    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+    filter = {
+        "name": {"$regex": "^.*" + quotedPerson.lower() + ".*$"}
+    }
 
-   #print(quotedPerson)
-   pipeline = [
-       {"$match": filter},
-       {"$sample": {"size": 1}},
-   ]
-   try:
-       quote = list(coll.aggregate(pipeline))[0]
-       return '"'+quote["quote"]+'"  - ' + quote["name"]
-   except Exception as e:
-       print(e)
-       return None
+    # print(quotedPerson)
+    pipeline = [
+        {"$match": filter},
+        {"$sample": {"size": 1}},
+    ]
+    try:
+        quote = list(coll.aggregate(pipeline))[0]
+        return '"' + quote["quote"] + '"  - ' + quote["name"]
+    except Exception as e:
+        print(e)
+        return None
