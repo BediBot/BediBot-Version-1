@@ -1,5 +1,4 @@
 import asyncio
-import discord
 
 from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole
 
@@ -9,7 +8,6 @@ async def setbedibotchannel(ctx, client):
         replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
-
 
     await ctx.channel.purge(limit = None)
     replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue")
@@ -33,4 +31,3 @@ async def setbedibotchannel(ctx, client):
     await asyncio.sleep(5)
 
     await ctx.channel.purge(limit = None, check = lambda msg: not msg.pinned)
-    

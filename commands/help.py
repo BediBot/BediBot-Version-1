@@ -25,6 +25,9 @@ async def helpCommand(ctx, client):
                                                                                                            "\n If no relevant time exists, use 'None' as the time argument", False)
     _embedMessage.addField(helpMessage, commandPrefix2 + "adminverify @Mention",
                            "Manually verifies a user.\nEx: " + commandPrefix2 + "adminverify " + client.user.mention, False)
+    _embedMessage.addField(helpMessage, commandPrefix2 + "removeduedate course type title stream YYYY MM DD HH:DD",
+                           "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
+                                                                          "\n If no relevant time exists, use 'None' as the time argument", False)
     _embedMessage.addField(helpMessage, commandPrefix2 + "setbedibotchannel",
                            "Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
 
