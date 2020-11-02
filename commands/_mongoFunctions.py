@@ -7,6 +7,7 @@ from commands import _hashingFunctions
 load_dotenv()
 
 CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING")
+DATABASE_STRING = os.getenv("MONGO_DATABASE_STRING")
 
 mClient = None
 GuildInformation = None
@@ -20,7 +21,7 @@ def init():
 
     mClient = pymongo.MongoClient(CONNECTION_STRING)
 
-    GuildInformation = mClient['GuildInformationTesting']
+    GuildInformation = mClient[DATABASE_STRING]
 
     Guilds = GuildInformation['Guilds']
 
