@@ -19,7 +19,7 @@ async def adminverify(ctx, client):
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:
-        await ctx.channel.send(embed = _embedMessage.create("Admin Verify Reply", "The syntax is invalid! Make sure it is in the format $adminverify <User (Mention)>", "red"))
+        await ctx.channel.send(embed = _embedMessage.create("Admin Verify Reply", "The syntax is invalid! Make sure it is in the format $adminverify <User (Mention)>\nNote that this command does NOT assign a role, it only verifies them inside the database!", "red"))
         return
 
     mention = message_contents[1]
