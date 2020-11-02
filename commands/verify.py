@@ -10,7 +10,7 @@ uw_driver = UW_Driver()
 
 
 async def verify(ctx, client):
-    if _checkrole.checkIfAuthorHasRole(ctx, "Verified"):
+    if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Verify Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
@@ -24,21 +24,24 @@ async def verify(ctx, client):
     email_address = message_contents[1]
 
     match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email_address) and email_address.endswith('@uwaterloo.ca')
+    uw_id = email_address[:email_address.rfind('@')]
 
     if not match:
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Invalid email!", "red"))
         return
 
-    if uw_driver.directory_people_search(email_address[:email_address.rfind('@')]) == {}:
+    if uw_driver.directory_people_search(uw_id) == {}:
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That's not a valid uWaterloo email!", "red"))
         return
 
-    if _mongoFunctions.is_email_linked_to_verified_user(ctx.guild.id, email_address):
+    uw_id = uw_driver.directory_people_search(uw_id)['user_id']
+
+    if _mongoFunctions.is_uw_id_linked_to_verified_user(ctx.guild.id, uw_id):
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That email is already linked to a user!", "red"))
         return
 
     _email.send_confirmation_email(email_address, ctx.author.id)
-    _mongoFunctions.add_user_to_pending_verification_users(ctx.guild.id, ctx.author.id, email_address)
+    _mongoFunctions.add_user_to_pending_verification_users(ctx.guild.id, ctx.author.id, uw_id)
     await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Verification Email sent!", "blue"))
 
     return
