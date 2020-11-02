@@ -40,6 +40,10 @@ async def verify(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That email is already linked to a user!", "red"))
         return
 
+    if _mongoFunctions.is_uw_id_linked_to_pending_verification_user(ctx.guild.id, uw_id):
+        await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Someone is already using that email to verify! If this is an error, contact an admin", "red"))
+        return
+
     _email.send_confirmation_email(email_address, ctx.author.id)
     _mongoFunctions.add_user_to_pending_verification_users(ctx.guild.id, ctx.author.id, uw_id)
     await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Verification Email sent!", "blue"))

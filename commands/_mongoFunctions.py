@@ -42,6 +42,13 @@ def is_uw_id_linked_to_verified_user(guild_id: int, uw_id):
     return True
 
 
+def is_uw_id_linked_to_pending_verification_user(guild_id: int, uw_id):
+    coll = GuildInformation["a" + str(guild_id) + ".PendingVerificationUsers"]
+    if coll.find_one({"uw_id": uw_id}) is None:
+        return False
+    return True
+
+
 def is_user_id_linked_to_verified_user(guild_id: int, user_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
     if coll.find_one({"user_id": int(user_id)}) is None:
@@ -59,6 +66,11 @@ def remove_verified_user(guild_id: int, user_id: int):
 def add_user_to_verified_users(guild_id: int, user_id: int, uw_id_hash):
     coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
     coll.insert_one({'user_id': int(user_id), 'uw_id': uw_id_hash})
+
+
+def admin_add_user_to_verified_users(guild_id: int, user_id: int):
+    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+    coll.insert_one({'user_id': int(user_id)})
 
 
 def add_user_to_pending_verification_users(guild_id: int, user_id: int, uw_id):
