@@ -26,7 +26,6 @@ async def confirm(ctx, client):
     unique_key = message_contents[1]
     if unique_key == _email.verificationCodes.get(ctx.author.id):
         department = uw_driver.directory_people_search(uw_id)['department']
-        print(department)
 
         if department == "ENG/Mechanical & Mechatronics":
             await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = "Tron"))
