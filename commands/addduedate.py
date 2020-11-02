@@ -47,7 +47,7 @@ async def addduedate(ctx, client):
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate course type title stream YYYY MM DD HH:MM"
                                                              "\n If there is no related time, enter none instead of HH:MM. Time in 24 hour format"
-                                                             "\n Ensure there is a space in between the course name: eg. MTE 100", "red"))
+                                                             "\n Ensure there is a space in between the course name: eg. MTE 100\nEx: addduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07", "red"))
         return
     if error_check == 2:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "red"))
