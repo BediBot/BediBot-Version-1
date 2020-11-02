@@ -13,8 +13,9 @@ async def unverify(ctx, client):
     if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, user_id):
         _mongoFunctions.remove_verified_user(ctx.guild.id, user_id)
         await ctx.channel.send(embed = _embedMessage.create("Unverify Reply", "You have been unverified", "blue"))
-        await ctx.author.remove_roles(discord.utils.get(ctx.guild.roles, name = "Tron"))
-        await ctx.author.remove_roles(discord.utils.get(ctx.guild.roles, name = "Not Tron"))
-        return
-
+        for role in ctx.author.roles:
+            try:
+                await ctx.author.remove_roles(role)
+            except:
+                print("this didnt work LOL")
     return
