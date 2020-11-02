@@ -29,7 +29,7 @@ async def addQuote(ctx: discord.message, client: discord.client):
 async def getQuotes(ctx: discord.message, client: discord.client):
     args = parseMessage(ctx.content)
     if len(args) != 3:
-        await ctx.channel.send(embed = create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuote Bedi 2", "red"))
+        await ctx.channel.send(embed = create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuote Bedi 2", "red"))
         return
     try:
         person = str(args[1])
