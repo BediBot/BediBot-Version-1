@@ -8,7 +8,7 @@ from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMes
 
 
 async def addduedate(ctx, client):
-    if not (_checkrole.checkIfAuthorHasRole(ctx, "admin") or _checkrole.checkIfAuthorHasRole(ctx, "bot dev")):
+    if not (_checkrole.checkIfAuthorHasRole(ctx, "admin") or _checkrole.checkIfAuthorHasRole(ctx, "admins()")):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
 
