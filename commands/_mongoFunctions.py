@@ -109,7 +109,16 @@ def get_all_birthdays_today(guild_id: int):
 
 def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
+    print("a" + str(guild_id) + ".UpcomingDueDates")
+    print(course)
+    print(due_date_type)
+    print(title)
     coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)})
+
+
+def remove_due_date_from_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
+    coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
+    coll.find_one_and_delete({'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)})
 
 
 def get_all_upcoming_due_dates(guild_id: int, stream: int, course):

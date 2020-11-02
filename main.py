@@ -23,7 +23,8 @@ commands = {
     command_prefix + "parse": parseCommand,
     command_prefix + "addQuote": addQuote,
     command_prefix + "getQuotes": getQuotes,
-    command_prefix + "adminverify": adminverify
+    command_prefix + "adminverify": adminverify,
+    command_prefix + "removeduedate": removeduedate
 }
 
 reactionHandlers = {
