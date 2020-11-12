@@ -83,7 +83,7 @@ async def quotesReactionHandler(reaction: discord.reaction, user: discord.User):
                     await reaction.message.edit(embed = embed)
 
     else:
-        await reaction.message.channel.send("i dont fucking know what this is")
+        await reaction.message.channel.send("i dont know what this is")
         # emojis from other servers
         # partial emojis?
 
