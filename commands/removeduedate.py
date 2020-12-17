@@ -8,7 +8,8 @@ from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMes
 
 
 async def removeduedate(ctx, client):
-    if not (_checkrole.checkIfAuthorHasRole(ctx, "admin") or _checkrole.checkIfAuthorHasRole(ctx, "admins()")):
+    global course, due_date_type, stream, title, year, month, day, time
+    if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
 
@@ -76,7 +77,7 @@ async def removeduedate(ctx, client):
     if not match:
         time = None
 
-    if time == None:
+    if time is None:
         if not _mongoFunctions.does_assignment_exist_already(ctx.guild.id, course, due_date_type, title, stream, datetime.datetime(int(year), int(month), int(day)), False):
             await ctx.channel.send(embed = _embedMessage.create("RemoveDueDate Reply", "Your due date does not exist!", "red"))
             return
