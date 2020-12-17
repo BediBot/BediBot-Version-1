@@ -8,7 +8,7 @@ sweat_smile = "😅"
 amount_emoji_needed = 4
 
 
-async def addQuote(ctx: discord.message, client: discord.client):
+async def add_quote(ctx: discord.message, client: discord.client):
     if not is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
         replyEmbed = create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -26,10 +26,10 @@ async def addQuote(ctx: discord.message, client: discord.client):
     # await ctx.channel.send("Quote Recorded!")
 
 
-async def getQuotes(ctx: discord.message, client: discord.client):
+async def get_quotes(ctx: discord.message, client: discord.client):
     args = parse_message(ctx.content)
     if len(args) != 3:
-        await ctx.channel.send(embed = create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuote Bedi 2", "red"))
+        await ctx.channel.send(embed = create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuotes Bedi 2", "red"))
         return
     try:
         person = str(args[1])
@@ -48,7 +48,7 @@ async def getQuotes(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = create("GetQuotes Reply", "Invalid Syntax! You need integers", "red"))
 
 
-async def quotesReactionHandler(reaction: discord.reaction, user: discord.User):
+async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User):
     # print("reaction handler")
     # print(reaction.message.embeds + "test")
 

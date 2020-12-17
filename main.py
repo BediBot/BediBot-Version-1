@@ -14,22 +14,22 @@ commands = {
     command_prefix + "verify": verify,
     command_prefix + "confirm": confirm,
     command_prefix + "unverify": unverify,
-    command_prefix + "setbirthday": setbirthday,
-    command_prefix + "addduedate": addduedate,
-    command_prefix + "help": helpCommand,
-    command_prefix + "setbedibotchannel": setbedibotchannel,
+    command_prefix + "setbirthday": set_birthday,
+    command_prefix + "addduedate": add_due_date,
+    command_prefix + "help": help_command,
+    command_prefix + "setbedibotchannel": set_bedi_bot_channel,
     command_prefix + "ping": ping,
-    command_prefix + "parse": parseCommand,
-    command_prefix + "addQuote": addQuote,
-    command_prefix + "addquote": addQuote,
-    command_prefix + "getQuotes": getQuotes,
-    command_prefix + "getquotes": getQuotes,
-    command_prefix + "adminverify": adminverify,
-    command_prefix + "removeduedate": removeduedate
+    command_prefix + "parse": parse_command,
+    command_prefix + "addQuote": add_quote,
+    command_prefix + "addquote": add_quote,
+    command_prefix + "getQuotes": get_quotes,
+    command_prefix + "getquotes": get_quotes,
+    command_prefix + "adminverify": admin_verify,
+    command_prefix + "removeduedate": remove_due_date
 }
 
 reactionHandlers = {
-    reaction_handler_prefix + "addQuote": quotesReactionHandler,
+    reaction_handler_prefix + "addQuote": quotes_reaction_handler,
 }
 
 intents = discord.Intents.all()

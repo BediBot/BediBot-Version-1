@@ -1,7 +1,7 @@
 from ._util import parse_message
 
 
-async def parseCommand(ctx, client):
+async def parse_command(ctx, client):
     args = parse_message(ctx.content)
     msg = ""
     num = 0

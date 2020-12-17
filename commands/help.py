@@ -3,7 +3,7 @@ from commands import _embedMessage
 commandPrefix2 = "$"
 
 
-async def helpCommand(ctx, client):
+async def help_command(ctx, client):
     helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each word represents an argument", "green")
     _embedMessage.add_field(helpMessage, commandPrefix2 + "addQuote \"quote with spaces\" Name",
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)

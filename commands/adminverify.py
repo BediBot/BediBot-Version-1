@@ -10,7 +10,7 @@ from uwaterloodriver import UW_Driver
 uw_driver = UW_Driver()
 
 
-async def adminverify(ctx, client):
+async def admin_verify(ctx, client):
     if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
         replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
