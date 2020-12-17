@@ -24,6 +24,8 @@ commands = {
     command_prefix + "addquote": add_quote,
     command_prefix + "getQuotes": get_quotes,
     command_prefix + "getquotes": get_quotes,
+    command_prefix + "getQuote": get_quotes,
+    command_prefix + "getquote": get_quotes,
     command_prefix + "adminverify": admin_verify,
     command_prefix + "removeduedate": remove_due_date
 }
