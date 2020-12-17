@@ -5,7 +5,7 @@ from ._checkrole import *
 import discord
 
 sweat_smile = "😅"
-amount_emoji_needed = 2
+amount_emoji_needed = 4
 
 
 async def add_quote(ctx: discord.message, client: discord.client):
