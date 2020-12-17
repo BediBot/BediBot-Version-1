@@ -24,7 +24,7 @@ async def add_quote(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
         return
 
-    embed = create("AddQuote Reply", "|addQuote quote: \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
+    embed = create("AddQuote Reply", "\"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
     message = await ctx.channel.send(embed = embed)
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = "bedi"))
 
