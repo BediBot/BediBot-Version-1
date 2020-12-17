@@ -5,7 +5,7 @@ from ._checkrole import *
 import discord
 
 sweat_smile = "😅"
-amount_emoji_needed = 4
+amount_emoji_needed = 2
 
 
 async def add_quote(ctx: discord.message, client: discord.client):
@@ -19,6 +19,11 @@ async def add_quote(ctx: discord.message, client: discord.client):
     if len(args) != 3:
         await ctx.channel.send(embed = create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
         return
+
+    if len(args[1]) > 1024:
+        await ctx.channel.send(embed = create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
+        return
+
     embed = create("AddQuote Reply", "|addQuote quote: \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
     message = await ctx.channel.send(embed = embed)
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = "bedi"))
@@ -28,18 +33,22 @@ async def add_quote(ctx: discord.message, client: discord.client):
 
 async def get_quotes(ctx: discord.message, client: discord.client):
     args = parse_message(ctx.content)
-    if len(args) != 3:
+    if len(args) != 3 and len(args) != 2:
         await ctx.channel.send(embed = create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuotes Bedi 2", "red"))
         return
     try:
         person = str(args[1])
-        page = int(args[2])
+        if len(args) == 2:
+            page = 1
+        else:
+            page = int(args[2])
         quotes = find_quotes(ctx.guild.id, person, page)
         try:
-            print(quotes)
+            # print(quotes)
             embed = create("Quotes from: " + person, "Page: " + str(page), "green")
             for quote in quotes:
-                add_field(embed_msg = embed, title_string = quote["quote"], value_string = quote["name"], is_inline = False)
+                value = (quote["quote"][:1021] + '...') if len(quote["quote"]) > 1024 else quote["quote"]
+                add_field(embed_msg = embed, title_string = quote["name"], value_string = value, is_inline = False)
             await ctx.channel.send(embed = embed)
         except Exception as e:
             print(e)
