@@ -17,9 +17,8 @@ async def edit_due_date_message(client):
 
         courses = _mongoFunctions.get_list_of_courses(guild_id)
 
-        await edit_schedule_embed(4, courses, guild_id, guild, channel_id)
-
-        await edit_schedule_embed(8, courses, guild_id, guild, channel_id)
+        for stream in _mongoFunctions.get_list_of_streams(guild_id):
+            await edit_schedule_embed(stream, courses, guild_id, guild, channel_id)
 
 
 async def edit_schedule_embed(stream, courses, guild_id, guild, channel_id):

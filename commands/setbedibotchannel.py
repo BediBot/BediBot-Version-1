@@ -1,5 +1,3 @@
-import asyncio
-
 from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole
 
 
@@ -10,24 +8,19 @@ async def set_bedi_bot_channel(ctx, client):
         return
 
     await ctx.channel.purge(limit = None)
-    replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue")
-    await ctx.channel.send(embed = replyEmbed)
+    await ctx.channel.send(embed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue"))
 
-    dueDatesStream4Embed = _embedMessage.create("Stream 4 Due Dates Message", "Temporary Message", "green")
-    dueDatesStream8Embed = _embedMessage.create("Stream 4 Due Dates Message", "Temporary Message", "green")
+    dueDateEmbeds = {}
+    dueDateMessages = {}
 
-    dueDatesStream4Message = await ctx.channel.send(embed = dueDatesStream4Embed)
-    dueDatesStream8Message = await ctx.channel.send(embed = dueDatesStream8Embed)
-
-    await dueDatesStream4Message.pin()
-    await dueDatesStream8Message.pin()
+    for stream in _mongoFunctions.get_list_of_streams(ctx.guild.id):
+        dueDateEmbeds[stream] = _embedMessage.create("Stream {0} Due Dates Message".format(stream), "Temporary Message", "green")
+        dueDateMessages[stream] = await ctx.channel.send(embed = dueDateEmbeds[stream])
+        await dueDateMessages[stream].pin()
+        _mongoFunctions.set_due_date_message_id(ctx.guild.id, stream, dueDateMessages[stream].id)
 
     _mongoFunctions.set_bedi_bot_channel_id(ctx.guild.id, ctx.channel.id)
-    _mongoFunctions.set_due_date_message_id(ctx.guild.id, 4, dueDatesStream4Message.id)
-    _mongoFunctions.set_due_date_message_id(ctx.guild.id, 8, dueDatesStream8Message.id)
 
     await _dueDateMessage.edit_due_date_message(client)
-
-    await asyncio.sleep(5)
 
     await ctx.channel.purge(limit = None, check = lambda msg: not msg.pinned)
