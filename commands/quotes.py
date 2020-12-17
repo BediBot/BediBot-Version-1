@@ -1,5 +1,5 @@
 from ._mongoFunctions import *
-from ._util import parseMessage
+from ._util import parse_message
 from ._embedMessage import *
 from ._checkrole import *
 import discord
@@ -8,13 +8,13 @@ sweat_smile = "😅"
 amount_emoji_needed = 4
 
 
-async def addQuote(ctx: discord.message, client: discord.client):
+async def add_quote(ctx: discord.message, client: discord.client):
     if not is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
         replyEmbed = create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
-    args = parseMessage(ctx.content)
+    args = parse_message(ctx.content)
 
     if len(args) != 3:
         await ctx.channel.send(embed = create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
@@ -26,20 +26,20 @@ async def addQuote(ctx: discord.message, client: discord.client):
     # await ctx.channel.send("Quote Recorded!")
 
 
-async def getQuotes(ctx: discord.message, client: discord.client):
-    args = parseMessage(ctx.content)
+async def get_quotes(ctx: discord.message, client: discord.client):
+    args = parse_message(ctx.content)
     if len(args) != 3:
-        await ctx.channel.send(embed = create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuote Bedi 2", "red"))
+        await ctx.channel.send(embed = create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuotes Bedi 2", "red"))
         return
     try:
         person = str(args[1])
         page = int(args[2])
-        quotes = findQuotes(ctx.guild.id, person, page)
+        quotes = find_quotes(ctx.guild.id, person, page)
         try:
             print(quotes)
             embed = create("Quotes from: " + person, "Page: " + str(page), "green")
             for quote in quotes:
-                addField(embedMsg = embed, titleString = quote["quote"], valueString = quote["name"], inlineBool = False)
+                add_field(embed_msg = embed, title_string = quote["quote"], value_string = quote["name"], is_inline = False)
             await ctx.channel.send(embed = embed)
         except Exception as e:
             print(e)
@@ -48,7 +48,7 @@ async def getQuotes(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = create("GetQuotes Reply", "Invalid Syntax! You need integers", "red"))
 
 
-async def quotesReactionHandler(reaction: discord.reaction, user: discord.User):
+async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User):
     # print("reaction handler")
     # print(reaction.message.embeds + "test")
 
@@ -67,10 +67,10 @@ async def quotesReactionHandler(reaction: discord.reaction, user: discord.User):
                 embed = create("Quote Reply", reaction.message.embeds[0].description + user.mention, "blue")
                 await reaction.message.edit(embed = embed)
             if reaction.count >= amount_emoji_needed:
-                args = parseMessage(reaction.message.embeds[0].description)
+                args = parse_message(reaction.message.embeds[0].description)
                 quote = args[2]
                 quotedPerson = args[4]
-                res = insertQuote(guildId = reaction.message.guild.id, quotedPerson = quotedPerson, quote = quote)
+                res = insert_quote(guild_id = reaction.message.guild.id, quoted_person = quotedPerson, quote = quote)
 
                 contentArr = reaction.message.embeds[0].description.split(" ")
                 newContent = " ".join(contentArr[1:])

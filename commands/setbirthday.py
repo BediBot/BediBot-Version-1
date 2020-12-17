@@ -2,7 +2,7 @@ import datetime
 from commands import _mongoFunctions, _embedMessage, _dateFunctions, _checkrole
 
 
-async def setbirthday(ctx, client):
+async def set_birthday(ctx, client):
     if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("SetBirthday Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)

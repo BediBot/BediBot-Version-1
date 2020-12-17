@@ -188,12 +188,12 @@ def get_last_announcement_time(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['last_announcement_time']
 
 
-def insertQuote(guildId: int, quote: str, quotedPerson: str):
+def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
-        'name': quotedPerson.lower()
+        'name': quoted_person.lower()
     }
-    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+    coll = GuildInformation["a" + str(guild_id) + ".quotes"]
     coll.insert_one(doc)
     try:
         return True
@@ -201,19 +201,17 @@ def insertQuote(guildId: int, quote: str, quotedPerson: str):
         return False
 
 
-def deleteQuote(guildId, quote, quotedPerson):
-    coll = GuildInformation["a" + guildId + ".quotes"]
-    coll.delete_one({"quote": quote, "name": quotedPerson})
+def delete_quote(guild_id, quote, quoted_person):
+    coll = GuildInformation["a" + guild_id + ".quotes"]
+    coll.delete_one({"quote": quote, "name": quoted_person})
 
 
-perPage = 5
-
-
-def findQuotes(guildId, quotedPerson, page):
+def find_quotes(guild_id, quoted_person, page):
+    perPage = 5
     skip = perPage * (page - 1)
-    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+    coll = GuildInformation["a" + str(guild_id) + ".quotes"]
     filter = {
-        "name": {"$regex": "^.*" + quotedPerson.lower() + ".*$"}
+        "name": {"$regex": "^.*" + quoted_person.lower() + ".*$"}
     }
     pipeline = [
         {"$match": filter},
@@ -227,10 +225,10 @@ def findQuotes(guildId, quotedPerson, page):
         return None
 
 
-def randomQuote(guildId, quotedPerson):
-    coll = GuildInformation["a" + str(guildId) + ".quotes"]
+def random_quote(guild_id, quoted_person):
+    coll = GuildInformation["a" + str(guild_id) + ".quotes"]
     filter = {
-        "name": {"$regex": "^.*" + quotedPerson.lower() + ".*$"}
+        "name": {"$regex": "^.*" + quoted_person.lower() + ".*$"}
     }
 
     # print(quotedPerson)

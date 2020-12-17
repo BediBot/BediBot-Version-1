@@ -13,7 +13,6 @@ def send_email(receiver_address, mail_body, subject):
     sender_address = os.getenv("GMAIL_USER")
     sender_password = os.getenv("GMAIL_PASS")
 
-    receiver_address = receiver_address
     # Setup the Multipurpose Internet Mail Connection
 
     message = MIMEMultipart()
@@ -34,8 +33,6 @@ def send_email(receiver_address, mail_body, subject):
 
 def send_confirmation_email(receiver_address, user_id):
     unique_key = get_unique_key()
-
-    mail_body = '''Please verify your email address by typing $confirm {0} in the #verification channel of the Tron 2025 Discord server! '''
 
     mail_body_html = """\
 <html>
