@@ -2,8 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from commands import *
-from commands import _morningAnnouncement, _mongoFunctions, _setBotStatus, _dueDateMessage
-from commands._mongoFunctions import randomQuote
+from commands import _morningAnnouncement, _setBotStatus
 
 command_prefix = "$"
 emote_prefix = "!"
@@ -15,20 +14,22 @@ commands = {
     command_prefix + "verify": verify,
     command_prefix + "confirm": confirm,
     command_prefix + "unverify": unverify,
-    command_prefix + "setbirthday": setbirthday,
-    command_prefix + "addduedate": addduedate,
-    command_prefix + "help": helpCommand,
-    command_prefix + "setbedibotchannel": setbedibotchannel,
+    command_prefix + "setbirthday": set_birthday,
+    command_prefix + "addduedate": add_due_date,
+    command_prefix + "help": help_command,
+    command_prefix + "setbedibotchannel": set_bedi_bot_channel,
     command_prefix + "ping": ping,
-    command_prefix + "parse": parseCommand,
-    command_prefix + "addQuote": addQuote,
-    command_prefix + "getQuotes": getQuotes,
-    command_prefix + "adminverify": adminverify,
-    command_prefix + "removeduedate": removeduedate
+    command_prefix + "parse": parse_command,
+    command_prefix + "addQuote": add_quote,
+    command_prefix + "addquote": add_quote,
+    command_prefix + "getQuotes": get_quotes,
+    command_prefix + "getquotes": get_quotes,
+    command_prefix + "adminverify": admin_verify,
+    command_prefix + "removeduedate": remove_due_date
 }
 
 reactionHandlers = {
-    reaction_handler_prefix + "addQuote": quotesReactionHandler,
+    reaction_handler_prefix + "addQuote": quotes_reaction_handler,
 }
 
 intents = discord.Intents.all()
@@ -38,11 +39,9 @@ client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-    # _mongoFunctions.init()
     # await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="115 ASMR | $help"))
-    await _setBotStatus.setBotStatusRandomly(client)
+    await _setBotStatus.set_random_bot_status(client)
     await _morningAnnouncement.schedule_announcement(client)
-    # await _morningAnnouncement.send_morning_announcement(client)
 
 
 @client.event
@@ -67,10 +66,6 @@ async def on_reaction_add(reaction, user):
 # ------------------------------main-----------------------------
 
 init()
-
-# quote = randomQuote(760615522130984980,"bedi")
-
-# rint(quote)
 
 load_dotenv()
 TOKEN = os.getenv("BOT_TOKEN")

@@ -22,9 +22,10 @@ schedule_thread.start()
 
 async def send_morning_announcement(client):
     guild_list = _mongoFunctions.get_guilds_information()
-    await _setBotStatus.setBotStatusRandomly(client)
+    await _setBotStatus.set_random_bot_status(client)
 
     for guild in guild_list:
+        global guild_id, channel_id
         for key, value in guild.items():
             if key == 'guild_id':
                 guild_id = value
@@ -32,7 +33,8 @@ async def send_morning_announcement(client):
                 channel_id = value
         await client.get_guild(guild_id).get_channel(channel_id).purge(limit = None, check = lambda msg: not msg.pinned)
         role = discord.utils.get(client.get_guild(guild_id).roles, name = 'Bedi Follower')
-        await client.get_guild(guild_id).get_channel(channel_id).send(role.mention, embed = _embedMessage.create("Good Morning Trons!", _mongoFunctions.randomQuote(guild_id, "bedi"), "blue"))
+        await client.get_guild(guild_id).get_channel(channel_id).send(role.mention,
+                                                                      embed = _embedMessage.create("Good Morning Trons!", _mongoFunctions.random_quote(guild_id, "bedi"), "blue"))
         await _birthdayMessage.send_birthday_message(client, guild_id, channel_id)
         _mongoFunctions.set_last_announcement_time(guild_id, datetime.now())
 
@@ -41,6 +43,7 @@ async def check_if_morning_announcement_occurred_today(client):
     guild_list = _mongoFunctions.get_guilds_information()
 
     for guild in guild_list:
+        global guild_id
         for key, value in guild.items():
             if key == 'guild_id':
                 guild_id = value
@@ -52,5 +55,5 @@ async def check_if_morning_announcement_occurred_today(client):
 
 async def schedule_announcement(client):
     schedule.every().day.at("08:30").do(asyncio.run_coroutine_threadsafe, send_morning_announcement(client), client.loop)
-    #schedule.every().day.at("08:35").do(asyncio.run_coroutine_threadsafe, check_if_morning_announcement_occurred_today(client), client.loop)
+    # schedule.every().day.at("08:35").do(asyncio.run_coroutine_threadsafe, check_if_morning_announcement_occurred_today(client), client.loop)
     schedule.every().minute.do(asyncio.run_coroutine_threadsafe, _dueDateMessage.edit_due_date_message(client), client.loop)

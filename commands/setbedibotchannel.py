@@ -3,8 +3,8 @@ import asyncio
 from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole
 
 
-async def setbedibotchannel(ctx, client):
-    if not (_checkrole.checkIfAuthorHasRole(ctx, "admin") or _checkrole.checkIfAuthorHasRole(ctx, "admins()")):
+async def set_bedi_bot_channel(ctx, client):
+    if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
         replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
