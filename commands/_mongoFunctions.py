@@ -188,6 +188,14 @@ def get_last_announcement_time(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['last_announcement_time']
 
 
+def get_birthday_role_string(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['birthday_role']
+
+
+def get_announcement_role_string(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['announcement_role']
+
+
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
