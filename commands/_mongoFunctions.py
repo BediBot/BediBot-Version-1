@@ -202,7 +202,7 @@ def insert_quote(guild_id: int, quote: str, quoted_person: str):
 
 
 def delete_quote(guild_id, quote, quoted_person):
-    coll = GuildInformation["a" + guild_id + ".quotes"]
+    coll = GuildInformation["a" + str(guild_id) + ".quotes"]
     coll.delete_one({"quote": quote, "name": quoted_person})
 
 

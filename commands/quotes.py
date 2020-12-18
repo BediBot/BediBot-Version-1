@@ -57,6 +57,27 @@ async def get_quotes(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = create("GetQuotes Reply", "Invalid Syntax! You need integers", "red"))
 
 
+async def remove_quote(ctx: discord.message, client: discord.client):
+    if not (author_has_role(ctx, "admin") or author_has_role(ctx, "admins()")):
+        replyEmbed = create("RemoveQuote Reply", "Invalid Permissions", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
+    args = parse_message(ctx.content)
+
+    if len(args) != 3:
+        await ctx.channel.send(embed = create("RemoveQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
+        return
+
+    if len(args[1]) > 1024:
+        await ctx.channel.send(embed = create("RemoveQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
+        return
+
+    embed = create("RemoveQuote Reply", "\"" + args[1] + "\" by: " + args[2] + " \n Removed by: " + ctx.author.mention, "blue")
+    await ctx.channel.send(embed = embed)
+    delete_quote(ctx.guild.id, args[1], args[2])
+
+
 async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User):
     # print("reaction handler")
     # print(reaction.message.embeds + "test")
