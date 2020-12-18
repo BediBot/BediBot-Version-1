@@ -7,7 +7,7 @@ async def send_birthday_message(client, guild_id, channel_id):
     channel_id = int(channel_id)
     guild = client.get_guild(guild_id)
 
-    role = discord.utils.get(guild.roles, name = "Bedi's Favorite")
+    role = discord.utils.get(guild.roles, name = _mongoFunctions.get_birthday_role_string(guild_id))
 
     for member in guild.members:
         if role in member.roles:
