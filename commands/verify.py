@@ -10,6 +10,11 @@ uw_driver = UW_Driver()
 
 
 async def verify(ctx, client):
+    if _mongoFunctions.get_verification_enabled(ctx.guild_id):
+        replyEmbed = _embedMessage.create("Verify Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Verify Reply", "Invalid Permissions - you are already verified!\nIf this is a mistake, contact a dev", "red")
         await ctx.channel.send(embed = replyEmbed)

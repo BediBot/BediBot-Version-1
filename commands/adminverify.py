@@ -15,6 +15,11 @@ async def admin_verify(ctx, client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
+    if _mongoFunctions.get_verification_enabled(ctx.guild_id):
+        replyEmbed = _embedMessage.create("AdminVerify Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:

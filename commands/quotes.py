@@ -7,8 +7,8 @@ embed_field_max_char = 1024
 
 
 async def add_quote(ctx: discord.message, client: discord.client):
-    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
-        replyEmbed = _embedMessage.create("AddQuote Reply", "Invalid Permissions", "red")
+    if not is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id) and get_verification_enabled(ctx.guild.id):
+        replyEmbed = create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
