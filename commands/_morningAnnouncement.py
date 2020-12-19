@@ -40,6 +40,6 @@ async def check_if_morning_announcement_occurred_today(client):
 
 
 async def schedule_announcement(client):
-    scheduler.add_job(send_morning_announcement, 'cron', hour = 8, minute = 30, second = 0, args = [client])
+    scheduler.add_job(send_morning_announcement, 'cron', hour = 8, minute = 30, second = 1, args = [client])
     scheduler.add_job(_dueDateMessage.edit_due_date_message, 'interval', minutes = 1, args = [client])
     scheduler.start()
