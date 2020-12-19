@@ -33,7 +33,7 @@ commands = {
 }
 
 reactionHandlers = {
-    reaction_handler_prefix + "addQuote": quotes_reaction_handler,
+    reaction_handler_prefix: quotes_reaction_handler,
 }
 
 intents = discord.Intents.all()
