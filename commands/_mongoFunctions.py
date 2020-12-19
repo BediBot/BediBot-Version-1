@@ -109,10 +109,6 @@ def get_all_birthdays_today(guild_id: int):
 
 def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    print("a" + str(guild_id) + ".UpcomingDueDates")
-    print(course)
-    print(due_date_type)
-    print(title)
     coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)})
 
 
@@ -158,9 +154,14 @@ def get_due_date_channel_id(guild_id: int, stream: int):
 
 def remove_due_dates_passed(guild_id: int):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    query = {"date": {"$lte": datetime.datetime.now()}}
+    today_date = datetime.date.today()
 
-    coll.delete_many(query)
+    time_included_query = {"date": {"$lte": datetime.datetime.now()}, "time_included": {"$eq": True}}
+    time_not_included_query = {"date": {"$lte": datetime.datetime(today_date.year, today_date.month, today_date.day) - datetime.timedelta(days = 1)},
+                               "time_included": {"$eq": False}}
+
+    coll.delete_many(time_included_query)
+    coll.delete_many(time_not_included_query)
 
 
 def does_assignment_exist_already(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, time_included: bool):

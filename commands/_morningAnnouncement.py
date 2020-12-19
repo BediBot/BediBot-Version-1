@@ -1,23 +1,9 @@
-import asyncio
-import threading
-import time
 import discord
 from datetime import date, datetime
-
-import schedule
 from commands import _birthdayMessage, _mongoFunctions, _setBotStatus, _dueDateMessage, _embedMessage
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-schedule_stop = threading.Event()
-
-
-def timer():
-    while not schedule_stop.is_set():
-        schedule.run_pending()
-        time.sleep(1)
-
-
-schedule_thread = threading.Thread(target = timer)
-schedule_thread.start()
+scheduler = AsyncIOScheduler()
 
 
 async def send_morning_announcement(client):
@@ -54,6 +40,6 @@ async def check_if_morning_announcement_occurred_today(client):
 
 
 async def schedule_announcement(client):
-    schedule.every().day.at("08:30").do(asyncio.run_coroutine_threadsafe, send_morning_announcement(client), client.loop)
-    # schedule.every().day.at("08:35").do(asyncio.run_coroutine_threadsafe, check_if_morning_announcement_occurred_today(client), client.loop)
-    schedule.every().minute.do(asyncio.run_coroutine_threadsafe, _dueDateMessage.edit_due_date_message(client), client.loop)
+    scheduler.add_job(send_morning_announcement, 'cron', hour = 1, minute = 2, second = 1, args = [client])
+    scheduler.add_job(_dueDateMessage.edit_due_date_message, 'interval', minutes = 1, args = [client])
+    scheduler.start()
