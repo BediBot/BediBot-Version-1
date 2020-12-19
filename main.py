@@ -29,7 +29,8 @@ commands = {
     command_prefix + "removequote": remove_quote,
     command_prefix + "adminverify": admin_verify,
     command_prefix + "removeduedate": remove_due_date,
-    command_prefix + "forcebirthdays": force_birthdays
+    command_prefix + "forcebirthdays": force_birthdays,
+    command_prefix + "say": say
 }
 
 reactionHandlers = {

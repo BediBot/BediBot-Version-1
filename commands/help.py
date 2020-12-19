@@ -30,6 +30,8 @@ async def help_command(ctx, client):
     _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate course type title stream YYYY MM DD HH:DD",
                             "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
                                                                            "\n If no relevant time exists, use 'None' as the time argument", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "say title content channel",
+                            "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "setbedibotchannel",
                             "Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
 
