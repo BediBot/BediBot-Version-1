@@ -24,7 +24,7 @@ async def add_quote(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
         return
 
-    embed = create("AddQuote Reply", "\"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
+    embed = create("AddQuote Reply", "| \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
     message = await ctx.channel.send(embed = embed)
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = "bedi"))
 
@@ -79,7 +79,7 @@ async def remove_quote(ctx: discord.message, client: discord.client):
 
 
 async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User):
-    # print("reaction handler")
+    print("reaction handler")
     # print(reaction.message.embeds + "test")
 
     if isinstance(reaction.emoji, str):
@@ -94,12 +94,13 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
 
         if reaction.emoji.id == discord.utils.get(reaction.message.guild.emojis, name = "bedi").id:
             if not user.mention in reaction.message.embeds[0].description:
-                embed = create("Quote Reply", reaction.message.embeds[0].description + user.mention, "blue")
+                embed = create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
                 await reaction.message.edit(embed = embed)
+                print("this is acc happening")
             if reaction.count >= amount_emoji_needed:
                 args = parse_message(reaction.message.embeds[0].description)
-                quote = args[2]
-                quotedPerson = args[4]
+                quote = args[1]
+                quotedPerson = args[3]
                 res = insert_quote(guild_id = reaction.message.guild.id, quoted_person = quotedPerson, quote = quote)
 
                 contentArr = reaction.message.embeds[0].description.split(" ")
