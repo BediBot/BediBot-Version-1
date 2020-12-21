@@ -5,7 +5,7 @@ commandPrefix2 = "$"
 
 async def help_command(ctx, client):
     helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each word represents an argument", "green")
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "addQuote \"quote with spaces\" Name",
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "addquote \"quote with spaces\" Name",
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "confirm code",
                             "Allows you to enter in your 2FA verification code after you run the verify command\nEx: " + commandPrefix2 + "confirm 123456789", False)
@@ -21,15 +21,13 @@ async def help_command(ctx, client):
                             "Allows you to verify yourself as a UWaterloo Student and access the server\nEx: " + commandPrefix2 + "$verify g0ose@uwaterloo.ca", False)
     _embedMessage.add_field(helpMessage, "Admin Commands", "Admin Commands are listed below. They cannot be used without the admin or bot dev role\n/**********************/",
                             False)
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "addduedate course type title stream YYYY MM DD HH:DD",
-                            "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
-                                                                                                            "\n If no relevant time exists, use 'None' as the time argument", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "addduedate", "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "adminverify @Mention",
                             "Manually verifies a user. Note that this does NOT add in a role and simply adds them to the database\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
                             False)
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate course type title stream YYYY MM DD HH:DD",
-                            "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
-                                                                           "\n If no relevant time exists, use 'None' as the time argument", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "removequote \"quote with spaces\" Name",
+                            "Removes a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "say title content channel",
                             "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "setbedibotchannel",
