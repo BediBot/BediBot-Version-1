@@ -7,6 +7,7 @@ from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMes
 
 async def add_due_date(ctx, client):
     global course, due_date_type, stream, time, title, year, month, day
+    wait_timeout = 60.0
     if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
@@ -18,7 +19,7 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "What course is this due date for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_courses(ctx.guild.id)), "blue"))
         try:
-            course_message = await client.wait_for('message', timeout = 60.0, check = check)
+            course_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
             await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
             return
@@ -33,7 +34,7 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "What is the due date type?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_due_date_types(ctx.guild.id)), "blue"))
         try:
-            due_date_type_message = await client.wait_for('message', timeout = 60.0, check = check)
+            due_date_type_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
             await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
             return
@@ -51,7 +52,7 @@ async def add_due_date(ctx, client):
             await ctx.channel.send(
                 embed = _embedMessage.create("AddDueDate Reply", "Which stream is this for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_streams(ctx.guild.id)), "blue"))
             try:
-                stream_message = await client.wait_for('message', timeout = 60.0, check = check)
+                stream_message = await client.wait_for('message', timeout = wait_timeout, check = check)
             except asyncio.TimeoutError:
                 await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
                 return
@@ -66,7 +67,7 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "What is the title?", "blue"))
         try:
-            title_message = await client.wait_for('message', timeout = 60.0, check = check)
+            title_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
             await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
             return
@@ -78,7 +79,7 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "What is the date? (YYYY MM DD)", "blue"))
         try:
-            date_message = await client.wait_for('message', timeout = 60.0, check = check)
+            date_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
             await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
             return
@@ -107,13 +108,13 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(
             embed = _embedMessage.create("AddDueDate Reply", "What time is the due date? (HH:MM)\nEnter 'None' if there is no time.", "blue"))
         try:
-            time_message = await client.wait_for('message', timeout = 60.0, check = check)
+            time_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
             await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
             return
         else:
             time = time_message.content
-            match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
+            match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)  # Using regex to check if time format is valid
 
             if time == "None":
                 break
