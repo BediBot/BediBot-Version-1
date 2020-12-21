@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import re
 
@@ -10,72 +11,125 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
 
-    message_contents = ctx.content.split(" ", 1)
+    def check(message):
+        return message.author == ctx.author and message.channel == ctx.channel
 
-    if len(message_contents) > 1:
-        message_contents.pop(0)
-
-        message_contents = message_contents[0].split(' ')
-
-        if len(message_contents) > 8:
-
-            description = [' '.join(message_contents[0:2]), message_contents[2], ' '.join(message_contents[3:-5])]
-
-            stream = message_contents[-5]
-
-            date = message_contents[-4:-1]
-
-            time = message_contents[-1]
-
-            course = description[0]
-            due_date_type = description[1]
-            title = description[2]
-            year = date[0]
-            month = date[1]
-            day = date[2]
-
-            error_check = _dateFunctions.check_for_errors_in_date(year, month, day)
-        else:
-            error_check = 1
-    else:
-        error_check = 1
-
-    if error_check == 1:
+    while True:
         await ctx.channel.send(
-            embed = _embedMessage.create("AddDueDate Reply", "The syntax is invalid! Make sure it is in the format $addduedate course type title stream YYYY MM DD HH:MM"
-                                                             "\n If there is no related time, enter none instead of HH:MM. Time in 24 hour format"
-                                                             "\n Ensure there is a space in between the course name: eg. MTE 100\nEx: addduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07",
-                                         "red"))
-        return
-    if error_check == 2:
-        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "red"))
-        return
+            embed = _embedMessage.create("AddDueDate Reply", "What course is this due date for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_courses(ctx.guild.id)), "blue"))
+        try:
+            course_message = await client.wait_for('message', timeout = 60.0, check = check)
+        except asyncio.TimeoutError:
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            course = course_message.content
+            if course not in _mongoFunctions.get_list_of_courses(ctx.guild.id):
+                await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The course name is invalid!", "red"))
+            else:
+                break
 
-    if course not in _mongoFunctions.get_list_of_courses(ctx.guild.id):
-        error_check = 3
+    while True:
+        await ctx.channel.send(
+            embed = _embedMessage.create("AddDueDate Reply", "What is the due date type?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_due_date_types(ctx.guild.id)), "blue"))
+        try:
+            due_date_type_message = await client.wait_for('message', timeout = 60.0, check = check)
+        except asyncio.TimeoutError:
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            due_date_type = due_date_type_message.content
+            if due_date_type not in _mongoFunctions.get_list_of_due_date_types(ctx.guild.id):
+                await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The due date type is invalid!", "red"))
+            else:
+                break
 
-    if due_date_type not in _mongoFunctions.get_list_of_due_date_types(ctx.guild.id):
-        error_check = 4
+    if len(_mongoFunctions.get_list_of_streams(ctx.guild.id)) == 1:
+        stream = _mongoFunctions.get_list_of_streams(ctx.guild.id)[0]
+    else:
+        while True:
+            await ctx.channel.send(
+                embed = _embedMessage.create("AddDueDate Reply", "Which stream is this for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_streams(ctx.guild.id)), "blue"))
+            try:
+                stream_message = await client.wait_for('message', timeout = 60.0, check = check)
+            except asyncio.TimeoutError:
+                await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
+                return
+            else:
+                stream = stream_message.content
+                if stream not in _mongoFunctions.get_list_of_streams(ctx.guild.id):
+                    await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The stream is invalid!", "red"))
+                else:
+                    break
 
-    if stream not in _mongoFunctions.get_list_of_streams(ctx.guild.id):
-        error_check = 5
+    while True:
+        await ctx.channel.send(
+            embed = _embedMessage.create("AddDueDate Reply", "What is the title?", "blue"))
+        try:
+            title_message = await client.wait_for('message', timeout = 60.0, check = check)
+        except asyncio.TimeoutError:
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            title = title_message.content
+            break
 
-    if error_check == 3:
-        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The course name is invalid!", "red"))
-        return
-    if error_check == 4:
-        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The due date type is invalid!", "red"))
-        return
-    if error_check == 5:
-        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The stream is invalid!", "red"))
-        return
+    while True:
+        await ctx.channel.send(
+            embed = _embedMessage.create("AddDueDate Reply", "What is the date? (YYYY MM DD)", "blue"))
+        try:
+            date_message = await client.wait_for('message', timeout = 60.0, check = check)
+        except asyncio.TimeoutError:
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            global error_check
+            date = date_message.content.split(" ")
+            if len(date) == 3:
+                year = date[0]
+                month = date[1]
+                day = date[2]
+                error_check = _dateFunctions.check_for_errors_in_date(year, month, day)
+            else:
+                error_check = 1
+            if error_check == 1:
+                await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid syntax. Make sure it is in the format YYYY MM DD", "red"))
+            elif error_check == 2:
+                await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "The date is invalid, please ensure that this is a valid date.", "red"))
+            else:
+                date_object = datetime.date(int(year), int(month), int(day))
+                if date_object < datetime.date.today():
+                    await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "That due date has already passed.", "red"))
+                else:
+                    break
 
-    match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
+    while True:
+        await ctx.channel.send(
+            embed = _embedMessage.create("AddDueDate Reply", "What time is the due date? (HH:MM)\nEnter 'None' if there is no time.", "blue"))
+        try:
+            time_message = await client.wait_for('message', timeout = 60.0, check = check)
+        except asyncio.TimeoutError:
+            await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            time = time_message.content
+            match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
 
-    if not match:
-        time = None
+            if time == "None":
+                break
+            elif not match:
+                await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid syntax. Make sure it is in the format HH:MM or 'None'", "red"))
+            else:
+                time = time.split(':')
+                time_object = datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1]))
 
-    if time is None:
+                if time_object < datetime.datetime.now():
+                    await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "That due date has already passed.", "red"))
+
+                else:
+                    break
+
+    if time == "None":
         if _mongoFunctions.does_assignment_exist_already(ctx.guild.id, course, due_date_type, title, stream, datetime.datetime(int(year), int(month), int(day)), False):
             await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date already exists!", "red"))
             return
@@ -84,7 +138,8 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
     else:
-        time = time.split(':')
+        if type(time) is str:
+            time = time.split(':')
 
         if _mongoFunctions.does_assignment_exist_already(ctx.guild.id, course, due_date_type, title, stream,
                                                          datetime.datetime(int(year), int(month), int(day), int(time[0]), int(time[1])), True):
@@ -96,5 +151,4 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
     await _dueDateMessage.edit_due_date_message(client)
-
     return

@@ -21,15 +21,11 @@ async def help_command(ctx, client):
                             "Allows you to verify yourself as a UWaterloo Student and access the server\nEx: " + commandPrefix2 + "$verify g0ose@uwaterloo.ca", False)
     _embedMessage.add_field(helpMessage, "Admin Commands", "Admin Commands are listed below. They cannot be used without the admin or bot dev role\n/**********************/",
                             False)
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "addduedate course type title stream YYYY MM DD HH:DD",
-                            "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
-                                                                                                            "\n If no relevant time exists, use 'None' as the time argument", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "addduedate", "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "adminverify @Mention",
                             "Manually verifies a user. Note that this does NOT add in a role and simply adds them to the database\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
                             False)
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate course type title stream YYYY MM DD HH:DD",
-                            "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate MATH 116 Assignment Crowdmark 2 8 2020 10 17 14:07"
-                                                                           "\n If no relevant time exists, use 'None' as the time argument", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "say title content channel",
                             "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "setbedibotchannel",
