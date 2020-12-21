@@ -5,7 +5,7 @@ commandPrefix2 = "$"
 
 async def help_command(ctx, client):
     helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each word represents an argument", "green")
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "addQuote \"quote with spaces\" Name",
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "addquote \"quote with spaces\" Name",
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "confirm code",
                             "Allows you to enter in your 2FA verification code after you run the verify command\nEx: " + commandPrefix2 + "confirm 123456789", False)
@@ -26,6 +26,8 @@ async def help_command(ctx, client):
                             "Manually verifies a user. Note that this does NOT add in a role and simply adds them to the database\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
                             False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "removequote \"quote with spaces\" Name",
+                            "Removes a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "say title content channel",
                             "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "setbedibotchannel",
