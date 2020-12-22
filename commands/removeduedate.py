@@ -2,13 +2,13 @@ import asyncio
 import datetime
 import re
 
-from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage, _checkrole
+from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage, _checkrole, _util
 
 
 async def remove_due_date(ctx, client):
     global course, due_date_type, stream, time, title, year, month, day
     wait_timeout = 60.0
-    if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
+    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_admin_role(ctx.guild.id)) or _util.author_is_bot_owner(ctx)):
         await ctx.channel.send(embed = _embedMessage.create("RemoveDueDate Reply", "Invalid Permissions", "red"))
         return
 
