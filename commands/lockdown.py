@@ -5,7 +5,7 @@ import discord
 
 async def lockdown(ctx: discord.message, client: discord.client):
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_admin_role(ctx.guild.id)) or _util.author_is_bot_owner(ctx)):
-        replyEmbed = _embedMessage.create("Locked Reply", "Invalid Permissions", "red")
+        replyEmbed = _embedMessage.create("Lockdown Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
