@@ -23,7 +23,7 @@ async def lockdown(ctx: discord.message, client: discord.client):
         await ctx.channel.set_permissions(role, send_messages=False)
 
     else:
-        replyEmbed = _embedMessage.create("Lockdown reply", "Something Fucky Happened", "red")
+        replyEmbed = _embedMessage.create("Lockdown reply", "Error 404: Something went wrong", "red")
         await ctx.channel.send(embed = replyEmbed)
 
 async def unlock(ctx: discord.message, client: discord.client):
