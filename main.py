@@ -68,10 +68,10 @@ async def on_reaction_add(reaction, user):
             await reactionHandlers[reaction.message.embeds[0].description.split(" ")[0]](reaction, user)
 
 
-# ------------------------------main-----------------------------
+if __name__ == "__main__":
 
-init()
+    init()
 
-load_dotenv()
-TOKEN = os.getenv("BOT_TOKEN")
-client.run(TOKEN)
+    load_dotenv()
+    TOKEN = os.getenv("BOT_TOKEN")
+    client.run(TOKEN)
