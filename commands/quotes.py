@@ -92,7 +92,7 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
         # print(reaction.emoji.name)
         # emojis from this server
 
-        if reaction.emoji.id == discord.utils.get(reaction.message.guild.emojis, name = "bedi").id:
+        if reaction.emoji.id == discord.utils.get(reaction.message.guild.emojis, name = get_reaction_emoji(reaction.message.guild.id)).id:
             if not user.mention in reaction.message.embeds[0].description:
                 embed = create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
                 await reaction.message.edit(embed = embed)

@@ -213,6 +213,10 @@ def get_admin_role(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['admin_role']
 
 
+def get_reaction_emoji(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['reaction_emoji']
+
+
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
