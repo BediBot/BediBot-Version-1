@@ -1,9 +1,9 @@
-from commands import _birthdayMessage, _mongoFunctions, _checkrole, _embedMessage
+from commands import _birthdayMessage, _mongoFunctions, _checkrole, _embedMessage, _util
 
 
 async def force_birthdays(ctx, client):
-    if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
-        replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
+    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_admin_role(ctx.guild.id)) or _util.author_is_bot_owner(ctx)):
+        replyEmbed = _embedMessage.create("ForceBirthdays Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 

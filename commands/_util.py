@@ -1,3 +1,11 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+BOT_OWNERS = os.getenv("BOT_OWNERS")
+BOT_OWNERS = BOT_OWNERS.split(' ')
+
+
 def parse_message(msg):
     ignoreSpace = False
     args = []
@@ -17,5 +25,9 @@ def parse_message(msg):
             args.append(msg[start:len(msg)].strip())
     return args
 
-# args = parseMessage('$com "2 3" arg2')
-# print(args)
+
+def author_is_bot_owner(ctx):
+    if str(ctx.author.id) in BOT_OWNERS:
+        return True
+    else:
+        return False

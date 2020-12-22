@@ -1,6 +1,5 @@
 import os
-from commands import _mongoFunctions, _embedMessage, _email, _hashingFunctions, _checkrole
-import discord
+from commands import _mongoFunctions, _embedMessage, _checkrole, _util
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,8 +10,8 @@ uw_driver = UW_Driver()
 
 
 async def admin_verify(ctx, client):
-    if not (_checkrole.author_has_role(ctx, "admin") or _checkrole.author_has_role(ctx, "admins()")):
-        replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
+    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_admin_role(ctx.guild.id)) or _util.author_is_bot_owner(ctx)):
+        replyEmbed = _embedMessage.create("AdminVerify Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 

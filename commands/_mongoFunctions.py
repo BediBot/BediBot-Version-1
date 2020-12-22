@@ -201,6 +201,22 @@ def get_bedi_bot_channel_id(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['channel_id']
 
 
+def get_announcement_quoted_person(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['announcement_quoted_person']
+
+
+def get_announcement_time(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['announcement_time']
+
+
+def get_admin_role(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['admin_role']
+
+
+def get_reaction_emoji(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['reaction_emoji']
+
+
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
