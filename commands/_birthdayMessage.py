@@ -3,7 +3,6 @@ from commands import _mongoFunctions, _embedMessage
 
 
 async def send_birthday_message(client, guild_id, channel_id):
-    await client.get_guild(guild_id).get_channel(channel_id).purge(limit = None, check = lambda msg: not msg.pinned)
     guild_id = int(guild_id)
     channel_id = int(channel_id)
     guild = client.get_guild(guild_id)
