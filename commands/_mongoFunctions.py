@@ -209,6 +209,10 @@ def get_announcement_time(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['announcement_time']
 
 
+def get_birthday_time(guild_id: int):
+    return Guilds.find_one({'guild_id': guild_id})['birthday_time']
+
+
 def get_admin_role(guild_id: int):
     return Guilds.find_one({'guild_id': guild_id})['admin_role']
 
