@@ -5,25 +5,22 @@ async def edit_due_date_message(client):
     guild_list = _mongoFunctions.get_guilds_information()
 
     for guild in guild_list:
-        global guild_id, channel_id
-        for key, value in guild.items():
-            if key == 'guild_id':
-                guild_id = value
-            if key == 'channel_id':
-                channel_id = value
+        guild_id = guild_list[guild]['settings']['guild_id']
+        channel_id = guild_list[guild]['settings']['channel_id']
 
         update_due_dates(guild_id)
-        guild = client.get_guild(guild_id)
+        guild_object = client.get_guild(guild_id)
 
-        courses = _mongoFunctions.get_list_of_courses(guild_id)
+        courses = guild_list[guild]['settings']['courses']
 
-        for stream in _mongoFunctions.get_list_of_streams(guild_id):
-            await edit_schedule_embed(stream, courses, guild_id, guild, channel_id)
+        for stream in guild_list[guild]['settings']['streams']:
+            await edit_schedule_embed(stream, courses, guild_id, guild_object, channel_id)
 
 
 async def edit_schedule_embed(stream, courses, guild_id, guild, channel_id):
     channel = guild.get_channel(channel_id)
-    message_id = _mongoFunctions.get_due_date_channel_id(guild_id, stream)
+
+    message_id = _mongoFunctions.get_settings(guild_id)['stream_' + str(stream) + '_message_id']
     msg = await channel.fetch_message(message_id)
 
     message_embed = _embedMessage.create("Upcoming Due Dates for Stream " + str(stream), "​", "blue")

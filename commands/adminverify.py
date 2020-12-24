@@ -10,7 +10,7 @@ uw_driver = UW_Driver()
 
 
 async def admin_verify(ctx, client):
-    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_admin_role(ctx.guild.id)) or _util.author_is_bot_owner(ctx)):
+    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         replyEmbed = _embedMessage.create("AdminVerify Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return

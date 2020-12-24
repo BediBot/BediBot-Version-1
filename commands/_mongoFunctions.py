@@ -1,8 +1,10 @@
 import os
+import threading
+
 import pymongo
 import datetime
 from dotenv import load_dotenv
-from commands import _hashingFunctions
+from commands import _hashingFunctions, _util
 
 load_dotenv()
 
@@ -12,12 +14,14 @@ DATABASE_STRING = os.getenv("MONGO_DATABASE_STRING")
 mClient = None
 GuildInformation = None
 Guilds = None
+Guild_Cache = {}
 
 
 def init():
     global mClient
     global Guilds
     global GuildInformation
+    global Guild_Cache
 
     mClient = pymongo.MongoClient(CONNECTION_STRING)
 
@@ -28,10 +32,31 @@ def init():
     guild_list = list(Guilds.find({}))
 
     for guild in guild_list:
-        for key, value in guild.items():
-            if key == 'guild_id':
-                coll = GuildInformation["a" + str(value) + ".PendingVerificationUsers"]
-                coll.delete_many({})
+        Guild_Cache[str(guild['guild_id'])] = {}
+        Guild_Cache[str(guild['guild_id'])]['settings'] = guild
+
+        Guild_Cache[str(guild['guild_id'])]['due_dates'] = list(GuildInformation["a" + str(guild['guild_id']) + ".UpcomingDueDates"].find({}))
+
+        pending_verification_coll = GuildInformation["a" + str(guild['guild_id']) + ".PendingVerificationUsers"]
+        pending_verification_coll.delete_many({})
+
+    thread = threading.Thread(target = update_guilds)
+    thread.start()
+
+
+def update_guilds():
+    stream = Guilds.watch()
+    for change in stream:
+        print(change)
+        guild_list = list(Guilds.find({}))
+        for guild in guild_list:
+            if guild['_id'] == change['documentKey']['_id']:
+                Guild_Cache[str(guild['guild_id'])]['settings'] = guild
+                break
+
+
+def get_settings(guild_id: int):
+    return Guild_Cache[str(guild_id)]['settings']
 
 
 def is_uw_id_linked_to_verified_user(guild_id: int, uw_id):
@@ -132,24 +157,8 @@ def get_all_upcoming_due_dates(guild_id: int, stream: int, course):
     return list(coll.aggregate(pipeline))
 
 
-def get_list_of_courses(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['courses']
-
-
-def get_list_of_due_date_types(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['due_date_types']
-
-
-def get_list_of_streams(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['streams']
-
-
 def get_guilds_information():
-    return list(Guilds.find({}))
-
-
-def get_due_date_channel_id(guild_id: int, stream: int):
-    return Guilds.find_one({'guild_id': guild_id})['stream_' + str(stream) + '_message_id']
+    return Guild_Cache
 
 
 def remove_due_dates_passed(guild_id: int):
@@ -183,42 +192,6 @@ def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
 
 def set_last_announcement_time(guild_id: int, time: datetime.datetime):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})
-
-
-def get_last_announcement_time(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['last_announcement_time']
-
-
-def get_birthday_role_string(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['birthday_role']
-
-
-def get_announcement_role_string(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['announcement_role']
-
-
-def get_bedi_bot_channel_id(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['channel_id']
-
-
-def get_announcement_quoted_person(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['announcement_quoted_person']
-
-
-def get_announcement_time(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['announcement_time']
-
-
-def get_birthday_time(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['birthday_time']
-
-
-def get_admin_role(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['admin_role']
-
-
-def get_reaction_emoji(guild_id: int):
-    return Guilds.find_one({'guild_id': guild_id})['reaction_emoji']
 
 
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
