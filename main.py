@@ -2,7 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from commands import *
-from commands import _morningAnnouncement, _setBotStatus
+from commands import _morningAnnouncement, _setBotStatus, _scheduling
 
 command_prefix = "$"
 emote_prefix = "!"
@@ -46,7 +46,7 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     # await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="115 ASMR | $help"))
     await _setBotStatus.set_random_bot_status(client)
-    await _morningAnnouncement.schedule_announcement(client)
+    await _scheduling.schedule_jobs(client)
 
 
 @client.event
@@ -69,6 +69,7 @@ async def on_reaction_add(reaction, user):
 
 
 # ------------------------------main-----------------------------
+
 
 init()
 
