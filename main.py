@@ -30,7 +30,9 @@ commands = {
     command_prefix + "adminverify": admin_verify,
     command_prefix + "removeduedate": remove_due_date,
     command_prefix + "forcebirthdays": force_birthdays,
-    command_prefix + "say": say
+    command_prefix + "say": say,
+    command_prefix + "lockdown": lockdown,
+    command_prefix + "unlock": unlock
 }
 
 reactionHandlers = {
@@ -68,11 +70,9 @@ async def on_reaction_add(reaction, user):
             await reactionHandlers[reaction.message.embeds[0].description.split(" ")[0]](reaction, user)
 
 
-# ------------------------------main-----------------------------
+if __name__ == "__main__":
 
 
-init()
-
-load_dotenv()
-TOKEN = os.getenv("BOT_TOKEN")
-client.run(TOKEN)
+    load_dotenv()
+    TOKEN = os.getenv("BOT_TOKEN")
+    client.run(TOKEN)
