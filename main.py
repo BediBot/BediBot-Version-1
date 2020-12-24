@@ -3,6 +3,7 @@ import discord
 from dotenv import load_dotenv
 from commands import *
 from commands import _morningAnnouncement, _setBotStatus, _scheduling
+from commands._mongoFunctions import init
 
 command_prefix = "$"
 emote_prefix = "!"

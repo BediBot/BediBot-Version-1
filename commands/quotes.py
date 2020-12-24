@@ -26,9 +26,7 @@ async def add_quote(ctx: discord.message, client: discord.client):
 
     embed = create("AddQuote Reply", "| \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \n Approved by: ", "blue")
     message = await ctx.channel.send(embed = embed)
-    await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = "bedi"))
-
-    # await ctx.channel.send("Quote Recorded!")
+    await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = get_settings(ctx.guild.id)['reaction_emoji']))
 
 
 async def get_quotes(ctx: discord.message, client: discord.client):
@@ -44,7 +42,6 @@ async def get_quotes(ctx: discord.message, client: discord.client):
             page = int(args[2])
         quotes = find_quotes(ctx.guild.id, person, page)
         try:
-            # print(quotes)
             embed = create("Quotes from: " + person, "Page: " + str(page), "green")
             for quote in quotes:
                 value = (quote["quote"][:1021] + '...') if len(quote["quote"]) > 1024 else quote["quote"]
@@ -58,7 +55,7 @@ async def get_quotes(ctx: discord.message, client: discord.client):
 
 
 async def remove_quote(ctx: discord.message, client: discord.client):
-    if not (author_has_role(ctx, get_admin_role(ctx.guild.id)) or author_is_bot_owner(ctx)):
+    if not (author_has_role(ctx, get_settings(ctx.guild.id)['admin_role']) or author_is_bot_owner(ctx)):
         replyEmbed = create("RemoveQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
@@ -92,7 +89,7 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
         # print(reaction.emoji.name)
         # emojis from this server
 
-        if reaction.emoji.id == discord.utils.get(reaction.message.guild.emojis, name = get_reaction_emoji(reaction.message.guild.id)).id:
+        if reaction.emoji.id == discord.utils.get(reaction.message.guild.emojis, name = get_settings(reaction.message.guild.id)['reaction_emoji']).id:
             if not user.mention in reaction.message.embeds[0].description:
                 embed = create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
                 await reaction.message.edit(embed = embed)
@@ -117,8 +114,3 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
         await reaction.message.channel.send("i dont know what this is")
         # emojis from other servers
         # partial emojis?
-
-# print(type(reaction.emoji),"reee",reaction.emoji)
-# await reaction.message.channel.send(reaction.emoji)
-# if reaction.emoji == sweat_smile:
-# await reaction.message.channel.send("reeeeeeeeeeee")
