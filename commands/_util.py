@@ -31,3 +31,7 @@ def author_is_bot_owner(ctx):
         return True
     else:
         return False
+
+
+async def purge_messages_in_channel(client, guild_id, channel_id):
+    await client.get_guild(guild_id).get_channel(channel_id).purge(limit = None, check = lambda msg: not msg.pinned)
