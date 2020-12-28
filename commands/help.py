@@ -25,6 +25,8 @@ async def help_command(ctx, client):
     _embedMessage.add_field(helpMessage, commandPrefix2 + "adminverify @Mention",
                             "Manually verifies a user. Note that this does NOT add in a role and simply adds them to the database\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
                             False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "lockdown role",
+                            "Sets send message permissions to false for specified role\nEx: " + commandPrefix2 + "lockdown " + "Tron", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "removequote \"quote with spaces\" Name",
                             "Removes a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
@@ -32,5 +34,8 @@ async def help_command(ctx, client):
                             "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "setbedibotchannel",
                             "Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "settings", "Displays the guild's settings", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "unlock role", "Sets send message permissions to True for specified role\nEx: " + commandPrefix2 + "unlock " + "Tron",
+                            False)
 
     await ctx.channel.send(embed = helpMessage)

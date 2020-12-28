@@ -9,7 +9,7 @@ async def add_due_date(ctx, client):
     global course, due_date_type, stream, time, title, year, month, day
     wait_timeout = 60.0
     sleep_time = 2
-    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_admin_role(ctx.guild.id)) or _util.author_is_bot_owner(ctx)):
+    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
 
@@ -17,11 +17,12 @@ async def add_due_date(ctx, client):
         return message.author == ctx.author and message.channel == ctx.channel
 
     response_message = await ctx.channel.send(
-        embed = _embedMessage.create("AddDueDate Reply", "What course is this due date for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_courses(ctx.guild.id)), "blue"))
+        embed = _embedMessage.create("AddDueDate Reply", "What course is this due date for?\nOptions: " + ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['courses']), "blue"))
 
     while True:
         await response_message.edit(
-            embed = _embedMessage.create("AddDueDate Reply", "What course is this due date for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_courses(ctx.guild.id)), "blue"))
+            embed = _embedMessage.create("AddDueDate Reply", "What course is this due date for?\nOptions: " + ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['courses']),
+                                         "blue"))
         try:
             course_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
@@ -29,7 +30,7 @@ async def add_due_date(ctx, client):
             return
         else:
             course = course_message.content
-            if course not in _mongoFunctions.get_list_of_courses(ctx.guild.id):
+            if course not in _mongoFunctions.get_settings(ctx.guild.id)['courses']:
                 await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "The course name is invalid!", "red"))
                 await asyncio.sleep(sleep_time)
             else:
@@ -37,7 +38,8 @@ async def add_due_date(ctx, client):
 
     while True:
         await response_message.edit(
-            embed = _embedMessage.create("AddDueDate Reply", "What is the due date type?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_due_date_types(ctx.guild.id)), "blue"))
+            embed = _embedMessage.create("AddDueDate Reply", "What is the due date type?\nOptions: " + ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['due_date_types']),
+                                         "blue"))
         try:
             due_date_type_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
@@ -45,18 +47,18 @@ async def add_due_date(ctx, client):
             return
         else:
             due_date_type = due_date_type_message.content
-            if due_date_type not in _mongoFunctions.get_list_of_due_date_types(ctx.guild.id):
+            if due_date_type not in _mongoFunctions.get_settings(ctx.guild.id)['due_date_types']:
                 await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "The due date type is invalid!", "red"))
                 await asyncio.sleep(sleep_time)
             else:
                 break
 
-    if len(_mongoFunctions.get_list_of_streams(ctx.guild.id)) == 1:
-        stream = _mongoFunctions.get_list_of_streams(ctx.guild.id)[0]
+    if len(_mongoFunctions.get_settings(ctx.guild.id)['streams']) == 1:
+        stream = _mongoFunctions.get_settings(ctx.guild.id)['streams'][0]
     else:
         while True:
             await response_message.edit(
-                embed = _embedMessage.create("AddDueDate Reply", "Which stream is this for?\nOptions: " + ', '.join(_mongoFunctions.get_list_of_streams(ctx.guild.id)), "blue"))
+                embed = _embedMessage.create("AddDueDate Reply", "Which stream is this for?\nOptions: " + ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['streams']), "blue"))
             try:
                 stream_message = await client.wait_for('message', timeout = wait_timeout, check = check)
             except asyncio.TimeoutError:
@@ -64,7 +66,7 @@ async def add_due_date(ctx, client):
                 return
             else:
                 stream = stream_message.content
-                if stream not in _mongoFunctions.get_list_of_streams(ctx.guild.id):
+                if stream not in _mongoFunctions.get_settings(ctx.guild.id)['streams']:
                     await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "The stream is invalid!", "red"))
                     await asyncio.sleep(sleep_time)
                 else:
@@ -83,8 +85,7 @@ async def add_due_date(ctx, client):
             break
 
     while True:
-        await response_message.edit(
-            embed = _embedMessage.create("AddDueDate Reply", "What is the date? (YYYY MM DD)", "blue"))
+        await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "What is the date? (YYYY MM DD)", "blue"))
         try:
             date_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
@@ -115,8 +116,7 @@ async def add_due_date(ctx, client):
                     break
 
     while True:
-        await response_message.edit(
-            embed = _embedMessage.create("AddDueDate Reply", "What time is the due date? (HH:MM)\nEnter 'None' if there is no time.", "blue"))
+        await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "What time is the due date? (HH:MM)\nEnter 'None' if there is no time.", "blue"))
         try:
             time_message = await client.wait_for('message', timeout = wait_timeout, check = check)
         except asyncio.TimeoutError:
