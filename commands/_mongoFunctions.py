@@ -48,7 +48,7 @@ async def init(client):
     asyncio.run_coroutine_threadsafe(update_guilds(client), update_guild_loop)
 
 
-# Starts an AsyncIO event loop
+# Starts an AsyncIO event loop (Function exists so that a thread can target it)
 def start_loop(loop):
     asyncio.set_event_loop(loop)
     loop.run_forever()

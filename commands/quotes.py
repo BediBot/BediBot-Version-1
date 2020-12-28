@@ -2,6 +2,7 @@ import discord
 from commands import _mongoFunctions, _util, _embedMessage, _checkrole
 
 amount_emoji_needed = 4
+embed_field_max_char = 1024
 
 
 async def add_quote(ctx: discord.message, client: discord.client):
@@ -16,7 +17,7 @@ async def add_quote(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
         return
 
-    if len(args[1]) > 1024:
+    if len(args[1]) > embed_field_max_char:
         await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
         return
 
@@ -40,7 +41,7 @@ async def get_quotes(ctx: discord.message, client: discord.client):
         try:
             embed = _embedMessage.create("Quotes from: " + person, "Page: " + str(page), "green")
             for quote in quotes:
-                value = (quote["quote"][:1021] + '...') if len(quote["quote"]) > 1024 else quote["quote"]
+                value = (quote["quote"][:(embed_field_max_char - 3)] + '...') if len(quote["quote"]) > 1024 else quote["quote"]
                 _embedMessage.add_field(embed_msg = embed, title_string = quote["name"], value_string = value, is_inline = False)
             await ctx.channel.send(embed = embed)
         except Exception as e:
@@ -62,7 +63,7 @@ async def remove_quote(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = _embedMessage.create("RemoveQuote Reply", "Invalid Syntax! You need two arguments for this function!", "red"))
         return
 
-    if len(args[1]) > 1024:
+    if len(args[1]) > embed_field_max_char:
         await ctx.channel.send(embed = _embedMessage.create("RemoveQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
         return
 
