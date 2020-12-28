@@ -10,6 +10,7 @@ async def settings(ctx, client):
 
     _embedMessage.add_field(message, "Timezone", _mongoFunctions.get_settings(ctx.guild.id)['timezone'], False)
     _embedMessage.add_field(message, "Verification Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled'], False)
+    _embedMessage.add_field(message, "Bedi Bot Channel", ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['channel_id'])).mention, False)
     _embedMessage.add_field(message, "Admin Role", _mongoFunctions.get_settings(ctx.guild.id)['admin_role'], False)
     _embedMessage.add_field(message, "Daily Announcement Time", _mongoFunctions.get_settings(ctx.guild.id)['announcement_time'], False)
     _embedMessage.add_field(message, "Daily Announcement Quote Author", _mongoFunctions.get_settings(ctx.guild.id)['announcement_quoted_person'], False)
