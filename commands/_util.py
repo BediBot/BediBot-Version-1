@@ -1,5 +1,4 @@
 import os
-from threading import Thread
 
 from dotenv import load_dotenv
 
@@ -37,8 +36,3 @@ def author_is_bot_owner(ctx):
 
 async def purge_messages_in_channel(client, guild_id, channel_id):
     await client.get_guild(guild_id).get_channel(channel_id).purge(limit = None, check = lambda msg: not msg.pinned)
-
-
-def run_threaded(func):
-    thread = Thread(target = func)
-    thread.start()

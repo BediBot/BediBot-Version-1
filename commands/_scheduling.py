@@ -32,11 +32,12 @@ async def schedule_jobs(client):
         scheduler.add_job(_morningAnnouncement.check_if_morning_announcement_occurred_today, 'cron', hour = announcement_time_object.hour, minute = announcement_time_object.minute,
                           second = 1, timezone = guild_timezone, args = [client, guild_id, channel_id])
 
-    scheduler.add_job(_dueDateMessage.edit_due_date_message, 'interval', minutes = 1, args = [client])
+    scheduler.add_job(_dueDateMessage.edit_due_date_message, 'interval', minutes = 10, args = [client])
 
 
 async def reschedule_jobs(client):
     for job in scheduler.get_jobs():
+        print(job)
         job.remove()
 
     await schedule_jobs(client)

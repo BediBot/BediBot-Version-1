@@ -1,10 +1,10 @@
+import asyncio
 import os
 import threading
-
 import pymongo
 import datetime
 from dotenv import load_dotenv
-from commands import _hashingFunctions, _util
+from commands import _hashingFunctions, _scheduling
 
 load_dotenv()
 
@@ -17,7 +17,7 @@ Guilds = None
 Guild_Cache = {}
 
 
-def init():
+async def init(client):
     global mClient
     global Guilds
     global GuildInformation
@@ -35,23 +35,29 @@ def init():
         Guild_Cache[str(guild['guild_id'])] = {}
         Guild_Cache[str(guild['guild_id'])]['settings'] = guild
 
-        Guild_Cache[str(guild['guild_id'])]['due_dates'] = list(GuildInformation["a" + str(guild['guild_id']) + ".UpcomingDueDates"].find({}))
-
         pending_verification_coll = GuildInformation["a" + str(guild['guild_id']) + ".PendingVerificationUsers"]
         pending_verification_coll.delete_many({})
 
-    thread = threading.Thread(target = update_guilds)
-    thread.start()
+    new_loop = asyncio.new_event_loop()
+    t = threading.Thread(target = start_loop, args = (new_loop,))
+    t.start()
+
+    asyncio.run_coroutine_threadsafe(update_guilds(client), new_loop)
 
 
-def update_guilds():
+def start_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+
+async def update_guilds(client):
     stream = Guilds.watch()
     for change in stream:
-        print(change)
         guild_list = list(Guilds.find({}))
         for guild in guild_list:
             if guild['_id'] == change['documentKey']['_id']:
                 Guild_Cache[str(guild['guild_id'])]['settings'] = guild
+                await _scheduling.reschedule_jobs(client)
                 break
 
 
@@ -134,12 +140,14 @@ def get_all_birthdays_today(guild_id: int):
 
 def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    coll.insert_one({'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)})
+    due_date = {'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)}
+    coll.insert_one(due_date)
 
 
 def remove_due_date_from_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
     coll = GuildInformation["a" + str(guild_id) + ".UpcomingDueDates"]
-    coll.find_one_and_delete({'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)})
+    due_date = {'course': course, 'type': due_date_type, 'title': title, 'stream': int(stream), 'date': date, "time_included": bool(timeIncluded)}
+    coll.find_one_and_delete(due_date)
 
 
 def get_all_upcoming_due_dates(guild_id: int, stream: int, course):

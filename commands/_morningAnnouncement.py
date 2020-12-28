@@ -4,6 +4,7 @@ from commands import _mongoFunctions, _embedMessage
 
 
 async def send_morning_announcement(client, guild_id, channel_id):
+    print("this got called")
     role = discord.utils.get(client.get_guild(guild_id).roles, name = _mongoFunctions.get_settings(guild_id)['announcement_role'])
     await client.get_guild(guild_id).get_channel(channel_id).send(role.mention, embed = _embedMessage.create("Good Morning!",
                                                                                                              _mongoFunctions.random_quote(guild_id,
