@@ -62,7 +62,27 @@ async def update_guilds(client):
 
 
 def get_settings(guild_id: int):
-    return Guild_Cache[str(guild_id)]['settings']
+    try:
+        return Guild_Cache[str(guild_id)]['settings']
+    except KeyError:
+        default_settings = {"guild_id": guild_id,
+                            "courses": ["Add", "Some", "Courses"],
+                            "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
+                            "streams": ["8", "4"],
+                            "channel_id": 0,
+                            "last_announcement_time": None,
+                            "announcement_role": "Bedi Follower",
+                            "birthday_role": "Bedi's Favourite",
+                            "verification_enabled": False,
+                            "announcement_quoted_person": "bedi",
+                            "announcement_time": "08:30",
+                            "admin_role": "admin",
+                            "reaction_emoji": "Default Reaction Emoji",
+                            "birthday_time": "00:00",
+                            "timezone": "America/Toronto"}
+        Guilds.insert_one(default_settings)
+        Guild_Cache[str(guild_id)]['settings'] = default_settings
+        return Guild_Cache[str(guild_id)]['settings']
 
 
 def is_uw_id_linked_to_verified_user(guild_id: int, uw_id):
