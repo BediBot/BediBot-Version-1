@@ -38,18 +38,23 @@ async def init(client):
         pending_verification_coll = GuildInformation["a" + str(guild['guild_id']) + ".PendingVerificationUsers"]
         pending_verification_coll.delete_many({})
 
-    new_loop = asyncio.new_event_loop()
-    t = threading.Thread(target = start_loop, args = (new_loop,))
-    t.start()
+    # Starts a new AsyncIO event loop to run in a separate thread (to avoid blocking main)
+    update_guild_loop = asyncio.new_event_loop()
+    update_guilds_thread = threading.Thread(target = start_loop, args = (update_guild_loop,))
+    update_guilds_thread.start()
 
-    asyncio.run_coroutine_threadsafe(update_guilds(client), new_loop)
+    # Adds update_guilds function to the created loop (now this function will run forever without blocking main)
+    # If in the future multiple functions must run at this point concurrently, look into asyncio.gather
+    asyncio.run_coroutine_threadsafe(update_guilds(client), update_guild_loop)
 
 
+# Starts an AsyncIO event loop
 def start_loop(loop):
     asyncio.set_event_loop(loop)
     loop.run_forever()
 
 
+# Watched for changes in the Guild Settings Collection, Updated the Cache, and Reschedules all Jobs (in case announcement times changed)
 async def update_guilds(client):
     stream = Guilds.watch()
     for change in stream:
