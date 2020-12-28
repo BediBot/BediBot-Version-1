@@ -1,6 +1,7 @@
 import discord
 from commands import _mongoFunctions, _util, _embedMessage, _checkrole
 
+sweat_smile = "😅"
 amount_emoji_needed = 4
 embed_field_max_char = 1024
 
