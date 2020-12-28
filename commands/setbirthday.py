@@ -35,6 +35,6 @@ async def set_birthday(ctx, client):
 
     await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "Your birthday has been set!", "blue"))
 
-    _mongoFunctions.set_users_birthday(ctx.guild.id, ctx.author.id, datetime.datetime.strptime(birth_date_string, "%Y-%m-%d"))
+    _mongoFunctions.set_users_birthday(ctx.author.id, datetime.datetime.strptime(birth_date_string, "%Y-%m-%d"))
 
     return

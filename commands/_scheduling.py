@@ -38,7 +38,6 @@ async def schedule_jobs(client):
 
 async def reschedule_jobs(client):
     for job in scheduler.get_jobs():
-        print(job)
         job.remove()
 
     await schedule_jobs(client)

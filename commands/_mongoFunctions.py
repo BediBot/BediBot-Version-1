@@ -146,13 +146,13 @@ def get_uw_id_from_pending_user_id(guild_id: int, user_id: int):
         return document['uw_id']
 
 
-def set_users_birthday(guild_id: int, user_id: int, birth_date: datetime.datetime):
-    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    coll.update_one({'user_id': int(user_id)}, {'$set': {'birth_date': birth_date}})
+def set_users_birthday(user_id: int, birth_date: datetime.datetime):
+    coll = GuildInformation["Birthdays"]
+    coll.update_one({'user_id': int(user_id)}, {'$set': {'birth_date': birth_date}}, upsert = True)
 
 
-def get_all_birthdays_today(guild_id: int):
-    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+def get_all_birthdays_today():
+    coll = GuildInformation["Birthdays"]
     return list(coll.aggregate([
         {'$match':
             {'$expr':
