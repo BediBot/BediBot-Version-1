@@ -23,6 +23,7 @@ async def schedule_jobs(client):
                           args = [client, guild_id, channel_id])
 
         announcement_time = guild_list[guild]['settings']['announcement_time'].split(':')
+
         announcement_time_object = datetime.today()
         announcement_time_object = announcement_time_object.replace(hour = int(announcement_time[0]), minute = int(announcement_time[1]))
 

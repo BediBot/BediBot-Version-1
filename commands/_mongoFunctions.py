@@ -226,7 +226,7 @@ def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
 def set_last_announcement_time(guild_id: int, time: datetime.datetime):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})
 
-
+    
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
