@@ -2,7 +2,6 @@ import discord
 from commands import _mongoFunctions, _util, _embedMessage, _checkrole
 
 sweat_smile = "😅"
-amount_emoji_needed = 4
 embed_field_max_char = 1024
 
 
@@ -88,7 +87,7 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
                 embed = _embedMessage.create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
                 await reaction.message.edit(embed = embed)
                 print("this is acc happening")
-            if reaction.count >= amount_emoji_needed:
+            if reaction.count >= _mongoFunctions.get_settings(reaction.message.guild.id)['required_quote_reactions']:
                 args = _util.parse_message(reaction.message.embeds[0].description)
                 quote = args[1]
                 quotedPerson = args[3]

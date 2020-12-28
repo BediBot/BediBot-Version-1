@@ -13,6 +13,10 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
 
+    if not _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
+        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Due Dates are not enabled on this server.", "red"))
+        return
+
     def check(message):
         return message.author == ctx.author and message.channel == ctx.channel
 

@@ -71,20 +71,26 @@ def get_settings(guild_id: int):
         return Guild_Cache[str(guild_id)]['settings']
     except KeyError:
         default_settings = {"guild_id": guild_id,
+                            "timezone": "America/Toronto",
+                            "admin_role": "admin",
+                            "channel_id": 0,
+                            "verification_enabled": False,
+                            "birthday_announcements_enabled": True,
+                            "morning_announcements_enabled": True,
+                            "due_dates_enabled": True,
+                            "last_announcement_time": None,
+                            "announcement_role": "Bedi Follower",
+                            "announcement_quoted_person": "bedi",
+                            "announcement_time": "08:30",
+                            "birthday_role": "Bedi's Favourite",
+                            "birthday_time": "00:00",
                             "courses": ["Add", "Some", "Courses"],
                             "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
                             "streams": ["8", "4"],
-                            "channel_id": 0,
-                            "last_announcement_time": None,
-                            "announcement_role": "Bedi Follower",
-                            "birthday_role": "Bedi's Favourite",
-                            "verification_enabled": False,
-                            "announcement_quoted_person": "bedi",
-                            "announcement_time": "08:30",
-                            "admin_role": "admin",
                             "reaction_emoji": "Default Reaction Emoji",
-                            "birthday_time": "00:00",
-                            "timezone": "America/Toronto"}
+                            "required_quote_reactions": 4
+                            }
+        
         Guilds.insert_one(default_settings)
         Guild_Cache[str(guild_id)]['settings'] = default_settings
         return Guild_Cache[str(guild_id)]['settings']
@@ -226,7 +232,7 @@ def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
 def set_last_announcement_time(guild_id: int, time: datetime.datetime):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})
 
-    
+
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
