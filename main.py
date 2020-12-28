@@ -2,7 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from commands import *
-from commands import _morningAnnouncement, _setBotStatus, _scheduling
+from commands import _setBotStatus, _scheduling, _mongoFunctions
 
 command_prefix = "$"
 emote_prefix = "!"
@@ -32,7 +32,8 @@ commands = {
     command_prefix + "forcebirthdays": force_birthdays,
     command_prefix + "say": say,
     command_prefix + "lockdown": lockdown,
-    command_prefix + "unlock": unlock
+    command_prefix + "unlock": unlock,
+    command_prefix + "settings": settings
 }
 
 reactionHandlers = {
@@ -46,7 +47,7 @@ client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-    # await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="115 ASMR | $help"))
+    await _mongoFunctions.init(client)
     await _setBotStatus.set_random_bot_status(client)
     await _scheduling.schedule_jobs(client)
 
@@ -71,8 +72,6 @@ async def on_reaction_add(reaction, user):
 
 
 if __name__ == "__main__":
-
-
     load_dotenv()
     TOKEN = os.getenv("BOT_TOKEN")
     client.run(TOKEN)
