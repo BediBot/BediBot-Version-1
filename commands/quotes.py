@@ -86,7 +86,7 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
             if not user.mention in reaction.message.embeds[0].description:
                 embed = _embedMessage.create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
                 await reaction.message.edit(embed = embed)
-                print("this is acc happening")
+
             if reaction.count >= _mongoFunctions.get_settings(reaction.message.guild.id)['required_quote_reactions']:
                 args = _util.parse_message(reaction.message.embeds[0].description)
                 quote = args[1]

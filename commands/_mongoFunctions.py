@@ -90,7 +90,6 @@ def get_settings(guild_id: int):
                             "reaction_emoji": "Default Reaction Emoji",
                             "required_quote_reactions": 4
                             }
-
         Guilds.insert_one(default_settings)
         Guild_Cache[str(guild_id)]['settings'] = default_settings
         return Guild_Cache[str(guild_id)]['settings']
