@@ -22,7 +22,10 @@ async def lockdown(ctx: discord.message, client: discord.client):
         replyEmbed = _embedMessage.create("Lockdown Reply", "Channel Locked for {}".format(args[1]), "green")
         await ctx.channel.send(embed = replyEmbed)
 
-        await ctx.channel.set_permissions(role, send_messages = False, read_messages = True)
+        #await ctx.channel.set_permissions(role, send_messages = False, read_messages = True)
+        perms = ctx.channel.overwrite_for(role) #Use a permissions overwrite object
+        perms.send_messages = False
+        await ctx.channel.set_permissions(role, overwrite=perms)
 
     else:
         replyEmbed = _embedMessage.create("Lockdown reply", "Error 404: Something went wrong", "red")
@@ -44,4 +47,7 @@ async def unlock(ctx: discord.message, client: discord.client):
 
     replyEmbed = _embedMessage.create("Unlock Reply", "Channel Unlocked for {}".format(args[1]), "green")
     await ctx.channel.send(embed = replyEmbed)
-    await ctx.channel.set_permissions(role, send_messages = True, read_messages = True)
+    #await ctx.channel.set_permissions(role, send_messages = True, read_messages = True)
+    perms = ctx.channel.overwrite_for(role) #Use a permissions overwrite object
+    perms.send_messages = False
+    await ctx.channel.set_permissions(role, overwrite=perms)
