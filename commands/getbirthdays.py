@@ -25,7 +25,7 @@ async def get_birthdays(ctx, client):
         if member is None:
             continue
 
-        _embedMessage.add_field(message_embed, document['birth_date'].strftime("%d %B, %Y"), member.mention, False)
+        _embedMessage.add_field(message_embed, document['birth_date'].strftime("%B %d"), member.mention, False)
 
     await ctx.channel.send(embed = message_embed)
 
