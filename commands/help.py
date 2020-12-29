@@ -9,6 +9,8 @@ async def help_command(ctx, client):
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "confirm code",
                             "Allows you to enter in your 2FA verification code after you run the verify command\nEx: " + commandPrefix2 + "confirm 123456789", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "getbirthdays monthnumber",
+                            "Gets all birthdays for the specified month\nEx: " + commandPrefix2 + "getbirthdays 5", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "getQuotes person pagenumber",
                             "Gets a persons quotes with a page number, with each page in 5 days\nEx: " + commandPrefix2 + "getQuote Bedi 2", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "help", "Allows you to view commands!", False)
