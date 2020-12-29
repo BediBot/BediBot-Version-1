@@ -90,7 +90,7 @@ def get_settings(guild_id: int):
                             "reaction_emoji": "Default Reaction Emoji",
                             "required_quote_reactions": 4
                             }
-        
+
         Guilds.insert_one(default_settings)
         Guild_Cache[str(guild_id)]['settings'] = default_settings
         return Guild_Cache[str(guild_id)]['settings']
@@ -167,6 +167,17 @@ def get_all_birthdays_today():
                     {'$eq': [{'$month': '$birth_date'}, datetime.date.today().month]}, ], },
             }
         }]))
+
+
+def get_birthdays_from_month(num_months: int):
+    coll = GuildInformation["Birthdays"]
+
+    return list(coll.aggregate([
+        {'$match':
+             {'$expr':
+                  {'$eq': [{'$month': '$birth_date'}, int(num_months)]}
+              }
+         }]))
 
 
 def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):

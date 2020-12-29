@@ -33,7 +33,8 @@ commands = {
     command_prefix + "say": say,
     command_prefix + "lockdown": lockdown,
     command_prefix + "unlock": unlock,
-    command_prefix + "settings": settings
+    command_prefix + "settings": settings,
+    command_prefix + "getbirthdays": get_birthdays
 }
 
 reactionHandlers = {
