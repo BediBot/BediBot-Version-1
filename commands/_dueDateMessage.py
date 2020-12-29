@@ -6,15 +6,16 @@ async def edit_due_date_message(client):
 
     for guild in guild_list:
         guild_id = guild_list[guild]['settings']['guild_id']
-        channel_id = guild_list[guild]['settings']['channel_id']
 
-        update_due_dates(guild_id)
-        guild_object = client.get_guild(guild_id)
+        if guild_list[guild]['settings']['due_dates_enabled']:
+            update_due_dates(guild_id)
+            guild_object = client.get_guild(guild_id)
 
-        courses = guild_list[guild]['settings']['courses']
+            courses = guild_list[guild]['settings']['courses']
 
-        for stream in guild_list[guild]['settings']['streams']:
-            await edit_schedule_embed(stream, courses, guild_id, guild_object, channel_id)
+            channel_id = guild_list[guild]['settings']['channel_id']
+            for stream in guild_list[guild]['settings']['streams']:
+                await edit_schedule_embed(stream, courses, guild_id, guild_object, channel_id
 
 
 async def edit_schedule_embed(stream, courses, guild_id, guild, channel_id):

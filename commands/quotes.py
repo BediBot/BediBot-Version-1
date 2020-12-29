@@ -2,12 +2,11 @@ import discord
 from commands import _mongoFunctions, _util, _embedMessage, _checkrole
 
 sweat_smile = "😅"
-amount_emoji_needed = 4
 embed_field_max_char = 1024
 
 
 async def add_quote(ctx: discord.message, client: discord.client):
-    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
+    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id) and _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         replyEmbed = _embedMessage.create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
@@ -87,8 +86,8 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
             if not user.mention in reaction.message.embeds[0].description:
                 embed = _embedMessage.create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
                 await reaction.message.edit(embed = embed)
-                print("this is acc happening")
-            if reaction.count >= amount_emoji_needed:
+
+            if reaction.count >= _mongoFunctions.get_settings(reaction.message.guild.id)['required_quote_reactions']:
                 args = _util.parse_message(reaction.message.embeds[0].description)
                 quote = args[1]
                 quotedPerson = args[3]

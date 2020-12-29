@@ -71,20 +71,25 @@ def get_settings(guild_id: int):
         return Guild_Cache[str(guild_id)]['settings']
     except KeyError:
         default_settings = {"guild_id": guild_id,
+                            "timezone": "America/Toronto",
+                            "admin_role": "admin",
+                            "channel_id": 0,
+                            "verification_enabled": False,
+                            "birthday_announcements_enabled": True,
+                            "morning_announcements_enabled": True,
+                            "due_dates_enabled": True,
+                            "last_announcement_time": None,
+                            "announcement_role": "Bedi Follower",
+                            "announcement_quoted_person": "bedi",
+                            "announcement_time": "08:30",
+                            "birthday_role": "Bedi's Favourite",
+                            "birthday_time": "00:00",
                             "courses": ["Add", "Some", "Courses"],
                             "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
                             "streams": ["8", "4"],
-                            "channel_id": 0,
-                            "last_announcement_time": None,
-                            "announcement_role": "Bedi Follower",
-                            "birthday_role": "Bedi's Favourite",
-                            "verification_enabled": False,
-                            "announcement_quoted_person": "bedi",
-                            "announcement_time": "08:30",
-                            "admin_role": "admin",
                             "reaction_emoji": "Default Reaction Emoji",
-                            "birthday_time": "00:00",
-                            "timezone": "America/Toronto"}
+                            "required_quote_reactions": 4
+                            }
         Guilds.insert_one(default_settings)
         Guild_Cache[str(guild_id)]['settings'] = default_settings
         return Guild_Cache[str(guild_id)]['settings']
@@ -146,13 +151,13 @@ def get_uw_id_from_pending_user_id(guild_id: int, user_id: int):
         return document['uw_id']
 
 
-def set_users_birthday(guild_id: int, user_id: int, birth_date: datetime.datetime):
-    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
-    coll.update_one({'user_id': int(user_id)}, {'$set': {'birth_date': birth_date}})
+def set_users_birthday(user_id: int, birth_date: datetime.datetime):
+    coll = GuildInformation["Birthdays"]
+    coll.update_one({'user_id': int(user_id)}, {'$set': {'birth_date': birth_date}}, upsert = True)
 
 
-def get_all_birthdays_today(guild_id: int):
-    coll = GuildInformation["a" + str(guild_id) + ".VerifiedUsers"]
+def get_all_birthdays_today():
+    coll = GuildInformation["Birthdays"]
     return list(coll.aggregate([
         {'$match':
             {'$expr':
@@ -161,6 +166,17 @@ def get_all_birthdays_today(guild_id: int):
                     {'$eq': [{'$month': '$birth_date'}, datetime.date.today().month]}, ], },
             }
         }]))
+
+
+def get_birthdays_from_month(num_months: int):
+    coll = GuildInformation["Birthdays"]
+
+    return list(coll.aggregate([
+        {'$match':
+             {'$expr':
+                  {'$eq': [{'$month': '$birth_date'}, int(num_months)]}
+              }
+         }]))
 
 
 def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
@@ -226,7 +242,7 @@ def set_due_date_message_id(guild_id: int, stream: int, message_id: int):
 def set_last_announcement_time(guild_id: int, time: datetime.datetime):
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': time}})
 
-    
+
 def insert_quote(guild_id: int, quote: str, quoted_person: str):
     doc = {
         'quote': quote,
