@@ -171,12 +171,22 @@ def get_all_birthdays_today():
 def get_birthdays_from_month(num_months: int):
     coll = GuildInformation["Birthdays"]
 
-    return list(coll.aggregate([
-        {'$match':
-             {'$expr':
+    project = {
+        "user_id": 1,
+        "birth_date": 1,
+        "day": {"$dayOfMonth": "$birth_date"}
+    }
+
+    filter = {'$expr':
                   {'$eq': [{'$month': '$birth_date'}, int(num_months)]}
               }
-         }]))
+    pipeline = [
+        {"$project": project},
+        {"$match": filter},
+        {'$sort': {"day": 1}}
+    ]
+
+    return list(coll.aggregate(pipeline))
 
 
 def add_due_date_to_upcoming_due_dates(guild_id: int, course, due_date_type, title, stream: int, date: datetime.datetime, timeIncluded: bool):
