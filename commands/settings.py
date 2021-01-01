@@ -20,7 +20,9 @@ async def settings(ctx, client):
     _embedMessage.add_field(message, "Admin Role", _mongoFunctions.get_settings(ctx.guild.id)['admin_role'], False)
 
     _embedMessage.add_field(message, "Verification Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled'], False)
-    
+    if _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
+        _embedMessage.add_field(message, "Verified Role", _mongoFunctions.get_settings(ctx.guild.id)['verified_role'], False)
+
     _embedMessage.add_field(message, "Morning Announcements Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['morning_announcements_enabled'], False)
     if _mongoFunctions.get_settings(ctx.guild.id)['morning_announcements_enabled']:
         _embedMessage.add_field(message, "Daily Announcement Time", _mongoFunctions.get_settings(ctx.guild.id)['announcement_time'], False)

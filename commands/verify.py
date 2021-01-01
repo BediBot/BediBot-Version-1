@@ -1,8 +1,10 @@
 import os
 import re
+
 from dotenv import load_dotenv
-from commands import _mongoFunctions, _embedMessage, _email, _checkrole
 from uwaterloodriver import UW_Driver
+
+from commands import _mongoFunctions, _embedMessage, _email
 
 load_dotenv()
 os.environ['UW_API_KEY'] = os.getenv('UW_API_KEY')
@@ -35,11 +37,12 @@ async def verify(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Invalid email!", "red"))
         return
 
-    if uw_driver.directory_people_search(uw_id) == {}:
-        await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That's not a valid uWaterloo email!", "red"))
-        return
+    # Commenting these lines since the V2 API will be deprecated
+    # if uw_driver.directory_people_search(uw_id) == {}:
+    #     await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That's not a valid uWaterloo email!", "red"))
+    #     return
 
-    uw_id = uw_driver.directory_people_search(uw_id)['user_id']
+    # uw_id = uw_driver.directory_people_search(uw_id)['user_id']
 
     if _mongoFunctions.is_uw_id_linked_to_verified_user(ctx.guild.id, uw_id):
         await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "That email is already linked to a user!", "red"))
