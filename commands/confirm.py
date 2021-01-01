@@ -1,5 +1,5 @@
 import os
-
+from commands import _mongoFunctions, _embedMessage, _email, _hashingFunctions, _util
 import discord
 from dotenv import load_dotenv
 
@@ -23,12 +23,16 @@ async def confirm(ctx, client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
-    message_contents = ctx.content.split(" ")
+    message_contents = _util.parse_message(ctx.content)
 
     if len(message_contents) != 2:
         await ctx.channel.send(embed = _embedMessage.create("Confirm Reply", "The syntax is invalid! Make sure it is in the format $confirm <confirmcode>", "red"))
         return
     uw_id = _mongoFunctions.get_uw_id_from_pending_user_id(ctx.guild.id, ctx.author.id)
+
+    if uw_id is None:
+        await ctx.channel.send(embed = _embedMessage.create("Confirm Reply", "You have not run $verify yet!", "red"))
+        return
 
     unique_key = message_contents[1]
     if unique_key == _email.verificationCodes.get(ctx.author.id):
