@@ -1,5 +1,6 @@
-import discord
 import random
+
+import discord
 
 botStatusList = [
     discord.Activity(type = discord.ActivityType.listening, name = "Martingales | $help"),
@@ -17,4 +18,4 @@ async def set_random_bot_status(client):
 
 
 async def set_bot_status_from_command(ctx, client):
-    await set_random_bot_status
+    await set_random_bot_status(client)

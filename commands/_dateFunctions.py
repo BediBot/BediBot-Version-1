@@ -3,9 +3,9 @@ import re
 
 
 def check_for_errors_in_date(year, month, day):
-    # return values: 0 is no errors, 1 is invalid syntax, 2 is invalid date
+    # Return Values: 0 (No errors), 1 (Syntax Error), 2 (Date Error)
 
-    if not re.match('^\d{4}', year) and re.match('^\d{2}', month) and re.match('^\d{2}', day):
+    if not (re.match('^\d{4}', year) and re.match('^\d{2}', month) and re.match('^\d{2}', day)):
         return 1
     else:
         try:

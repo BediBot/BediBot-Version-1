@@ -1,4 +1,5 @@
 import discord
+
 from commands import _mongoFunctions, _util, _embedMessage, _checkrole
 
 sweat_smile = "😅"
@@ -95,7 +96,7 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
 
                 contentArr = reaction.message.embeds[0].description.split(" ")
                 newContent = " ".join(contentArr[1:])
-                print(newContent)
+                # print(newContent)
                 if res:
                     embed = _embedMessage.create("Quote Reply", "Approved: " + newContent, "blue")
                     await reaction.message.edit(embed = embed)
