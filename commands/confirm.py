@@ -1,7 +1,9 @@
 import os
-from commands import _mongoFunctions, _embedMessage, _email, _hashingFunctions
+
 import discord
 from dotenv import load_dotenv
+
+from commands import _mongoFunctions, _embedMessage, _email, _hashingFunctions
 
 load_dotenv()
 os.environ['UW_API_KEY'] = os.getenv('UW_API_KEY')
@@ -30,13 +32,14 @@ async def confirm(ctx, client):
 
     unique_key = message_contents[1]
     if unique_key == _email.verificationCodes.get(ctx.author.id):
-        department = uw_driver.directory_people_search(uw_id)['department']
+        # department = uw_driver.directory_people_search(uw_id)['department']
 
-        if department == "ENG/Mechanical & Mechatronics":
-            await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = "Tron"))
-        else:
-            await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = "Not Tron"))
+        # if department == "ENG/Mechanical & Mechatronics":
+        #     await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = "Tron"))
+        # else:
+        #     await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = "Not Tron"))
 
+        await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = _mongoFunctions.get_settings(ctx.guild.id)['verified_role']))
         _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, _hashingFunctions.hash_user_id(uw_id))
         _mongoFunctions.remove_user_from_pending_verification_users(ctx.guild.id, ctx.author.id)
         await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "You have been verified", "blue"))
