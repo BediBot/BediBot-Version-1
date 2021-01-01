@@ -39,7 +39,7 @@ def send_confirmation_email(receiver_address, user_id):
   <head></head>
   <body>
     <p>HONK!<br>
-        Please verify your email address by typing <b>$confirm {0}</b> in the #verification channel of the Tron 2025 Discord server!<br>
+        Please verify your email address by typing <b>$confirm {0}</b> in the verification channel!<br>
         If you have time, please reply with something to prevent this message from being flagged as spam.<br>
         <br>
         For any concerns, please contact a BediBot Dev :)<br>
