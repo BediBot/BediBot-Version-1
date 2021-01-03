@@ -19,6 +19,7 @@ async def edit_due_date_message(client):
                     await edit_schedule_embed(stream, courses, guild_id, guild_object, channel_id)
                 except:
                     print("Error in edit_schedule_embed")
+                    print("server is" + str(guild))
 
 
 async def edit_schedule_embed(stream, courses, guild_id, guild, channel_id):
