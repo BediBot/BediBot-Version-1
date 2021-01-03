@@ -1,4 +1,5 @@
 import discord
+
 from commands import _mongoFunctions, _util, _embedMessage, _checkrole
 
 sweat_smile = "😅"
@@ -102,8 +103,3 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
                 else:
                     embed = _embedMessage.create("Quote Reply", "Failed to Connect to DB: " + newContent, "blue")
                     await reaction.message.edit(embed = embed)
-
-    else:
-        await reaction.message.channel.send("i dont know what this is")
-        # emojis from other servers
-        # partial emojis?
