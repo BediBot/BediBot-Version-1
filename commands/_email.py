@@ -51,7 +51,7 @@ def send_confirmation_email(receiver_address, user_id):
 
     verificationCodes[user_id] = unique_key
 
-    send_email(receiver_address, mail_body_html.format(unique_key), 'Tron 2025 Discord Server Confirmation')
+    send_email(receiver_address, mail_body_html.format(unique_key), 'Discord Server 2FA Confirmation')
 
 
 def get_unique_key():
