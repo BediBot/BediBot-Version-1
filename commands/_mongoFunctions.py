@@ -1,9 +1,11 @@
 import asyncio
+import datetime
 import os
 import threading
+
 import pymongo
-import datetime
 from dotenv import load_dotenv
+
 from commands import _hashingFunctions, _scheduling
 
 load_dotenv()
@@ -91,6 +93,7 @@ def get_settings(guild_id: int):
                             "required_quote_reactions": 4
                             }
         Guilds.insert_one(default_settings)
+        Guild_Cache[str(guild_id)] = {}
         Guild_Cache[str(guild_id)]['settings'] = default_settings
         return Guild_Cache[str(guild_id)]['settings']
 
