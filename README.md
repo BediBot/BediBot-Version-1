@@ -1,5 +1,5 @@
 # BediBot
-Bot designed for the Tron 2025 Discord Server, in active use with 300+ users.
+Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 500+ users in both official and unofficial contexts.
 Currently, the bot provides authentication services for the Tron 2025 Discord Server via the UW V2 WatIAm Idenfitication. 
 
 Key Features
