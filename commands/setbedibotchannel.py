@@ -10,7 +10,7 @@ async def set_bedi_bot_channel(ctx, client):
     await ctx.channel.purge(limit = None)
     await ctx.channel.send(embed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue"))
 
-    if _mongoFunctions.get_settings(ctx.guild.id)['settings']['due_dates_enabled']:
+    if _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
         dueDateEmbeds = {}
         dueDateMessages = {}
 
