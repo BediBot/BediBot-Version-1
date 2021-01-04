@@ -77,6 +77,7 @@ def get_settings(guild_id: int):
                             "admin_role": "admin",
                             "channel_id": 0,
                             "verification_enabled": False,
+                            "verified_role": "Verified",
                             "birthday_announcements_enabled": True,
                             "morning_announcements_enabled": True,
                             "due_dates_enabled": True,
