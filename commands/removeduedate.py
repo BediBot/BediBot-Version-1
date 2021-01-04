@@ -2,10 +2,14 @@ import asyncio
 import datetime
 import re
 
+import discord
+
 from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage, _checkrole, _util
 
 
-async def remove_due_date(ctx, client):
+async def remove_due_date(ctx: discord.Message, client: discord.Client):
+    # This command is almost identical to $addduedate. Reference comments in that file.
+
     global course, due_date_type, stream, time, title, year, month, day
     wait_timeout = 60.0
     sleep_time = 2
@@ -168,4 +172,3 @@ async def remove_due_date(ctx, client):
         await response_message.edit(embed = _embedMessage.create("RemoveDueDate Reply", "Your due date has been removed!", "blue"))
 
     await _dueDateMessage.edit_due_date_message(client)
-    return

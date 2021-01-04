@@ -5,7 +5,7 @@ import discord
 from commands import _embedMessage, _util, _mongoFunctions
 
 
-async def get_birthdays(ctx, client):
+async def get_birthdays(ctx: discord.Message, client: discord.Client):
     args = _util.parse_message(ctx.content)
 
     if len(args) != 2:
@@ -25,8 +25,7 @@ async def get_birthdays(ctx, client):
         if member is None:
             continue
 
+        # Adds birthday to embed, only including day and month
         _embedMessage.add_field(message_embed, document['birth_date'].strftime("%B %d"), member.mention, False)
 
     await ctx.channel.send(embed = message_embed)
-
-    return

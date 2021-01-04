@@ -1,9 +1,11 @@
+import discord
+
 from commands import _embedMessage
 
 commandPrefix2 = "$"
 
 
-async def help_command(ctx, client):
+async def help_command(ctx: discord.Message, client: discord.Client):
     helpMessage = _embedMessage.create("Help Command", "Commands that can be run with BediBot. Each word represents an argument", "green")
     _embedMessage.add_field(helpMessage, commandPrefix2 + "addquote \"quote with spaces\" Name",
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\", Bedi", False)

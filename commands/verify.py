@@ -1,6 +1,7 @@
 import os
 import re
 
+import discord
 from dotenv import load_dotenv
 from uwaterloodriver import UW_Driver
 
@@ -11,7 +12,7 @@ os.environ['UW_API_KEY'] = os.getenv('UW_API_KEY')
 uw_driver = UW_Driver()
 
 
-async def verify(ctx, client):
+async def verify(ctx: discord.Message, client: discord.Client):
     if not _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         replyEmbed = _embedMessage.create("Verify Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -55,5 +56,3 @@ async def verify(ctx, client):
     _email.send_confirmation_email(email_address, ctx.author.id)
     _mongoFunctions.add_user_to_pending_verification_users(ctx.guild.id, ctx.author.id, uw_id)
     await ctx.channel.send(embed = _embedMessage.create("Verify Reply", "Verification Email sent!", "blue"))
-
-    return
