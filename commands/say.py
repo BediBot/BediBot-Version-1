@@ -32,7 +32,11 @@ async def say(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("Say Reply", "Channel not Found!", "red"))
         return
 
-    await ctx.delete()
+    try:
+        await ctx.delete()
+    except:
+        print("Missing manage messages permission on server id: " + str(ctx.guild.id))
+
     await target_channel.send(embed = _embedMessage.create(title, content, "green"))
 
     return
