@@ -1,10 +1,12 @@
-from commands import _embedMessage, _checkrole, _util, _mongoFunctions
-from discord.utils import get
-from ._util import parse_message
 import discord
+from discord.utils import get
+
+from commands import _embedMessage, _checkrole, _util, _mongoFunctions
+from ._util import parse_message
 
 
-async def lockdown(ctx: discord.message, client: discord.client):
+async def lockdown(ctx: discord.Message, client: discord.Client):
+    # Checks if user is admin or bot owner
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         replyEmbed = _embedMessage.create("Lockdown Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -16,23 +18,23 @@ async def lockdown(ctx: discord.message, client: discord.client):
         try:
             role = get(ctx.guild.roles, name = args[1])
         except:
-            replyEmbed = _embedMessage.create("Lockdown reply", "Invalid Role", "red")
+            replyEmbed = _embedMessage.create("Lockdown Reply", "Invalid Role", "red")
             await ctx.channel.send(embed = replyEmbed)
             return
         replyEmbed = _embedMessage.create("Lockdown Reply", "Channel Locked for {}".format(args[1]), "green")
         await ctx.channel.send(embed = replyEmbed)
 
-        #await ctx.channel.set_permissions(role, send_messages = False, read_messages = True)
-        perms = ctx.channel.overwrites_for(role) #Use a permissions overwrite object
+        # await ctx.channel.set_permissions(role, send_messages = False, read_messages = True)
+        perms = ctx.channel.overwrites_for(role)  # Use a permissions overwrite object
         perms.send_messages = False
-        await ctx.channel.set_permissions(role, overwrite=perms)
+        await ctx.channel.set_permissions(role, overwrite = perms)
 
     else:
-        replyEmbed = _embedMessage.create("Lockdown reply", "Error 404: Something went wrong", "red")
+        replyEmbed = _embedMessage.create("Lockdown Reply", "This command needs an argument for the role.", "red")
         await ctx.channel.send(embed = replyEmbed)
 
 
-async def unlock(ctx: discord.message, client: discord.client):
+async def unlock(ctx: discord.Message, client: discord.Client):
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         replyEmbed = _embedMessage.create("Unlock Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -47,7 +49,7 @@ async def unlock(ctx: discord.message, client: discord.client):
 
     replyEmbed = _embedMessage.create("Unlock Reply", "Channel Unlocked for {}".format(args[1]), "green")
     await ctx.channel.send(embed = replyEmbed)
-    #await ctx.channel.set_permissions(role, send_messages = True, read_messages = True)
-    perms = ctx.channel.overwrites_for(role) #Use a permissions overwrite object
+    # await ctx.channel.set_permissions(role, send_messages = True, read_messages = True)
+    perms = ctx.channel.overwrites_for(role)  # Use a permissions overwrite object
     perms.send_messages = True
-    await ctx.channel.set_permissions(role, overwrite=perms)
+    await ctx.channel.set_permissions(role, overwrite = perms)

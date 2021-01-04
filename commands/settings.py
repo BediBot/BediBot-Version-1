@@ -1,7 +1,10 @@
+import discord
+
 from commands import _embedMessage, _checkrole, _mongoFunctions, _util
 
 
-async def settings(ctx, client):
+async def settings(ctx: discord.Message, client: discord.Client):
+    # Checks if user is admin or bot owner
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -44,5 +47,3 @@ async def settings(ctx, client):
     _embedMessage.add_field(message, "Required Quote Reactions for Approval", _mongoFunctions.get_settings(ctx.guild.id)['required_quote_reactions'], False)
 
     await ctx.channel.send(embed = message)
-
-    return

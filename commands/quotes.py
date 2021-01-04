@@ -6,7 +6,7 @@ sweat_smile = "😅"
 embed_field_max_char = 1024
 
 
-async def add_quote(ctx: discord.message, client: discord.client):
+async def add_quote(ctx: discord.Message, client: discord.Client):
     if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id) and _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         replyEmbed = _embedMessage.create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -27,7 +27,7 @@ async def add_quote(ctx: discord.message, client: discord.client):
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = _mongoFunctions.get_settings(ctx.guild.id)['reaction_emoji']))
 
 
-async def get_quotes(ctx: discord.message, client: discord.client):
+async def get_quotes(ctx: discord.Message, client: discord.Client):
     args = _util.parse_message(ctx.content)
     if len(args) != 3 and len(args) != 2:
         await ctx.channel.send(embed = _embedMessage.create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuotes Bedi 2", "red"))
@@ -52,7 +52,8 @@ async def get_quotes(ctx: discord.message, client: discord.client):
         await ctx.channel.send(embed = _embedMessage.create("GetQuotes Reply", "Invalid Syntax! You need integers", "red"))
 
 
-async def remove_quote(ctx: discord.message, client: discord.client):
+async def remove_quote(ctx: discord.Message, client: discord.Client):
+    # Checks if user is admin or bot owner
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         replyEmbed = _embedMessage.create("RemoveQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -73,7 +74,7 @@ async def remove_quote(ctx: discord.message, client: discord.client):
     _mongoFunctions.delete_quote(ctx.guild.id, args[1], args[2])
 
 
-async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User):
+async def quotes_reaction_handler(reaction: discord.Reaction, user: discord.User):
     # if isinstance(reaction.emoji, str):
     # i think this means its a discord emoji
     # await reaction.message.channel.send("string")
@@ -96,7 +97,7 @@ async def quotes_reaction_handler(reaction: discord.reaction, user: discord.User
 
                 contentArr = reaction.message.embeds[0].description.split(" ")
                 newContent = " ".join(contentArr[1:])
-                print(newContent)
+                # print(newContent)
                 if res:
                     embed = _embedMessage.create("Quote Reply", "Approved: " + newContent, "blue")
                     await reaction.message.edit(embed = embed)
