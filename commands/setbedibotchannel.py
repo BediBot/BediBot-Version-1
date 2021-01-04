@@ -1,14 +1,16 @@
+import discord
+
 from commands import _embedMessage, _mongoFunctions, _dueDateMessage, _checkrole, _util
 
 
-async def set_bedi_bot_channel(ctx, client):
+async def set_bedi_bot_channel(ctx: discord.Message, client: discord.Client):
+    # Checks if user is admin or bot owner
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         replyEmbed = _embedMessage.create("SetBediBotChannel Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
     await ctx.channel.purge(limit = None)
-    await ctx.channel.send(embed = _embedMessage.create("SetBediBotChannel Reply", "The channel has been set!", "blue"))
 
     if _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
         dueDateEmbeds = {}
@@ -24,4 +26,5 @@ async def set_bedi_bot_channel(ctx, client):
 
         await _dueDateMessage.edit_due_date_message(client)
 
+    # Purge all unpinned messages
     await ctx.channel.purge(limit = None, check = lambda msg: not msg.pinned)

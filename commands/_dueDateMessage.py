@@ -21,10 +21,10 @@ async def edit_due_date_message(client: discord.Client):
 
             for stream in guild_list[guild_dict]['streams']:
                 try:
-                    await edit_schedule_embed(stream, courses, guild_id, guild_object, channel_id)
+                    await edit_due_date_embed(stream, courses, guild_id, guild_object, channel_id)
                 except:
                     print("Error in edit_schedule_embed")
-                    print("server is" + str(guild))
+                    print("server id: " + str(guild_dict))
 
 
 async def edit_due_date_embed(stream: int, courses: list[str], guild_id: int, guild: discord.Guild, channel_id: int):
@@ -71,5 +71,5 @@ async def edit_due_date_embed(stream: int, courses: list[str], guild_id: int, gu
     await due_date_message.edit(embed = message_embed)
 
 
-def update_due_dates(guild_id):
+def update_due_dates(guild_id: int):
     _mongoFunctions.remove_due_dates_passed(guild_id)

@@ -1,8 +1,11 @@
 import datetime
-from commands import _mongoFunctions, _embedMessage, _dateFunctions, _checkrole
+
+import discord
+
+from commands import _mongoFunctions, _embedMessage, _dateFunctions
 
 
-async def set_birthday(ctx, client):
+async def set_birthday(ctx: discord.Message, client: discord.Client):
     if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id) and _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         replyEmbed = _embedMessage.create("SetBirthday Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -25,7 +28,7 @@ async def set_birthday(ctx, client):
 
     if error_check == 1:
         await ctx.channel.send(
-            embed = _embedMessage.create("SetBirthday Reply", "The syntax is invalid! Make sure it is in the format YYYY MM DD\nEx: $setbirthday 2002 01 01", "red"))
+            embed = _embedMessage.create("SetBirthday Reply", "The syntax is invalid! Make sure it is in the format YYYY MM DD\nEx: $setbirthday 2002 07 26", "red"))
         return
     if error_check == 2:
         await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "The date is invalid, please ensure that this is a valid date.", "red"))
@@ -36,5 +39,3 @@ async def set_birthday(ctx, client):
     await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "Your birthday has been set!", "blue"))
 
     _mongoFunctions.set_users_birthday(ctx.author.id, datetime.datetime.strptime(birth_date_string, "%Y-%m-%d"))
-
-    return

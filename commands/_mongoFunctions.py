@@ -59,7 +59,7 @@ async def update_guilds(client):
         guild_list = list(Guilds.find({}))
         for guild in guild_list:
             if guild['_id'] == change['documentKey']['_id']:
-                Settings_Cache[str(guild['guild_id'])]['settings'] = guild
+                Settings_Cache[str(guild['guild_id'])] = guild
                 await _scheduling.reschedule_jobs(client)
                 break
 

@@ -1,8 +1,9 @@
 import discord
-from commands import _mongoFunctions, _embedMessage, _checkrole
+
+from commands import _mongoFunctions, _embedMessage
 
 
-async def unverify(ctx, client):
+async def unverify(ctx: discord.Message, client: discord.Client):
     if not _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         replyEmbed = _embedMessage.create("Confirm Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -23,4 +24,3 @@ async def unverify(ctx, client):
                 await ctx.author.remove_roles(role)
             except:
                 print("this didnt work LOL")
-    return

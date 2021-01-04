@@ -2,13 +2,21 @@ import asyncio
 import datetime
 import re
 
+import discord
+
 from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMessage, _checkrole, _util
 
 
-async def add_due_date(ctx, client):
+async def add_due_date(ctx: discord.Message, client: discord.Client):
     global course, due_date_type, stream, time, title, year, month, day
+
+    # How long to wait for user response before timeout
     wait_timeout = 60.0
-    sleep_time = 2
+
+    # How long (seconds) the user has to read the response before the next question is asked
+    sleep_time = 3
+
+    # Checks if user is admin or bot owner
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
         return
@@ -17,6 +25,7 @@ async def add_due_date(ctx, client):
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Due Dates are not enabled on this server.", "red"))
         return
 
+    # Checking function to determine if responses are sent by initial user in initial channel
     def check(message):
         return message.author == ctx.author and message.channel == ctx.channel
 
@@ -57,6 +66,7 @@ async def add_due_date(ctx, client):
             else:
                 break
 
+    # Doesn't bother asking for stream if the server only has one stream configured
     if len(_mongoFunctions.get_settings(ctx.guild.id)['streams']) == 1:
         stream = _mongoFunctions.get_settings(ctx.guild.id)['streams'][0]
     else:
@@ -128,7 +138,9 @@ async def add_due_date(ctx, client):
             return
         else:
             time = time_message.content
-            match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)  # Using regex to check if time format is valid
+
+            # Using regex to check if time format is valid
+            match = re.match('^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', time)
 
             if time == "None":
                 break
@@ -153,6 +165,7 @@ async def add_due_date(ctx, client):
         await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
     else:
+        # Since its possible that the time object was already turned into a list, we do this check to only convert it to a list if its a string
         if type(time) is str:
             time = time.split(':')
 
@@ -166,4 +179,3 @@ async def add_due_date(ctx, client):
         await response_message.edit(embed = _embedMessage.create("AddDueDate Reply", "Your due date has been added!", "blue"))
 
     await _dueDateMessage.edit_due_date_message(client)
-    return
