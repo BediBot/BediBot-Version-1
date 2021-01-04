@@ -27,7 +27,7 @@ async def edit_due_date_message(client: discord.Client):
                     print("server id: " + str(guild_dict))
 
 
-async def edit_due_date_embed(stream: int, courses: list[str], guild_id: int, guild: discord.Guild, channel_id: int):
+async def edit_due_date_embed(stream: int, courses: list, guild_id: int, guild: discord.Guild, channel_id: int):
     channel = guild.get_channel(channel_id)
 
     message_id = _mongoFunctions.get_settings(guild_id)['stream_' + str(stream) + '_message_id']
