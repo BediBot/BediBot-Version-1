@@ -1,5 +1,5 @@
 # BediBot
-Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 500+ users in both official and unofficial contexts.
+Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 1k+ users in both official and unofficial contexts.
 
 Key Features
 ========
