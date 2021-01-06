@@ -6,7 +6,7 @@ from commands import _embedMessage
 async def ping(ctx: discord.Message, client: discord.Client):
     member_count = 0
 
-    for user in client.users:
+    for user in client.get_all_members():
         if not user.bot:
             member_count += 1
 
