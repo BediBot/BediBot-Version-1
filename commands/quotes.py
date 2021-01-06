@@ -74,33 +74,40 @@ async def remove_quote(ctx: discord.Message, client: discord.Client):
     _mongoFunctions.delete_quote(ctx.guild.id, args[1], args[2])
 
 
-async def quotes_reaction_handler(reaction: discord.Reaction, user: discord.User):
+async def quotes_reaction_handler(reaction_payload: discord.RawReactionActionEvent, message: discord.Message):
     # if isinstance(reaction.emoji, str):
     # i think this means its a discord emoji
     # await reaction.message.channel.send("string")
 
-    if isinstance(reaction.emoji, discord.Emoji):
+    if reaction_payload.emoji.is_custom_emoji:
         # await reaction.message.channel.send("emoji")
         # print(reaction.emoji.name)
         # emojis from this server
 
-        if reaction.emoji.id == discord.utils.get(reaction.message.guild.emojis, name = _mongoFunctions.get_settings(reaction.message.guild.id)['reaction_emoji']).id:
-            if not user.mention in reaction.message.embeds[0].description:
-                embed = _embedMessage.create("AddQuote Reply", reaction.message.embeds[0].description + " " + user.mention, "blue")
-                await reaction.message.edit(embed = embed)
+        if reaction_payload.emoji.id == discord.utils.get(message.guild.emojis, name = _mongoFunctions.get_settings(message.guild.id)['reaction_emoji']).id:
+            if reaction_payload.member.mention not in message.embeds[0].description:
+                embed = _embedMessage.create("AddQuote Reply", message.embeds[0].description + " " + reaction_payload.member.mention, "blue")
+                await message.edit(embed = embed)
 
-            if reaction.count >= _mongoFunctions.get_settings(reaction.message.guild.id)['required_quote_reactions']:
-                args = _util.parse_message(reaction.message.embeds[0].description)
+            reaction_object = None
+
+            for reaction in message.reactions:
+                if reaction.emoji.id == reaction.emoji.id:
+                    reaction_object = reaction
+                    break
+
+            if reaction_object.count >= _mongoFunctions.get_settings(message.guild.id)['required_quote_reactions']:
+                args = _util.parse_message(message.embeds[0].description)
                 quote = args[1]
                 quotedPerson = args[3]
-                res = _mongoFunctions.insert_quote(guild_id = reaction.message.guild.id, quoted_person = quotedPerson, quote = quote)
+                res = _mongoFunctions.insert_quote(guild_id = message.guild.id, quoted_person = quotedPerson, quote = quote)
 
-                contentArr = reaction.message.embeds[0].description.split(" ")
+                contentArr = message.embeds[0].description.split(" ")
                 newContent = " ".join(contentArr[1:])
-                # print(newContent)
+
                 if res:
                     embed = _embedMessage.create("Quote Reply", "Approved: " + newContent, "blue")
-                    await reaction.message.edit(embed = embed)
+                    await message.edit(embed = embed)
                 else:
                     embed = _embedMessage.create("Quote Reply", "Failed to Connect to DB: " + newContent, "blue")
-                    await reaction.message.edit(embed = embed)
+                    await message.edit(embed = embed)
