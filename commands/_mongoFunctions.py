@@ -86,7 +86,7 @@ def get_settings(guild_id: int) -> dict:
                             "birthday_time": "00:00",
                             "courses": ["Add", "Some", "Courses"],
                             "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
-                            "streams": [4, 8],
+                            "streams": ["4", "8"],
                             "reaction_emoji": "Default Reaction Emoji",
                             "required_quote_reactions": 4
                             }
