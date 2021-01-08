@@ -64,35 +64,43 @@ async def update_guilds(client):
                 break
 
 
+def update_setting(guild_id: int, setting: str, new_value):
+    Guilds.update_one({'guild_id': int(guild_id)}, {'$set': {setting: new_value}})
+
+
 # Returns a dictionary containing the settings for the guild. If the settings do not exist, inserts default settings for the guild into the collection and the cache
 def get_settings(guild_id: int) -> dict:
     try:
         return Settings_Cache[str(guild_id)]
     except KeyError:
-        default_settings = {"guild_id": guild_id,
-                            "timezone": "America/Toronto",
-                            "admin_role": "admin",
-                            "channel_id": 0,
-                            "verification_enabled": False,
-                            "verified_role": "Verified",
-                            "birthday_announcements_enabled": True,
-                            "morning_announcements_enabled": True,
-                            "due_dates_enabled": True,
-                            "last_announcement_time": None,
-                            "announcement_role": "Bedi Follower",
-                            "announcement_quoted_person": "bedi",
-                            "announcement_time": "08:30",
-                            "birthday_role": "Bedi's Favourite",
-                            "birthday_time": "00:00",
-                            "courses": ["Add", "Some", "Courses"],
-                            "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
-                            "streams": ["4", "8"],
-                            "reaction_emoji": "Default Reaction Emoji",
-                            "required_quote_reactions": 4
-                            }
-        Guilds.insert_one(default_settings)
-        Settings_Cache[str(guild_id)] = default_settings
+        generate_default_settings(guild_id)
         return Settings_Cache[str(guild_id)]
+
+
+def generate_default_settings(guild_id: int):
+    default_settings = {"guild_id": guild_id,
+                        "timezone": "America/Toronto",
+                        "admin_role": "admin",
+                        "channel_id": 0,
+                        "verification_enabled": False,
+                        "verified_role": "Verified",
+                        "birthday_announcements_enabled": True,
+                        "morning_announcements_enabled": True,
+                        "due_dates_enabled": True,
+                        "last_announcement_time": None,
+                        "announcement_role": "Bedi Follower",
+                        "announcement_quoted_person": "bedi",
+                        "announcement_time": "08:30",
+                        "birthday_role": "Bedi's Favourite",
+                        "birthday_time": "00:00",
+                        "courses": ["Add", "Some", "Courses"],
+                        "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
+                        "streams": ["4", "8"],
+                        "reaction_emoji": "Default Reaction Emoji",
+                        "required_quote_reactions": 4
+                        }
+    Guilds.insert_one(default_settings)
+    Settings_Cache[str(guild_id)] = default_settings
 
 
 def get_guilds_information() -> dict:

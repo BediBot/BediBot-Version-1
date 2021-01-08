@@ -17,7 +17,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
     try:
         channel_name = ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['channel_id'])).mention
     except:
-        channel_name = "Not set"
+        channel_name = "Not set. Run $setbedibotchannel in a channel to set."
 
     _embedMessage.add_field(message, "Bedi Bot Channel", channel_name, False)
     _embedMessage.add_field(message, "Admin Role", _mongoFunctions.get_settings(ctx.guild.id)['admin_role'], False)
