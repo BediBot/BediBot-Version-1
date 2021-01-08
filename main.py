@@ -64,12 +64,15 @@ async def on_message(ctx):
 
 
 @client.event
-async def on_reaction_add(reaction, user):
-    if user.bot:
+async def on_raw_reaction_add(reaction_payload: discord.RawReactionActionEvent):
+    if reaction_payload.member.bot:
         return
-    if reaction.message.author == client.user:
-        if reaction.message.embeds[0].description.split(" ")[0] in reactionHandlers:
-            await reactionHandlers[reaction.message.embeds[0].description.split(" ")[0]](reaction, user)
+
+    message = await client.get_channel(reaction_payload.channel_id).fetch_message(reaction_payload.message_id)
+
+    if message.author == client.user:
+        if message.embeds[0].description.split(" ")[0] in reactionHandlers:
+            await reactionHandlers[message.embeds[0].description.split(" ")[0]](reaction_payload, message)
 
 
 if __name__ == "__main__":
