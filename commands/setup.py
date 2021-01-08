@@ -286,5 +286,5 @@ async def setup(ctx: discord.Message, client: discord.Client):
             _mongoFunctions.update_setting(ctx.guild.id, "required_quote_reactions", int(reaction_number_string))
             break
 
-    await response_message.edit(embed = _embedMessage.create("Setup Reply", "Guild has been setup. Make sure to run $setbedibotchannel in a view-only channel if needed.", "blue"))
+    await ctx.channel.send(embed = _embedMessage.create("Setup Reply", "Guild has been setup. Make sure to run $setbedibotchannel in a view-only channel if needed.", "blue"))
     await settings(ctx, client)
