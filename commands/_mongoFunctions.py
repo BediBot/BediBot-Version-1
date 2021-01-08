@@ -84,6 +84,7 @@ def generate_default_settings(guild_id: int):
                         "channel_id": 0,
                         "verification_enabled": False,
                         "verified_role": "Verified",
+                        "email_domain": "@uwaterloo.ca",
                         "birthday_announcements_enabled": True,
                         "morning_announcements_enabled": True,
                         "due_dates_enabled": True,
