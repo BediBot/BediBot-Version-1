@@ -143,6 +143,7 @@ def is_user_id_linked_to_verified_user_anywhere(guild_id: int, user_id: int) -> 
 
 
 # Gets the user document from a verified user's ID (Only call this if you have confirmed that the user is verified in at least one guild with the same email domain.)
+# Otherwise, it will return None
 def get_user_doc_from_verified_user_id(guild_id: int, user_id: int) -> dict:
     for guild in get_guilds_information():
         coll = GuildInformation.get_collection("a" + str(guild) + ".VerifiedUsers")
