@@ -18,8 +18,15 @@ async def verify(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
-    if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
+    if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Verify Reply", "Invalid Permissions - you are already verified!\nIf this is a mistake, contact a dev", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
+    if _mongoFunctions.is_user_id_linked_to_verified_user_anywhere(ctx.guild.id, ctx.author.id):
+        user_doc = _mongoFunctions.get_user_doc_from_verified_user_id(ctx.guild.id, ctx.author.id)
+        _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, user_doc['uw_id'])
+        replyEmbed = _embedMessage.create("Verify Reply", "You are already verified on another server, so you've been automatically verified.", "blue")
         await ctx.channel.send(embed = replyEmbed)
         return
 
