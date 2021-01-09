@@ -8,6 +8,11 @@ from commands import _embedMessage, _mongoFunctions, _dateFunctions, _dueDateMes
 
 
 async def add_due_date(ctx: discord.Message, client: discord.Client):
+    if not _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id) and _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
+        replyEmbed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     global course, due_date_type, stream, time, title, year, month, day
 
     # How long to wait for user response before timeout
@@ -15,11 +20,6 @@ async def add_due_date(ctx: discord.Message, client: discord.Client):
 
     # How long (seconds) the user has to read the response before the next question is asked
     sleep_time = 3
-
-    # Checks if user is admin or bot owner
-    if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
-        await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Invalid Permissions", "red"))
-        return
 
     if not _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
         await ctx.channel.send(embed = _embedMessage.create("AddDueDate Reply", "Due Dates are not enabled on this server.", "red"))
