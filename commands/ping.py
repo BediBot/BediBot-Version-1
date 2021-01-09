@@ -1,16 +1,10 @@
 import discord
 
-from commands import _embedMessage
+from commands import _embedMessage, _util
 
 
 async def ping(ctx: discord.Message, client: discord.Client):
-    member_count = 0
-
-    for user in client.get_all_members():
-        if not user.bot:
-            member_count += 1
-
-    guild_count = len(client.guilds)
-
-    message = _embedMessage.create("Ping Reply", "Pong! **{0}ms**\n Guilds: **{1}**\n Users: **{2}**".format(int(client.latency * 1000), guild_count, member_count), "blue")
+    message = _embedMessage.create("Ping Reply",
+                                   "Pong! **{0}ms**\n Guilds: **{1}**\n Users: **{2}**".format(int(client.latency * 1000), _util.get_guild_count(client),
+                                                                                               _util.get_member_count(client)), "blue")
     await ctx.channel.send(embed = message)
