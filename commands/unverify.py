@@ -9,14 +9,14 @@ async def unverify(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
-    if not _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
+    if not _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Unverify Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
     user_id = ctx.author.id
 
-    if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, user_id):
+    if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, user_id):
         _mongoFunctions.remove_verified_user(ctx.guild.id, user_id)
         await ctx.channel.send(embed = _embedMessage.create("Unverify Reply", "You have been unverified", "blue"))
         for role in ctx.author.roles:

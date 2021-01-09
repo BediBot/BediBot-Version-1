@@ -84,6 +84,7 @@ def generate_default_settings(guild_id: int):
                         "channel_id": 0,
                         "verification_enabled": False,
                         "verified_role": "Verified",
+                        "email_domain": "@uwaterloo.ca",
                         "birthday_announcements_enabled": True,
                         "morning_announcements_enabled": True,
                         "due_dates_enabled": True,
@@ -124,12 +125,31 @@ def is_uw_id_linked_to_pending_verification_user(guild_id: int, uw_id: str) -> b
         return True
 
 
-def is_user_id_linked_to_verified_user(guild_id: int, user_id: int) -> bool:
+# Checks if user id is linked to a verified user in a specific guild
+def is_user_id_linked_to_verified_user_in_guild(guild_id: int, user_id: int) -> bool:
     coll = GuildInformation.get_collection("a" + str(guild_id) + ".VerifiedUsers")
     if coll.find_one({"user_id": int(user_id)}) is None:
         return False
     else:
         return True
+
+
+# Checks if user id is linked to a verified user in any guild with the same email domain
+def is_user_id_linked_to_verified_user_anywhere(guild_id: int, user_id: int) -> bool:
+    for guild in Settings_Cache:
+        if is_user_id_linked_to_verified_user_in_guild(int(guild), user_id) and Settings_Cache[guild]['email_domain'] == Settings_Cache[str(guild_id)]['email_domain']:
+            return True
+    return False
+
+
+# Gets the user document from a verified user's ID (Only call this if you have confirmed that the user is verified in at least one guild with the same email domain.)
+# Otherwise, it will return None
+def get_user_doc_from_verified_user_id(guild_id: int, user_id: int) -> dict:
+    for guild in get_guilds_information():
+        coll = GuildInformation.get_collection("a" + str(guild) + ".VerifiedUsers")
+        user_doc = coll.find_one({"user_id": int(user_id)})
+        if user_doc is not None and Settings_Cache[guild]['email_domain'] == Settings_Cache[str(guild_id)]['email_domain']:
+            return user_doc
 
 
 def remove_verified_user(guild_id: int, user_id: int) -> bool:

@@ -1,6 +1,6 @@
 import discord
 
-from commands import _embedMessage
+from commands import _embedMessage, _mongoFunctions
 
 commandPrefix2 = "$"
 
@@ -21,7 +21,7 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                             "Allows you to set your birthday and let the server know when to embarrass you :D\nEx: " + commandPrefix2 + "setbirthday 2001 01 01", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "unverify",
                             "Unverifies you from the server. Note that this does NOT remove the associated email address from your discord user ID", False)
-    _embedMessage.add_field(helpMessage, commandPrefix2 + "verify userID@uwaterloo.ca",
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "verify userID{0}".format(_mongoFunctions.get_settings(ctx.guild.id)['email_domain']),
                             "Allows you to verify yourself as a UWaterloo Student and access the server\nEx: " + commandPrefix2 + "$verify g0ose@uwaterloo.ca", False)
     _embedMessage.add_field(helpMessage, "Admin Commands", "Admin Commands are listed below. They cannot be used without the admin or bot dev role\n/**********************/",
                             False)

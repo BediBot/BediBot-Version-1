@@ -74,6 +74,20 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 _mongoFunctions.update_setting(ctx.guild.id, "verified_role", verified_role_string)
                 break
 
+        while True:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the verification email domain? (E.g. @uwaterloo.ca)", "blue"))
+            try:
+                email_domain_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+            except asyncio.TimeoutError:
+                await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+                return
+            else:
+                email_domain = email_domain_message.content
+                if email_domain.lower() == 'next':
+                    break
+                _mongoFunctions.update_setting(ctx.guild.id, "email_domain", email_domain)
+                break
+
     while True:
         await response_message.edit(embed = _embedMessage.create("Setup Reply", "Should Morning Announcements be Enabled (y/n)?", "blue"))
         try:
