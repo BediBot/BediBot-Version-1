@@ -23,7 +23,7 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                                 "Allows you to verify yourself as a UWaterloo Student and access the server\nEx: " + commandPrefix2 + "verify g0ose{0}".format(
                                     _mongoFunctions.get_settings(ctx.guild.id)['email_domain']), False)
         _embedMessage.add_field(verification_embed, commandPrefix2 + "unverify",
-                                "Unverifies you from the server. Note that this does NOT remove the associated email address from your discord user ID", False)
+                                "Unverifies you from the server.", False)
         _embedMessage.add_field(verification_embed, commandPrefix2 + "confirm code",
                                 "Allows you to enter in your 2FA verification code after you run the verify command\nEx: " + commandPrefix2 + "confirm 123456789", False)
         await ctx.channel.send(embed = verification_embed)
@@ -47,7 +47,7 @@ async def help_command(ctx: discord.Message, client: discord.Client):
         _embedMessage.add_field(admin_embed, commandPrefix2 + "removequote \"quote with spaces\" Name",
                                 "Removes a quote from the individual of your choice\nEx: " + commandPrefix2 + "removequote \"Life is Good\" Bedi", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "adminverify @Mention",
-                                "Manually verifies a user. Note that this does NOT add in a role and simply adds them to the database\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
+                                "Manually verifies a user.\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
                                 False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "lockdown role",
