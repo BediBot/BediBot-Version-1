@@ -64,35 +64,45 @@ async def update_guilds(client):
                 break
 
 
+def update_setting(guild_id: int, setting: str, new_value):
+    Guilds.update_one({'guild_id': int(guild_id)}, {'$set': {setting: new_value}})
+
+
 # Returns a dictionary containing the settings for the guild. If the settings do not exist, inserts default settings for the guild into the collection and the cache
 def get_settings(guild_id: int) -> dict:
     try:
         return Settings_Cache[str(guild_id)]
     except KeyError:
-        default_settings = {"guild_id": guild_id,
-                            "timezone": "America/Toronto",
-                            "admin_role": "admin",
-                            "channel_id": 0,
-                            "verification_enabled": False,
-                            "verified_role": "Verified",
-                            "birthday_announcements_enabled": True,
-                            "morning_announcements_enabled": True,
-                            "due_dates_enabled": True,
-                            "last_announcement_time": None,
-                            "announcement_role": "Bedi Follower",
-                            "announcement_quoted_person": "bedi",
-                            "announcement_time": "08:30",
-                            "birthday_role": "Bedi's Favourite",
-                            "birthday_time": "00:00",
-                            "courses": ["Add", "Some", "Courses"],
-                            "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
-                            "streams": ["4", "8"],
-                            "reaction_emoji": "Default Reaction Emoji",
-                            "required_quote_reactions": 4
-                            }
-        Guilds.insert_one(default_settings)
-        Settings_Cache[str(guild_id)] = default_settings
+        generate_default_settings(guild_id)
         return Settings_Cache[str(guild_id)]
+
+
+def generate_default_settings(guild_id: int):
+    default_settings = {"guild_id": guild_id,
+                        "prefix": "$",
+                        "timezone": "America/Toronto",
+                        "admin_role": "admin",
+                        "channel_id": 0,
+                        "verification_enabled": False,
+                        "verified_role": "Verified",
+                        "email_domain": "@uwaterloo.ca",
+                        "birthday_announcements_enabled": True,
+                        "morning_announcements_enabled": True,
+                        "due_dates_enabled": True,
+                        "last_announcement_time": None,
+                        "announcement_role": "Bedi Follower",
+                        "announcement_quoted_person": "bedi",
+                        "announcement_time": "08:30",
+                        "birthday_role": "Bedi's Favourite",
+                        "birthday_time": "00:00",
+                        "courses": ["Add", "Some", "Courses"],
+                        "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
+                        "streams": ["4", "8"],
+                        "reaction_emoji": "Default Reaction Emoji",
+                        "required_quote_reactions": 4
+                        }
+    Guilds.insert_one(default_settings)
+    Settings_Cache[str(guild_id)] = default_settings
 
 
 def get_guilds_information() -> dict:
@@ -116,12 +126,31 @@ def is_uw_id_linked_to_pending_verification_user(guild_id: int, uw_id: str) -> b
         return True
 
 
-def is_user_id_linked_to_verified_user(guild_id: int, user_id: int) -> bool:
+# Checks if user id is linked to a verified user in a specific guild
+def is_user_id_linked_to_verified_user_in_guild(guild_id: int, user_id: int) -> bool:
     coll = GuildInformation.get_collection("a" + str(guild_id) + ".VerifiedUsers")
     if coll.find_one({"user_id": int(user_id)}) is None:
         return False
     else:
         return True
+
+
+# Checks if user id is linked to a verified user in any guild with the same email domain
+def is_user_id_linked_to_verified_user_anywhere(guild_id: int, user_id: int) -> bool:
+    for guild in Settings_Cache:
+        if is_user_id_linked_to_verified_user_in_guild(int(guild), user_id) and Settings_Cache[guild]['email_domain'] == Settings_Cache[str(guild_id)]['email_domain']:
+            return True
+    return False
+
+
+# Gets the user document from a verified user's ID (Only call this if you have confirmed that the user is verified in at least one guild with the same email domain.)
+# Otherwise, it will return None
+def get_user_doc_from_verified_user_id(guild_id: int, user_id: int) -> dict:
+    for guild in get_guilds_information():
+        coll = GuildInformation.get_collection("a" + str(guild) + ".VerifiedUsers")
+        user_doc = coll.find_one({"user_id": int(user_id)})
+        if user_doc is not None and Settings_Cache[guild]['email_domain'] == Settings_Cache[str(guild_id)]['email_domain']:
+            return user_doc
 
 
 def remove_verified_user(guild_id: int, user_id: int) -> bool:

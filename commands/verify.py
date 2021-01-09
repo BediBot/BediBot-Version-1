@@ -18,8 +18,20 @@ async def verify(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
-    if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
-        replyEmbed = _embedMessage.create("Verify Reply", "Invalid Permissions - you are already verified!\nIf this is a mistake, contact a dev", "red")
+    # This checks if the user is verified in the current guild
+    if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
+        replyEmbed = _embedMessage.create("Verify Reply",
+                                          "Invalid Permissions - you are already verified! Run $unverify if you need to reverify yourself here."
+                                          "\nIf this is a mistake, contact a dev",
+                                          "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
+    # Checks if the user is verified in ANY guild with the same verification email domain
+    if _mongoFunctions.is_user_id_linked_to_verified_user_anywhere(ctx.guild.id, ctx.author.id):
+        user_doc = _mongoFunctions.get_user_doc_from_verified_user_id(ctx.guild.id, ctx.author.id)
+        _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, user_doc['uw_id'])
+        replyEmbed = _embedMessage.create("Verify Reply", "You are already verified on another server, so you've been automatically verified.", "blue")
         await ctx.channel.send(embed = replyEmbed)
         return
 
@@ -31,7 +43,8 @@ async def verify(ctx: discord.Message, client: discord.Client):
 
     email_address = message_contents[1]
 
-    match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email_address) and email_address.endswith('@uwaterloo.ca')
+    match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email_address) and email_address.endswith(
+        _mongoFunctions.get_settings(ctx.guild.id)['email_domain'])
     uw_id = email_address[:email_address.rfind('@')]
 
     if not match:

@@ -20,7 +20,7 @@ async def confirm(ctx: discord.Message, client: discord.Client):
         return
 
     # Verified users can't run $confirm. They are already verified (duh)
-    if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
+    if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Confirm Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
