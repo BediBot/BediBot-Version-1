@@ -39,6 +39,7 @@ async def help_command(ctx: discord.Message, client: discord.Client):
     _embedMessage.add_field(helpMessage, commandPrefix2 + "setbedibotchannel",
                             "Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "settings", "Displays the guild's settings", False)
+    _embedMessage.add_field(helpMessage, commandPrefix2 + "setup", "This command will allow you to change the guild's settings.", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "unlock role", "Sets send message permissions to True for specified role\nEx: " + commandPrefix2 + "unlock " + "Tron",
                             False)
 
