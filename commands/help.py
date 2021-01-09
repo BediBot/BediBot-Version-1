@@ -58,5 +58,5 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                                 "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "setbedibotchannel",
                                 "Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
-        _embedMessage.add_field(admin_embed, commandPrefix2 + "settings", "ADMIN ONLY - Displays the guild's settings", False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "settings", "Displays the guild's settings", False)
         await ctx.channel.send(embed = admin_embed)
