@@ -25,7 +25,23 @@ async def setup(ctx: discord.Message, client: discord.Client):
         return message.author == ctx.author and message.channel == ctx.channel
 
     response_message = await ctx.channel.send(
-        embed = _embedMessage.create("Setup Reply", "What is the admin role? For any of these settings, if you wish to keep the current setting, type 'next'.", "blue"))
+        embed = _embedMessage.create("Setup Reply", "What should the prefix be (Default: $)? For any of these settings, if you wish to keep the current setting, type 'next'.",
+                                     "blue"))
+
+    while True:
+        await response_message.edit(embed = _embedMessage.create("Setup Reply", "What should the prefix be (Default: $)? For any of these settings, "
+                                                                                "if you wish to keep the current setting, type 'next'.", "blue"))
+        try:
+            prefix_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+        except asyncio.TimeoutError:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            prefix = prefix_message.content
+            if prefix.lower() == 'next':
+                break
+            _mongoFunctions.update_setting(ctx.guild.id, "prefix", prefix)
+            break
 
     while True:
         await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the admin role?", "blue"))

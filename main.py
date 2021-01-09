@@ -4,39 +4,35 @@ from dotenv import load_dotenv
 from commands import *
 from commands import _setBotStatus, _scheduling, _mongoFunctions
 
-command_prefix = "$"
-emote_prefix = "!"
-reaction_handler_prefix = "|"
-
-prefixes = [command_prefix, emote_prefix]
-
 commands = {
-    command_prefix + "verify": verify,
-    command_prefix + "confirm": confirm,
-    command_prefix + "unverify": unverify,
-    command_prefix + "setbirthday": set_birthday,
-    command_prefix + "addduedate": add_due_date,
-    command_prefix + "help": help_command,
-    command_prefix + "setbedibotchannel": set_bedi_bot_channel,
-    command_prefix + "ping": ping,
-    command_prefix + "parse": parse_command,
-    command_prefix + "addQuote": add_quote,
-    command_prefix + "addquote": add_quote,
-    command_prefix + "getQuotes": get_quotes,
-    command_prefix + "getquotes": get_quotes,
-    command_prefix + "getQuote": get_quotes,
-    command_prefix + "getquote": get_quotes,
-    command_prefix + "removequote": remove_quote,
-    command_prefix + "adminverify": admin_verify,
-    command_prefix + "removeduedate": remove_due_date,
-    command_prefix + "forcebirthdays": force_birthdays,
-    command_prefix + "say": say,
-    command_prefix + "lockdown": lockdown,
-    command_prefix + "unlock": unlock,
-    command_prefix + "settings": settings,
-    command_prefix + "getbirthdays": get_birthdays,
-    command_prefix + "setup": setup
+    "verify": verify,
+    "confirm": confirm,
+    "unverify": unverify,
+    "setbirthday": set_birthday,
+    "addduedate": add_due_date,
+    "help": help_command,
+    "setbedibotchannel": set_bedi_bot_channel,
+    "ping": ping,
+    "parse": parse_command,
+    "addQuote": add_quote,
+    "addquote": add_quote,
+    "getQuotes": get_quotes,
+    "getquotes": get_quotes,
+    "getQuote": get_quotes,
+    "getquote": get_quotes,
+    "removequote": remove_quote,
+    "adminverify": admin_verify,
+    "removeduedate": remove_due_date,
+    "forcebirthdays": force_birthdays,
+    "say": say,
+    "lockdown": lockdown,
+    "unlock": unlock,
+    "settings": settings,
+    "getbirthdays": get_birthdays,
+    "setup": setup
 }
+
+reaction_handler_prefix = "|"
 
 reactionHandlers = {
     reaction_handler_prefix: quotes_reaction_handler,
@@ -59,9 +55,12 @@ async def on_message(ctx):
     if ctx.author == client.user:
         return
 
-    if ctx.content[0] in prefixes:
-        if ctx.content.split(" ")[0] in commands:
-            await commands[ctx.content.split(" ")[0]](ctx, client)
+    prefix = _mongoFunctions.get_settings(ctx.guild.id)['prefix']
+
+    if ctx.content.startswith(prefix):
+        # Checks if the first word of the message's content (with the prefix removed) is in the dict of commands
+        if ctx.content.split(" ")[0][len(prefix):] in commands:
+            await commands[ctx.content.split(" ")[0][len(prefix):]](ctx, client)
 
 
 @client.event
