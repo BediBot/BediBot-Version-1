@@ -79,6 +79,7 @@ def get_settings(guild_id: int) -> dict:
 
 def generate_default_settings(guild_id: int):
     default_settings = {"guild_id": guild_id,
+                        "prefix": "$",
                         "timezone": "America/Toronto",
                         "admin_role": "admin",
                         "channel_id": 0,
