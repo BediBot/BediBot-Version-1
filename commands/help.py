@@ -28,22 +28,22 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                                 "Allows you to enter in your 2FA verification code after you run the verify command\nEx: " + commandPrefix2 + "confirm 123456789", False)
         await ctx.channel.send(embed = verification_embed)
 
-        if _mongoFunctions.get_settings(ctx.guild.id)['birthday_announcements_enabled']:
-            birthday_embed = _embedMessage.create("Birthday Commands", "Commands related to birthdays.", "green")
+    if _mongoFunctions.get_settings(ctx.guild.id)['birthday_announcements_enabled']:
+        birthday_embed = _embedMessage.create("Birthday Commands", "Commands related to birthdays.", "green")
         _embedMessage.add_field(birthday_embed, commandPrefix2 + "getbirthdays monthnumber",
                                 "Gets all birthdays for the specified month\nEx: " + commandPrefix2 + "getbirthdays 5", False)
         _embedMessage.add_field(birthday_embed, commandPrefix2 + "setbirthday YYYY MM DD",
                                 "Allows you to set your birthday and let the server know when to embarrass you :D\nEx: " + commandPrefix2 + "setbirthday 2001 01 01", False)
         await ctx.channel.send(embed = birthday_embed)
 
-        if _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
-            due_date_embed = _embedMessage.create("Due Date Commands", "Commands related to due dates.", "green")
+    if _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
+        due_date_embed = _embedMessage.create("Due Date Commands", "Commands related to due dates.", "green")
         _embedMessage.add_field(due_date_embed, commandPrefix2 + "addduedate",
                                 "Add's an assignment's due date to be counted down to\nEx: " + commandPrefix2 + "addduedate", False)
         await ctx.channel.send(embed = due_date_embed)
 
-        if _checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx):
-            admin_embed = _embedMessage.create("Admin Commands", "Commands that can only be run by those with the admin role.", "green")
+    if _checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx):
+        admin_embed = _embedMessage.create("Admin Commands", "Commands that can only be run by those with the admin role.", "green")
         _embedMessage.add_field(admin_embed, commandPrefix2 + "removequote \"quote with spaces\" Name",
                                 "Removes a quote from the individual of your choice\nEx: " + commandPrefix2 + "removequote \"Life is Good\" Bedi", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "adminverify @Mention",
