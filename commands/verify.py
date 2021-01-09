@@ -18,11 +18,16 @@ async def verify(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
+    # This checks if the user is verified in the current guild
     if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
-        replyEmbed = _embedMessage.create("Verify Reply", "Invalid Permissions - you are already verified!\nIf this is a mistake, contact a dev", "red")
+        replyEmbed = _embedMessage.create("Verify Reply",
+                                          "Invalid Permissions - you are already verified! Run $unverify if you need to reverify yourself here."
+                                          "\nIf this is a mistake, contact a dev",
+                                          "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
+    # Checks if the user is verified in ANY guild with the same verification email domain
     if _mongoFunctions.is_user_id_linked_to_verified_user_anywhere(ctx.guild.id, ctx.author.id):
         user_doc = _mongoFunctions.get_user_doc_from_verified_user_id(ctx.guild.id, ctx.author.id)
         _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, user_doc['uw_id'])
