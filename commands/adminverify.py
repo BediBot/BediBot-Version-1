@@ -29,4 +29,5 @@ async def admin_verify(ctx: discord.Message, client: discord.Client):
     user_id = mention.replace("<", "").replace(">", "").replace("@", "").replace("!", "")
 
     _mongoFunctions.admin_add_user_to_verified_users(ctx.guild.id, user_id)
+    await ctx.guild.get_member(user_id).add_roles(discord.utils.get(ctx.guild.roles, name = _mongoFunctions.get_settings(ctx.guild.id)['verified_role']))
     await ctx.channel.send(embed = _embedMessage.create("AdminVerify reply", mention + "has been verified", "blue"))
