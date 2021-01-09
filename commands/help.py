@@ -51,4 +51,5 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                             "ADMIN ONLY - Sets the channel which will be used for announcements\nWARNING: This clears the channel's history. Use with caution.", False)
     _embedMessage.add_field(helpMessage, commandPrefix2 + "settings", "ADMIN ONLY - Displays the guild's settings", False)
 
+
     await ctx.channel.send(embed = helpMessage)

@@ -10,6 +10,7 @@ async def set_bedi_bot_channel(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
+    _mongoFunctions.set_bedi_bot_channel_id(ctx.guild.id, ctx.channel.id)
     await ctx.channel.purge(limit = None)
 
     if _mongoFunctions.get_settings(ctx.guild.id)['due_dates_enabled']:
@@ -23,8 +24,6 @@ async def set_bedi_bot_channel(ctx: discord.Message, client: discord.Client):
             _mongoFunctions.set_due_date_message_id(ctx.guild.id, stream, dueDateMessages[stream].id)
 
         await _dueDateMessage.edit_due_date_message(client)
-
-    _mongoFunctions.set_bedi_bot_channel_id(ctx.guild.id, ctx.channel.id)
 
     # Purge all unpinned messages
     await ctx.channel.purge(limit = None, check = lambda msg: not msg.pinned)

@@ -17,7 +17,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
     try:
         channel_name = ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['channel_id'])).mention
     except:
-        channel_name = "Not set"
+        channel_name = "Not set. Run $setbedibotchannel in a channel to set."
 
     _embedMessage.add_field(message, "Bedi Bot Channel", channel_name, False)
     _embedMessage.add_field(message, "Admin Role", _mongoFunctions.get_settings(ctx.guild.id)['admin_role'], False)
@@ -25,6 +25,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
     _embedMessage.add_field(message, "Verification Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled'], False)
     if _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         _embedMessage.add_field(message, "Verified Role", _mongoFunctions.get_settings(ctx.guild.id)['verified_role'], False)
+        _embedMessage.add_field(message, "Verification Email Domain", _mongoFunctions.get_settings(ctx.guild.id)['email_domain'], False)
 
     _embedMessage.add_field(message, "Morning Announcements Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['morning_announcements_enabled'], False)
     if _mongoFunctions.get_settings(ctx.guild.id)['morning_announcements_enabled']:
