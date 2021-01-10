@@ -53,6 +53,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
         except:
             channel_name = "Not set. Run {0}setduedatechannel in a channel to set.".format(_mongoFunctions.get_settings(ctx.guild.id)['prefix'])
 
+
         _embedMessage.add_field(message, "Due Date Channel", channel_name, False)
         _embedMessage.add_field(message, "Streams", ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['streams']), False)
         _embedMessage.add_field(message, "Courses", ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['courses']), False)
