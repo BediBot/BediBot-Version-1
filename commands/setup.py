@@ -10,6 +10,8 @@ async def setup(ctx: discord.Message, client: discord.Client):
     # How long to wait for user response before timeout
     wait_timeout = 60.0
 
+    stop_embed = _embedMessage.create("Setup Reply", "Setup Stopped", "green")
+
     # Checks if user is admin or bot owner
     if not (ctx.author.guild_permissions.administrator or _util.author_is_bot_owner(ctx)):
         await ctx.channel.send(embed = _embedMessage.create("Setup Reply", "Invalid Permissions", "red"))
@@ -25,7 +27,8 @@ async def setup(ctx: discord.Message, client: discord.Client):
         return message.author == ctx.author and message.channel == ctx.channel
 
     response_message = await ctx.channel.send(
-        embed = _embedMessage.create("Setup Reply", "What should the prefix be (Default: $)? For any of these settings, if you wish to keep the current setting, type 'next'.",
+        embed = _embedMessage.create("Setup Reply", "What should the prefix be (Default: $)? For any of these settings, if you wish to keep the current setting, type 'next'. "
+                                                    "If you wish to stop the command at any time, type 'stop'.",
                                      "blue"))
 
     while True:
@@ -40,6 +43,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             prefix = prefix_message.content
             if prefix.lower() == 'next':
                 break
+            if prefix.lower() == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             _mongoFunctions.update_setting(ctx.guild.id, "prefix", prefix)
             break
 
@@ -54,6 +60,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             admin_role_string = admin_message.content
             if admin_role_string.lower() == 'next':
                 break
+            if admin_role_string.lower() == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             _mongoFunctions.update_setting(ctx.guild.id, "admin_role", admin_role_string)
             break
 
@@ -68,6 +77,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             verification_string = verification_message.content.lower()
             if verification_string == 'next':
                 break
+            if verification_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             if verification_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
                 _mongoFunctions.update_setting(ctx.guild.id, "verification_enabled", True)
 
@@ -87,6 +99,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 verified_role_string = verified_role_message.content
                 if verified_role_string.lower() == 'next':
                     break
+                if verified_role_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "verified_role", verified_role_string)
                 break
 
@@ -101,6 +116,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 email_domain = email_domain_message.content
                 if email_domain.lower() == 'next':
                     break
+                if email_domain.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "email_domain", email_domain)
                 break
 
@@ -115,6 +133,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             morning_announcements_string = morning_announcements_message.content.lower()
             if morning_announcements_string == 'next':
                 break
+            if morning_announcements_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             if morning_announcements_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
                 _mongoFunctions.update_setting(ctx.guild.id, "morning_announcements_enabled", True)
             else:
@@ -123,6 +144,24 @@ async def setup(ctx: discord.Message, client: discord.Client):
             break
 
     if _mongoFunctions.get_settings(ctx.guild.id)["morning_announcements_enabled"]:
+        while True:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the morning announcement channel?", "blue"))
+            try:
+                announcement_channel_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+            except asyncio.TimeoutError:
+                await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+                return
+            else:
+                announcement_channel_string = announcement_channel_message.content
+                if announcement_channel_string.lower() == 'next':
+                    break
+                if announcement_channel_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
+                announcement_channel_id = discord.utils.get(ctx.guild.channels, mention = announcement_channel_string).id
+                _mongoFunctions.update_setting(ctx.guild.id, "announcement_channel_id", announcement_channel_id)
+                break
+
         while True:
             await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the morning announcement time (HH:MM)?", "blue"))
             try:
@@ -134,6 +173,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 announcement_time_string = announcement_time_message.content
                 if announcement_time_string.lower() == 'next':
                     break
+                if announcement_time_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "announcement_time", announcement_time_string)
                 break
 
@@ -148,6 +190,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 announcement_quoted_person = announcement_quoted_person_message.content
                 if announcement_quoted_person.lower() == 'next':
                     break
+                if announcement_quoted_person.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "announcement_quoted_person", announcement_quoted_person)
                 break
 
@@ -165,6 +210,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 announcement_role_string = announcement_role_message.content
                 if announcement_role_string.lower() == 'next':
                     break
+                if announcement_role_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "announcement_role", announcement_role_string)
                 break
 
@@ -179,6 +227,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             birthday_announcements_string = birthday_announcements_message.content.lower()
             if birthday_announcements_string == 'next':
                 break
+            if birthday_announcements_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             if birthday_announcements_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
                 _mongoFunctions.update_setting(ctx.guild.id, "birthday_announcements_enabled", True)
             else:
@@ -186,6 +237,24 @@ async def setup(ctx: discord.Message, client: discord.Client):
             break
 
     if _mongoFunctions.get_settings(ctx.guild.id)["birthday_announcements_enabled"]:
+        while True:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the birthday announcement channel?", "blue"))
+            try:
+                birthday_channel_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+            except asyncio.TimeoutError:
+                await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+                return
+            else:
+                birthday_channel_string = birthday_channel_message.content
+                if birthday_channel_string.lower() == 'next':
+                    break
+                if birthday_channel_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
+                birthday_channel_id = discord.utils.get(ctx.guild.channels, mention = birthday_channel_string).id
+                _mongoFunctions.update_setting(ctx.guild.id, "birthday_channel_id", birthday_channel_id)
+                break
+
         while True:
             await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the birthday announcement time (HH:MM)? Most would do 00:00 here.", "blue"))
             try:
@@ -197,6 +266,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 birthday_time_string = birthday_time_message.content
                 if birthday_time_string.lower() == 'next':
                     break
+                if birthday_time_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "birthday_time", birthday_time_string)
                 break
 
@@ -214,6 +286,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 birthday_role_string = birthday_role_message.content
                 if birthday_role_string.lower() == 'next':
                     break
+                if birthday_role_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 _mongoFunctions.update_setting(ctx.guild.id, "birthday_role", birthday_role_string)
                 break
 
@@ -228,6 +303,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             due_dates_string = due_dates_message.content.lower()
             if due_dates_string == 'next':
                 break
+            if due_dates_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             if due_dates_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
                 _mongoFunctions.update_setting(ctx.guild.id, "due_dates_enabled", True)
 
@@ -248,6 +326,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 streams_string = streams_message.content
                 if streams_string.lower() == 'next':
                     break
+                if streams_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 streams = streams_string.split(' ')
                 _mongoFunctions.update_setting(ctx.guild.id, "streams", streams)
                 break
@@ -266,6 +347,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 courses_string = courses_message.content
                 if courses_string.lower() == 'next':
                     break
+                if courses_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 courses = _util.parse_message(courses_string)
                 _mongoFunctions.update_setting(ctx.guild.id, "courses", courses)
                 break
@@ -283,6 +367,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 due_date_types_string = due_date_types_message.content
                 if due_date_types_string.lower() == 'next':
                     break
+                if due_date_types_string.lower() == 'stop':
+                    await ctx.channel.send(embed = stop_embed)
+                    return
                 due_date_types = due_date_types_string.split(' ')
                 _mongoFunctions.update_setting(ctx.guild.id, "due_date_types", due_date_types)
                 break
@@ -299,6 +386,9 @@ async def setup(ctx: discord.Message, client: discord.Client):
             reaction_emoji_string = reaction_emoji_message.content
             if reaction_emoji_string.lower() == 'next':
                 break
+            if reaction_emoji_string.lower() == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             _mongoFunctions.update_setting(ctx.guild.id, "reaction_emoji", reaction_emoji_string)
             break
 
@@ -313,8 +403,12 @@ async def setup(ctx: discord.Message, client: discord.Client):
             reaction_number_string = reaction_number_message.content
             if reaction_number_string.lower() == 'next':
                 break
+            if reaction_number_string.lower() == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
             _mongoFunctions.update_setting(ctx.guild.id, "required_quote_reactions", int(reaction_number_string))
             break
 
-    await ctx.channel.send(embed = _embedMessage.create("Setup Reply", "Guild has been setup. Make sure to run $setbedibotchannel in a view-only channel if needed.", "blue"))
+    await ctx.channel.send(embed = _embedMessage.create("Setup Reply", "Guild has been setup. Make sure to run {0}setduedatechannel in a view-only channel if needed.".format(
+        _mongoFunctions.get_settings(ctx.guild.id)['prefix']), "blue"))
     await settings(ctx, client)

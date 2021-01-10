@@ -10,6 +10,6 @@ async def force_birthdays(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
         return
 
-    await _birthdayMessage.send_birthday_message(client, ctx.guild.id, _mongoFunctions.get_settings(ctx.guild.id)['channel_id'])
+    await _birthdayMessage.send_birthday_message(client, ctx.guild.id, _mongoFunctions.get_settings(ctx.guild.id)['birthday_channel_id'])
     await ctx.channel.send(embed = _embedMessage.create("ForceBirthdays Reply", "Birthdays have been **FORCED**", "blue"))
     return
