@@ -1,5 +1,5 @@
 # BediBot
-Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 1k+ users in both official and unofficial contexts.
+Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 2000+ users in both official and unofficial contexts.
 
 Key Features
 ========
@@ -7,6 +7,7 @@ Key Features
 - $addduedate: Adds due dates for assigments, tests, and reminders to a set channel
 - $setbirthday: Stores the birthday in a mongoDB that is checked daily to announce birthdays to promote team bonding
 - $addQuotes: Adds in a particular quote from a user
+- $lockdown: Prevents users from speaking in a text channel temporarily (in case of assessments)
 
 DEV INFORMATION
 ========
