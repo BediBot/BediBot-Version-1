@@ -17,7 +17,7 @@ async def edit_due_date_message(client: discord.Client):
             guild_object = client.get_guild(guild_id)
 
             courses = guild_list[guild_dict]['courses']
-            channel_id = guild_list[guild_dict]['channel_id']
+            channel_id = guild_list[guild_dict]['due_date_channel_id']
             try:
                 channel = guild_object.get_channel(channel_id)
                 for stream in guild_list[guild_dict]['streams']:
