@@ -31,6 +31,7 @@ async def verify(ctx: discord.Message, client: discord.Client):
     if _mongoFunctions.is_user_id_linked_to_verified_user_anywhere(ctx.guild.id, ctx.author.id):
         user_doc = _mongoFunctions.get_user_doc_from_verified_user_id(ctx.guild.id, ctx.author.id)
         _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, user_doc['uw_id'])
+        await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = _mongoFunctions.get_settings(ctx.guild.id)['verified_role']))
         replyEmbed = _embedMessage.create("Verify Reply", "You are already verified on another server, so you've been automatically verified.", "blue")
         await ctx.channel.send(embed = replyEmbed)
         return
