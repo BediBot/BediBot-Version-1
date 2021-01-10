@@ -28,7 +28,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
         try:
             channel_name = ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['announcement_channel_id'])).mention
         except:
-            channel_name = "Not set. Run $setup to set."
+            channel_name = "Not set. Run {0}setup to set.".format(_mongoFunctions.get_settings(ctx.guild.id)['prefix'])
 
         _embedMessage.add_field(message, "Morning Announcements Channel", channel_name, False)
         _embedMessage.add_field(message, "Daily Announcement Time", _mongoFunctions.get_settings(ctx.guild.id)['announcement_time'], False)
@@ -40,7 +40,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
         try:
             channel_name = ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['birthday_channel_id'])).mention
         except:
-            channel_name = "Not set. Run $setup to set."
+            channel_name = "Not set. Run {0}setup to set.".format(_mongoFunctions.get_settings(ctx.guild.id)['prefix'])
 
         _embedMessage.add_field(message, "Birthday Announcements Channel", channel_name, False)
         _embedMessage.add_field(message, "Birthday Announcement Time", _mongoFunctions.get_settings(ctx.guild.id)['birthday_time'], False)
@@ -51,7 +51,8 @@ async def settings(ctx: discord.Message, client: discord.Client):
         try:
             channel_name = ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['due_date_channel_id'])).mention
         except:
-            channel_name = "Not set. Run $setduedatechannel in a channel to set."
+            channel_name = "Not set. Run {0}setduedatechannel in a channel to set.".format(_mongoFunctions.get_settings(ctx.guild.id)['prefix'])
+
 
         _embedMessage.add_field(message, "Due Date Channel", channel_name, False)
         _embedMessage.add_field(message, "Streams", ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['streams']), False)
