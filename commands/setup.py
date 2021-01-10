@@ -124,6 +124,21 @@ async def setup(ctx: discord.Message, client: discord.Client):
 
     if _mongoFunctions.get_settings(ctx.guild.id)["morning_announcements_enabled"]:
         while True:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the morning announcement channel?", "blue"))
+            try:
+                announcement_channel_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+            except asyncio.TimeoutError:
+                await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+                return
+            else:
+                announcement_channel_string = announcement_channel_message.content
+                if announcement_channel_string.lower() == 'next':
+                    break
+                announcement_channel_id = discord.utils.get(ctx.guild.channels, mention = announcement_channel_string).id
+                _mongoFunctions.update_setting(ctx.guild.id, "announcement_channel_id", announcement_channel_id)
+                break
+
+        while True:
             await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the morning announcement time (HH:MM)?", "blue"))
             try:
                 announcement_time_message = await client.wait_for('message', timeout = wait_timeout, check = check)
@@ -186,6 +201,21 @@ async def setup(ctx: discord.Message, client: discord.Client):
             break
 
     if _mongoFunctions.get_settings(ctx.guild.id)["birthday_announcements_enabled"]:
+        while True:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the birthday announcement channel?", "blue"))
+            try:
+                birthday_channel_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+            except asyncio.TimeoutError:
+                await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+                return
+            else:
+                birthday_channel_string = birthday_channel_message.content
+                if birthday_channel_string.lower() == 'next':
+                    break
+                birthday_channel_id = discord.utils.get(ctx.guild.channels, mention = birthday_channel_string).id
+                _mongoFunctions.update_setting(ctx.guild.id, "birthday_channel_id", birthday_channel_id)
+                break
+
         while True:
             await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the birthday announcement time (HH:MM)? Most would do 00:00 here.", "blue"))
             try:
@@ -316,5 +346,6 @@ async def setup(ctx: discord.Message, client: discord.Client):
             _mongoFunctions.update_setting(ctx.guild.id, "required_quote_reactions", int(reaction_number_string))
             break
 
-    await ctx.channel.send(embed = _embedMessage.create("Setup Reply", "Guild has been setup. Make sure to run $setbedibotchannel in a view-only channel if needed.", "blue"))
+    await ctx.channel.send(embed = _embedMessage.create("Setup Reply", "Guild has been setup. Make sure to run {0}setduedatechannel in a view-only channel if needed.".format(
+        _mongoFunctions.get_settings(ctx.guild.id)['prefix']), "blue"))
     await settings(ctx, client)

@@ -11,7 +11,7 @@ commands = {
     "setbirthday": set_birthday,
     "addduedate": add_due_date,
     "help": help_command,
-    "setbedibotchannel": set_bedi_bot_channel,
+    "setduedatechannel": set_due_date_channel,
     "ping": ping,
     "parse": parse_command,
     "addQuote": add_quote,
@@ -29,7 +29,8 @@ commands = {
     "unlock": unlock,
     "settings": settings,
     "getbirthdays": get_birthdays,
-    "setup": setup
+    "setup": setup,
+    "forceannouncement": force_announcement
 }
 
 reaction_handler_prefix = "|"

@@ -82,24 +82,30 @@ def generate_default_settings(guild_id: int):
                         "prefix": "$",
                         "timezone": "America/Toronto",
                         "admin_role": "admin",
-                        "channel_id": 0,
+                        "reaction_emoji": "Default Reaction Emoji",
+                        "required_quote_reactions": 4,
+
                         "verification_enabled": False,
                         "verified_role": "Verified",
                         "email_domain": "@uwaterloo.ca",
+
                         "birthday_announcements_enabled": True,
+                        "birthday_channel_id": 0,
+                        "birthday_role": "Birthday",
+                        "birthday_time": "00:00",
+
                         "morning_announcements_enabled": True,
-                        "due_dates_enabled": True,
+                        "announcement_channel_id": 0,
                         "last_announcement_time": None,
                         "announcement_role": "Bedi Follower",
                         "announcement_quoted_person": "bedi",
                         "announcement_time": "08:30",
-                        "birthday_role": "Bedi's Favourite",
-                        "birthday_time": "00:00",
+
+                        "due_dates_enabled": True,
+                        "due_date_channel_id": 0,
                         "courses": ["Add", "Some", "Courses"],
                         "due_date_types": ["Assignment", "Test", "Quiz", "Exam", "Project", "Other"],
-                        "streams": ["4", "8"],
-                        "reaction_emoji": "Default Reaction Emoji",
-                        "required_quote_reactions": 4
+                        "streams": ["4", "8"]
                         }
     Guilds.insert_one(default_settings)
     Settings_Cache[str(guild_id)] = default_settings
@@ -280,8 +286,8 @@ def does_assignment_exist_already(guild_id: int, course: str, due_date_type: str
         return True
 
 
-def set_bedi_bot_channel_id(guild_id: int, channel_id: int):
-    Guilds.update_one({'guild_id': guild_id}, {'$set': {'channel_id': int(channel_id)}})
+def set_due_date_channel_id(guild_id: int, channel_id: int):
+    Guilds.update_one({'guild_id': guild_id}, {'$set': {'due_date_channel_id': int(channel_id)}})
     Guilds.update_one({'guild_id': guild_id}, {'$set': {'last_announcement_time': None}})
 
 
