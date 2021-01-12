@@ -14,8 +14,8 @@ async def help_command(ctx: discord.Message, client: discord.Client):
     _embedMessage.add_field(help_embed, commandPrefix2 + "getquotes person pagenumber",
                             "Gets a persons quotes with a page number, with each page containing 5 quotes. Page number argument is optional.\nEx: " + commandPrefix2 + "getQuote Bedi 2",
                             False)
-    _embedMessage.add_field(help_embed, commandPrefix2 + "getrandomquote",
-                            "Gets a random quote from a random person.\nEx: " + commandPrefix2 + "getrandomquote",
+    _embedMessage.add_field(help_embed, commandPrefix2 + "getrandomquote name",
+                            "Gets a random quote from a random or specified person. Name is optional.\nEx: " + commandPrefix2 + "getrandomquote Bedi",
                             False)
 
     await ctx.channel.send(embed = help_embed)
