@@ -32,7 +32,8 @@ commands = {
     "setupduedates": setup_due_dates,
     "setupquotes": setup_quotes,
     "setupverification": setup_verification,
-    "getrandomquote": get_random_quote
+    "getrandomquote": get_random_quote,
+    "kavirgoat": kavir_goat
 }
 
 reaction_handler_prefix = "|"
