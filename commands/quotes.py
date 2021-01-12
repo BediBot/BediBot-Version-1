@@ -53,7 +53,13 @@ async def get_quotes(ctx: discord.Message, client: discord.Client):
 
 
 async def get_random_quote(ctx: discord.Message, client: discord.Client):
-    await ctx.channel.send(embed = _embedMessage.create("GetRandomQuote Reply", _mongoFunctions.random_quote(ctx.guild.id), "blue"))
+    args = _util.parse_message(ctx.content)
+
+    quote = _mongoFunctions.random_quote_from_person(ctx.guild.id, args[1]) \
+        if len(args) == 2 \
+        else _mongoFunctions.random_quote(ctx.guild.id)
+
+    await ctx.channel.send(embed = _embedMessage.create("GetRandomQuote Reply", quote, "blue"))
 
 
 async def remove_quote(ctx: discord.Message, client: discord.Client):
