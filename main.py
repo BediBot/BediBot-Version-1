@@ -30,7 +30,12 @@ commands = {
     "settings": settings,
     "getbirthdays": get_birthdays,
     "setup": setup,
-    "forceannouncement": force_announcement
+    "forceannouncement": force_announcement,
+    "setupannouncement": setup_announcement,
+    "setupbirthdays": setup_birthdays,
+    "setupduedates": setup_due_dates,
+    "setupquotes": setup_quotes,
+    "setupverification": setup_verification
 }
 
 reaction_handler_prefix = "|"
