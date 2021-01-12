@@ -38,4 +38,6 @@ async def set_birthday(ctx: discord.Message, client: discord.Client):
 
     await ctx.channel.send(embed = _embedMessage.create("SetBirthday Reply", "Your birthday has been set!", "blue"))
 
+    await ctx.delete()
+
     _mongoFunctions.set_users_birthday(ctx.author.id, datetime.datetime.strptime(birth_date_string, "%Y-%m-%d"))

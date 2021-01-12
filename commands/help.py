@@ -14,6 +14,9 @@ async def help_command(ctx: discord.Message, client: discord.Client):
     _embedMessage.add_field(help_embed, commandPrefix2 + "getquotes person pagenumber",
                             "Gets a persons quotes with a page number, with each page containing 5 quotes. Page number argument is optional.\nEx: " + commandPrefix2 + "getQuote Bedi 2",
                             False)
+    _embedMessage.add_field(help_embed, commandPrefix2 + "getrandomquote",
+                            "Gets a random quote from a random person.\nEx: " + commandPrefix2 + "getrandomquote",
+                            False)
 
     await ctx.channel.send(embed = help_embed)
 
@@ -61,4 +64,9 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                                 "Sets the channel which will be used for due dates\n**WARNING**: This clears the channel's history. Use with caution.", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "settings", "Displays the guild's settings", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "setup", "Command used to setup initial guild settings or change any settings.", False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "setupannouncement", "Command used to setup initial guild settings or change all settings at once.", False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "setupbirthdays", "Command used to setup birthday settings.", False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "setupduedates", "Command used to setup due date settings.", False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "setupquotes", "Command used to setup quote settings.", False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "setupverification", "Command used to setup verification settings.", False)
         await ctx.channel.send(embed = admin_embed)
