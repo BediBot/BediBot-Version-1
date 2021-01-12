@@ -7,12 +7,11 @@ from commands import _mongoFunctions, _embedMessage
 
 async def send_morning_announcement(client: discord.Client, guild_id: int, channel_id: int):
     guild = client.get_guild(guild_id)
-    role = discord.utils.get(guild.roles, name = _mongoFunctions.get_settings(guild_id)['announcement_role'])
-    await guild.get_channel(channel_id).send(role.mention, embed = _embedMessage.create("Good Morning!",
-                                                                                        _mongoFunctions.random_quote(guild_id,
-                                                                                                                     _mongoFunctions.get_settings(guild_id)[
-                                                                                                                         'announcement_quoted_person']),
-                                                                                        "blue"))
+    await guild.get_channel(channel_id).send(embed = _embedMessage.create("Good Morning!",
+                                                                          _mongoFunctions.random_quote(guild_id,
+                                                                                                       _mongoFunctions.get_settings(guild_id)[
+                                                                                                           'announcement_quoted_person']),
+                                                                          "blue"))
     _mongoFunctions.set_last_announcement_time(guild_id, datetime.now())
 
 
