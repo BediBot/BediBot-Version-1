@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import discord
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from commands import _birthdayMessage, _mongoFunctions, _dueDateMessage, _morningAnnouncement, _util
+from commands import _birthdayMessage, _mongoFunctions, _dueDateMessage, _morningAnnouncement, _util, _setBotStatus
 
 scheduler = AsyncIOScheduler()
 scheduler.start()
@@ -59,6 +59,7 @@ async def schedule_jobs(client: discord.Client):
 
     due_date_edit_interval = 10
     scheduler.add_job(_dueDateMessage.edit_due_date_message, 'interval', minutes = due_date_edit_interval, args = [client])
+    scheduler.add_job(_setBotStatus.set_random_bot_status, 'interval', hours = 1, args = [client])
 
 
 # Removes all jobs and reschedules them
