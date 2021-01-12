@@ -16,15 +16,14 @@ async def verify(ctx: discord.Message, client: discord.Client):
     await ctx.delete()
 
     if not _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
-        replyEmbed = _embedMessage.create("Verify Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
+        replyEmbed = _embedMessage.create("Verify Reply", "Verification is not enabled on this server!", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
     # This checks if the user is verified in the current guild
     if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Verify Reply",
-                                          "Invalid Permissions - you are already verified! Run $unverify if you need to reverify yourself here."
-                                          "\nIf this is a mistake, contact a dev",
+                                          "Invalid Permissions - you are already verified! Run $unverify if you need to reverify yourself here.",
                                           "red")
         await ctx.channel.send(embed = replyEmbed)
         return
