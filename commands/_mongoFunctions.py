@@ -97,7 +97,6 @@ def generate_default_settings(guild_id: int):
                         "morning_announcements_enabled": True,
                         "announcement_channel_id": 0,
                         "last_announcement_time": None,
-                        "announcement_role": "Bedi Follower",
                         "announcement_quoted_person": "bedi",
                         "announcement_time": "08:30",
 

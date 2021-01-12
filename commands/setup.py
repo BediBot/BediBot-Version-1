@@ -196,26 +196,6 @@ async def setup(ctx: discord.Message, client: discord.Client):
                 _mongoFunctions.update_setting(ctx.guild.id, "announcement_quoted_person", announcement_quoted_person)
                 break
 
-        while True:
-            await response_message.edit(embed = _embedMessage.create("Setup Reply",
-                                                                     "What is the morning announcement role? (This role will be tagged in every announcement. "
-                                                                     "Think of it as a subscription role.)",
-                                                                     "blue"))
-            try:
-                announcement_role_message = await client.wait_for('message', timeout = wait_timeout, check = check)
-            except asyncio.TimeoutError:
-                await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
-                return
-            else:
-                announcement_role_string = announcement_role_message.content
-                if announcement_role_string.lower() == 'next':
-                    break
-                if announcement_role_string.lower() == 'stop':
-                    await ctx.channel.send(embed = stop_embed)
-                    return
-                _mongoFunctions.update_setting(ctx.guild.id, "announcement_role", announcement_role_string)
-                break
-
     while True:
         await response_message.edit(embed = _embedMessage.create("Setup Reply", "Should Birthday Announcements be Enabled (y/n)?", "blue"))
         try:

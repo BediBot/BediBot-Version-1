@@ -33,7 +33,6 @@ async def settings(ctx: discord.Message, client: discord.Client):
         _embedMessage.add_field(message, "Morning Announcements Channel", channel_name, False)
         _embedMessage.add_field(message, "Daily Announcement Time", _mongoFunctions.get_settings(ctx.guild.id)['announcement_time'], False)
         _embedMessage.add_field(message, "Daily Announcement Quote Author", _mongoFunctions.get_settings(ctx.guild.id)['announcement_quoted_person'], False)
-        _embedMessage.add_field(message, "Announcement Role", _mongoFunctions.get_settings(ctx.guild.id)['announcement_role'], False)
 
     _embedMessage.add_field(message, "Birthday Announcements Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['birthday_announcements_enabled'], False)
     if _mongoFunctions.get_settings(ctx.guild.id)['birthday_announcements_enabled']:
@@ -52,7 +51,6 @@ async def settings(ctx: discord.Message, client: discord.Client):
             channel_name = ctx.guild.get_channel(int(_mongoFunctions.get_settings(ctx.guild.id)['due_date_channel_id'])).mention
         except:
             channel_name = "Not set. Run {0}setduedatechannel in a channel to set.".format(_mongoFunctions.get_settings(ctx.guild.id)['prefix'])
-
 
         _embedMessage.add_field(message, "Due Date Channel", channel_name, False)
         _embedMessage.add_field(message, "Streams", ', '.join(_mongoFunctions.get_settings(ctx.guild.id)['streams']), False)
