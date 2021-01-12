@@ -10,9 +10,9 @@ async def help_command(ctx: discord.Message, client: discord.Client):
     _embedMessage.add_field(help_embed, commandPrefix2 + "ping", "Returns Pong and some bot stats.", False)
 
     _embedMessage.add_field(help_embed, commandPrefix2 + "addquote \"quote with spaces\" Name",
-                            "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addQuote \"Life is Good\" Bedi", False)
+                            "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addquote \"Life is Good\" Bedi", False)
     _embedMessage.add_field(help_embed, commandPrefix2 + "getquotes person pagenumber",
-                            "Gets a persons quotes with a page number, with each page containing 5 quotes. Page number argument is optional.\nEx: " + commandPrefix2 + "getQuote Bedi 2",
+                            "Gets a persons quotes with a page number, with each page containing 5 quotes. Page number argument is optional.\nEx: " + commandPrefix2 + "getquotes Bedi 2",
                             False)
     _embedMessage.add_field(help_embed, commandPrefix2 + "getrandomquote name",
                             "Gets a random quote from a random or specified person. Name is optional.\nEx: " + commandPrefix2 + "getrandomquote Bedi",

@@ -14,12 +14,8 @@ commands = {
     "setduedatechannel": set_due_date_channel,
     "ping": ping,
     "parse": parse_command,
-    "addQuote": add_quote,
     "addquote": add_quote,
-    "getQuotes": get_quotes,
     "getquotes": get_quotes,
-    "getQuote": get_quotes,
-    "getquote": get_quotes,
     "removequote": remove_quote,
     "adminverify": admin_verify,
     "removeduedate": remove_due_date,
@@ -66,8 +62,10 @@ async def on_message(ctx):
 
     if ctx.content.startswith(prefix):
         # Checks if the first word of the message's content (with the prefix removed) is in the dict of commands
-        if ctx.content.split(" ")[0][len(prefix):] in commands:
-            await commands[ctx.content.split(" ")[0][len(prefix):]](ctx, client)
+        command_string = ctx.content.split(" ")[0][len(prefix):].lower()
+
+        if command_string in commands:
+            await commands[command_string](ctx, client)
 
 
 @client.event
