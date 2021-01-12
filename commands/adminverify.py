@@ -11,14 +11,14 @@ async def admin_verify(ctx: discord.Message, client: discord.Client):
         return
 
     if not _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
-        replyEmbed = _embedMessage.create("AdminVerify Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
+        replyEmbed = _embedMessage.create("AdminVerify Reply", "Verification is not enabled on this server!", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
     message_contents = ctx.content.split(" ")
 
     if len(message_contents) != 2:
-        await ctx.channel.send(embed = _embedMessage.create("Admin Verify Reply",
+        await ctx.channel.send(embed = _embedMessage.create("AdminVerify Reply",
                                                             "The syntax is invalid! Make sure it is in the format $adminverify <User (Mention)>\nNote that this command does NOT assign a role, it only verifies them inside the database!",
                                                             "red"))
         return

@@ -52,6 +52,10 @@ async def get_quotes(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = _embedMessage.create("GetQuotes Reply", "Invalid Syntax! You need integers", "red"))
 
 
+async def get_random_quote(ctx: discord.Message, client: discord.Client):
+    await ctx.channel.send(embed = _embedMessage.create("GetRandomQuote Reply", _mongoFunctions.random_quote(ctx.guild.id), "blue"))
+
+
 async def remove_quote(ctx: discord.Message, client: discord.Client):
     # Checks if user is admin or bot owner
     if not (_checkrole.author_has_role(ctx, _mongoFunctions.get_settings(ctx.guild.id)['admin_role']) or _util.author_is_bot_owner(ctx)):
