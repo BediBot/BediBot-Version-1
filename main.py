@@ -35,7 +35,8 @@ commands = {
     "setupbirthdays": setup_birthdays,
     "setupduedates": setup_due_dates,
     "setupquotes": setup_quotes,
-    "setupverification": setup_verification
+    "setupverification": setup_verification,
+    "getrandomquote": get_random_quote
 }
 
 reaction_handler_prefix = "|"

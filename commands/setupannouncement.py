@@ -84,6 +84,26 @@ async def setup_announcement(ctx: discord.Message, client: discord.Client):
             break
 
     while True:
+        await response_message.edit(embed = _embedMessage.create("SetupAnnouncement Reply", "Should the quote be random (y/n)?", "blue"))
+        try:
+            random_quote_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+        except asyncio.TimeoutError:
+            await response_message.edit(embed = _embedMessage.create("SetupAnnouncement Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            random_quote_string = random_quote_message.content.lower()
+            if random_quote_string == 'next':
+                break
+            if random_quote_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
+            if random_quote_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+                _mongoFunctions.update_setting(ctx.guild.id, "random_quote", True)
+            else:
+                _mongoFunctions.update_setting(ctx.guild.id, "random_quote", False)
+            break
+
+    while True:
         await response_message.edit(embed = _embedMessage.create("SetupAnnouncement Reply", "Who should be quoted in the morning announcement?", "blue"))
         try:
             announcement_quoted_person_message = await client.wait_for('message', timeout = wait_timeout, check = check)

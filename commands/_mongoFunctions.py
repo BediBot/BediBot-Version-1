@@ -335,7 +335,7 @@ def find_quotes(guild_id: int, quoted_person: str, page: int):
         return None
 
 
-def random_quote(guild_id: int, quoted_person: str):
+def random_quote_from_person(guild_id: int, quoted_person: str):
     coll = GuildInformation.get_collection("a" + str(guild_id) + ".quotes")
     filter = {
         "name": {"$regex": "^.*" + quoted_person.lower() + ".*$"}
@@ -344,6 +344,20 @@ def random_quote(guild_id: int, quoted_person: str):
     # print(quotedPerson)
     pipeline = [
         {"$match": filter},
+        {"$sample": {"size": 1}},
+    ]
+    try:
+        quote = list(coll.aggregate(pipeline))[0]
+        return '"' + quote["quote"] + '"  - ' + quote["name"]
+    except Exception as e:
+        print(e)
+        return None
+
+
+def random_quote(guild_id: int):
+    coll = GuildInformation.get_collection("a" + str(guild_id) + ".quotes")
+
+    pipeline = [
         {"$sample": {"size": 1}},
     ]
     try:

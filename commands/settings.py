@@ -32,6 +32,7 @@ async def settings(ctx: discord.Message, client: discord.Client):
 
         _embedMessage.add_field(message, "Morning Announcements Channel", channel_name, False)
         _embedMessage.add_field(message, "Daily Announcement Time", _mongoFunctions.get_settings(ctx.guild.id)['announcement_time'], False)
+        _embedMessage.add_field(message, "Random Quote?", _mongoFunctions.get_settings(ctx.guild.id)['random_quote'], False)
         _embedMessage.add_field(message, "Daily Announcement Quote Author", _mongoFunctions.get_settings(ctx.guild.id)['announcement_quoted_person'], False)
 
     _embedMessage.add_field(message, "Birthday Announcements Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['birthday_announcements_enabled'], False)
