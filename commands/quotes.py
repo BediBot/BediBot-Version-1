@@ -106,7 +106,7 @@ async def quotes_reaction_handler(reaction_payload: discord.RawReactionActionEve
                     reaction_object = reaction
                     break
 
-            if reaction_object.count >= _mongoFunctions.get_settings(message.guild.id)['required_quote_reactions']:
+            if reaction_object.count == _mongoFunctions.get_settings(message.guild.id)['required_quote_reactions']:
                 args = _util.parse_message(message.embeds[0].description)
                 quote = args[1]
                 quotedPerson = args[3]
