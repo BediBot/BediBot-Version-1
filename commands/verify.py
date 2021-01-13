@@ -35,6 +35,7 @@ async def verify(ctx: discord.Message, client: discord.Client):
         await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = _mongoFunctions.get_settings(ctx.guild.id)['verified_role']))
         replyEmbed = _embedMessage.create("Verify Reply", "You are already verified on another server, so you've been automatically verified.", "blue")
         await ctx.channel.send(embed = replyEmbed)
+        await ctx.author.send(embed = replyEmbed)
         return
 
     message_contents = ctx.content.split(" ")
