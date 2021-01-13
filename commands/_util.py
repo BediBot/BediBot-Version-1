@@ -11,6 +11,7 @@ BOT_OWNERS = BOT_OWNERS.split(' ')
 
 def parse_message(msg):
     msg = msg.replace('“', '"')
+    msg = msg.replace('”', '"')
     return shlex.split(msg)
 
 
