@@ -54,9 +54,11 @@ async def help_command(ctx: discord.Message, client: discord.Client):
                                 False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "lockdown role",
-                                "Sets send message permissions to false for specified role in the current channel\nEx: " + commandPrefix2 + "lockdown " + "Tron", False)
+                                "Sets send message permissions to false for specified role in the current channel."
+                                "If role is not specified. Channel will be locked for all possible roles.\nEx: " + commandPrefix2 + "lockdown " + "Tron", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "unlock role",
-                                "Sets send message permissions to True for specified role\nEx: " + commandPrefix2 + "unlock " + "Tron",
+                                "Sets send message permissions to True for specified role."
+                                "If role is not specified. Channel will be unlocked for all possible roles.\nEx: " + commandPrefix2 + "unlock " + "Tron",
                                 False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "say title content channel",
                                 "Sends a message inside an embed to the specified channel\nEx: " + commandPrefix2 + "say Hello world " + ctx.channel.mention, False)
