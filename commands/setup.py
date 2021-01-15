@@ -66,6 +66,27 @@ async def setup(ctx: discord.Message, client: discord.Client):
             _mongoFunctions.update_setting(ctx.guild.id, "admin_role", admin_role_string)
             break
 
+    while True:
+        await response_message.edit(embed = _embedMessage.create("Setup Reply", "Should reaction pinning be enabled (y/n)?", "blue"))
+        try:
+            pinning_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+        except asyncio.TimeoutError:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            pinning_string = pinning_message.content.lower()
+            if pinning_string == 'next':
+                break
+            if pinning_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
+            if pinning_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+                _mongoFunctions.update_setting(ctx.guild.id, "pins_enabled", True)
+            else:
+                _mongoFunctions.update_setting(ctx.guild.id, "pins_enabled", False)
+
+            break
+
     await setupverification.set_settings(ctx, client, response_message, stop_embed, check)
 
     await setupannouncement.set_settings(ctx, client, response_message, stop_embed, check)

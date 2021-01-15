@@ -39,7 +39,7 @@ commands = {
 reaction_handler_prefix = "|"
 
 reactionHandlers = {
-    reaction_handler_prefix: quotes_reaction_handler,
+    reaction_handler_prefix: quotes_reaction_handler
 }
 
 intents = discord.Intents.all()
@@ -79,6 +79,16 @@ async def on_raw_reaction_add(reaction_payload: discord.RawReactionActionEvent):
     if message.author == client.user:
         if message.embeds[0].description.split(" ")[0] in reactionHandlers:
             await reactionHandlers[message.embeds[0].description.split(" ")[0]](reaction_payload, message)
+
+
+@client.event
+async def on_reaction_add(reaction: discord.Reaction, user: discord.Member):
+    await pins_reaction_handler(reaction, user, False)
+
+
+@client.event
+async def on_reaction_remove(reaction: discord.Reaction, user: discord.Member):
+    await pins_reaction_handler(reaction, user, True)
 
 
 if __name__ == "__main__":
