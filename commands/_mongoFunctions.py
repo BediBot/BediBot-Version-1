@@ -82,7 +82,7 @@ def generate_default_settings(guild_id: int):
                         "prefix": "$",
                         "timezone": "America/Toronto",
                         "admin_role": "admin",
-                        "pins_enabled": True,
+                        "pins_enabled": False,
                         "reaction_emoji": "Default Reaction Emoji",
                         "required_quote_reactions": 4,
 
