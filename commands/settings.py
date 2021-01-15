@@ -18,6 +18,8 @@ async def settings(ctx: discord.Message, client: discord.Client):
 
     _embedMessage.add_field(settings_embed, "Admin Role", _mongoFunctions.get_settings(ctx.guild.id)['admin_role'], False)
 
+    _embedMessage.add_field(settings_embed, "Pins Enabled", _mongoFunctions.get_settings(ctx.guild.id)['pins_enabled'], False)
+
     await ctx.channel.send(embed = settings_embed)
 
     verification_embed = _embedMessage.create("Verification Settings", "Here are the verification settings.", "blue")
