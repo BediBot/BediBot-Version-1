@@ -81,6 +81,30 @@ async def on_raw_reaction_add(reaction_payload: discord.RawReactionActionEvent):
             await reactionHandlers[message.embeds[0].description.split(" ")[0]](reaction_payload, message)
 
 
+@client.event
+async def on_reaction_add(reaction, user):
+    ctx = reaction.message
+    #if not _mongoFunctions.get_settings(ctx.guild.id)['pin_enabled']:
+    #  replyEmbed = _embedMessage.create("Verify Reply", "Verification is not enabled on this server!", "red")
+    # await ctx.channel.send(embed = replyEmbed)
+    #return
+
+    if str(reaction.emoji) == "📌":
+        await reaction.message.pin()
+
+
+@client.event
+async def on_reaction_remove(reaction, user):
+    #if not _mongoFunctions.get_settings(ctx.guild.id)['pin_enabled']:
+    #    replyEmbed = _embedMessage.create("Verify Reply", "Verification is not enabled on this server!", "red")
+    #await ctx.channel.send(embed = replyEmbed)
+    #return
+
+    if reaction.emoji == "📌":
+        if not ":pushpin:" in [reaction.emoji for reaction in reaction.message.reactions]:
+            await reaction.message.unpin()
+
+
 if __name__ == "__main__":
     load_dotenv()
     TOKEN = os.getenv("BOT_TOKEN")
