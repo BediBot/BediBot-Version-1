@@ -15,7 +15,7 @@ async def say(ctx: discord.Message, client: discord.Client):
     args = _util.parse_message(ctx.content)
 
     if len(args) != 4:
-        await ctx.channel.send(embed = _embedMessage.create("Say Reply", "Invalid Syntax! You need three arguments for this function!", "red"))
+        await ctx.channel.send(embed = _embedMessage.create("Say Reply", "Invalid Syntax! You need three arguments for this function!\nSyntax: say title content channel", "red"))
         return
 
     title = args[1]
