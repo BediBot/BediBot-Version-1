@@ -15,12 +15,12 @@ uw_driver = UW_Driver()
 
 async def confirm(ctx: discord.Message, client: discord.Client):
     if not _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
-        replyEmbed = _embedMessage.create("Confirm Reply", "Verification is not enabled on this server!\nIf this is a mistake, contact a dev", "red")
+        replyEmbed = _embedMessage.create("Confirm Reply", "Verification is not enabled on this server!", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
 
     # Verified users can't run $confirm. They are already verified (duh)
-    if _mongoFunctions.is_user_id_linked_to_verified_user(ctx.guild.id, ctx.author.id):
+    if _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id):
         replyEmbed = _embedMessage.create("Confirm Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
         return
@@ -51,7 +51,9 @@ async def confirm(ctx: discord.Message, client: discord.Client):
         await ctx.author.add_roles(discord.utils.get(ctx.guild.roles, name = _mongoFunctions.get_settings(ctx.guild.id)['verified_role']))
         _mongoFunctions.add_user_to_verified_users(ctx.guild.id, ctx.author.id, _hashingFunctions.hash_user_id(uw_id))
         _mongoFunctions.remove_user_from_pending_verification_users(ctx.guild.id, ctx.author.id)
-        await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "You have been verified", "blue"))
+        reply_embed = _embedMessage.create("Confirm reply", "You have been verified", "blue")
+        await ctx.channel.send(embed = reply_embed)
+        await ctx.author.send(embed = reply_embed)
 
     else:
         await ctx.channel.send(embed = _embedMessage.create("Confirm reply", "Invalid Code!", "red"))

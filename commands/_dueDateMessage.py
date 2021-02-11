@@ -17,14 +17,18 @@ async def edit_due_date_message(client: discord.Client):
             guild_object = client.get_guild(guild_id)
 
             courses = guild_list[guild_dict]['courses']
-            channel_id = guild_list[guild_dict]['channel_id']
-
-            for stream in guild_list[guild_dict]['streams']:
-                try:
-                    await edit_due_date_embed(stream, courses, guild_id, guild_object, channel_id)
-                except:
-                    print("Error in edit_schedule_embed")
-                    print("server id: " + str(guild_dict))
+            channel_id = guild_list[guild_dict]['due_date_channel_id']
+            try:
+                channel = guild_object.get_channel(channel_id)
+                for stream in guild_list[guild_dict]['streams']:
+                    try:
+                        await edit_due_date_embed(stream, courses, guild_id, guild_object, channel_id)
+                    except:
+                        print("Error in edit_schedule_embed")
+                        print("server id: " + str(guild_dict))
+            except:
+                print("Error in edit_schedule_embed")
+                print("server id: " + str(guild_dict))
 
 
 async def edit_due_date_embed(stream: int, courses: list, guild_id: int, guild: discord.Guild, channel_id: int):
