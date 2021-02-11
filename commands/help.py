@@ -52,6 +52,7 @@ async def help_command(ctx: discord.Message, client: discord.Client):
         _embedMessage.add_field(admin_embed, commandPrefix2 + "adminverify @Mention",
                                 "Manually verifies a user.\nEx: " + commandPrefix2 + "adminverify " + client.user.mention,
                                 False)
+        _embedMessage.add_field(admin_embed, commandPrefix2 + "purge number_of_messages", "Purges a specified amount of messages in the channel that the command is executed in.\nEx: " + commandPrefix2 + "purge 10", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "removeduedate", "Remove's a due date\nEx: " + commandPrefix2 + "removeduedate", False)
         _embedMessage.add_field(admin_embed, commandPrefix2 + "lockdown role",
                                 "Sets send message permissions to false for specified role in the current channel."
