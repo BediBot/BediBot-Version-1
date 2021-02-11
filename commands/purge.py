@@ -12,7 +12,11 @@ async def purge(ctx: discord.Message, client: discord.Client):
         return
 
     args = _util.parse_message(ctx.content)
-    numberOfMessages = int(args[1])
+    try:
+        numberOfMessages = int(args[1])
+    except:
+        await ctx.channel.send(embed = _embedMessage.create("Purge Reply", "Ensure that the argument is an int!", "red"))
+        return
 
     if(len(args) != 2 or numberOfMessages < 1 or numberOfMessages > MAX_PURGE_LIMIT):
         await ctx.channel.send(embed = _embedMessage.create("Purge Reply", "Invalid Syntax! You need 1 argument for this function that is a positive integer less than " + str(MAX_PURGE_LIMIT) + "!\nSyntax: purge numberOfMessages", "red"))
