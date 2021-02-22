@@ -35,9 +35,7 @@ commands = {
     "getrandomquote": get_random_quote,
     "kavirgoat": kavir_goat,
     "purge" : purge,
-    "GitHub" : show_github,
-    "github" : show_github,
-    "Github" : show_github
+    "github" : show_github
 }
 
 reaction_handler_prefix = "|"
