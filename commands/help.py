@@ -8,6 +8,7 @@ async def help_command(ctx: discord.Message, client: discord.Client):
     help_embed = _embedMessage.create("General Commands", "Commands that can be run with BediBot. Each word represents an argument.", "green")
     _embedMessage.add_field(help_embed, commandPrefix2 + "help", "Allows you to view commands!", False)
     _embedMessage.add_field(help_embed, commandPrefix2 + "ping", "Returns Pong and some bot stats.", False)
+    _embedMessage.add_field(help_embed, commandPrefix2 + "GitHub", "Shows the GitHub repository link", False)
 
     _embedMessage.add_field(help_embed, commandPrefix2 + "addquote \"quote with spaces\" Name",
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addquote \"Life is Good\" Bedi", False)
