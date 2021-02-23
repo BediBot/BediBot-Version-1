@@ -40,4 +40,9 @@ async def say(ctx: discord.Message, client: discord.Client):
     except:
         print("Missing Manage Messages permission in {0} on server ID: {1}".format(channel.mention, str(ctx.guild.id)))
 
-    await target_channel.send(embed = _embedMessage.create(title, content, "green"))
+    if not _util.author_is_bot_owner(ctx):
+        embed = _embedMessage.create(title, content + "\n\n This message was sent by {}".format(ctx.author.mention), "green")
+    else:
+        embed = _embedMessage.create(title, content, "green")
+
+    await target_channel.send(embed = embed)
