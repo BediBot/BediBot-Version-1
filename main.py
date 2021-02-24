@@ -36,6 +36,7 @@ commands = {
     "kavirgoat": kavir_goat,
     "kick": kick_user_from_command,
     "ban" : ban_user_from_command,
+    "unban" : unban_user_from_command,
     "purge" : purge,
     "github" : show_github
 }
