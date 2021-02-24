@@ -34,6 +34,8 @@ commands = {
     "setupverification": setup_verification,
     "getrandomquote": get_random_quote,
     "kavirgoat": kavir_goat,
+    "kick": kick_user_from_command,
+    "ban" : ban_user_from_command,
     "purge" : purge,
     "github" : show_github
 }
