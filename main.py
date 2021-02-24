@@ -34,7 +34,8 @@ commands = {
     "setupverification": setup_verification,
     "getrandomquote": get_random_quote,
     "kavirgoat": kavir_goat,
-    "purge" : purge
+    "purge" : purge,
+    "github" : show_github
 }
 
 reaction_handler_prefix = "|"
