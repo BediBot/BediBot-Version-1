@@ -41,7 +41,7 @@ async def say(ctx: discord.Message, client: discord.Client):
     try:
         await ctx.delete()
     except:
-        print("Missing Manage Messages permission in {0} on server ID: {1}".format(channel.mention, client.get_guild(ctx.guild.id)))
+        print("Missing Manage Messages permission in {0} on server ID: {1}".format(channel.mention, str(client.get_guild(ctx.guild.id))))
 
     if not _util.author_is_bot_owner(ctx):
         embed = _embedMessage.create(title, content + "\n\n This message was sent by {}".format(ctx.author.mention), "green")
