@@ -25,7 +25,7 @@ async def schedule_jobs(client: discord.Client):
                 scheduler.add_job(_util.purge_messages_in_channel, 'cron', hour = 23, minute = 59, second = 0, timezone = guild_timezone,
                                   args = [client, guild_id, due_date_channel_id])
             except:
-                print("Error scheduling due dates for guild ID: {0}".format(guild_id))
+                print("Error scheduling due dates for guild ID: {0}".format(str(client.get_guild(guild_id))))
 
         if guild_list[guild_dict]['birthday_announcements_enabled']:
             try:
