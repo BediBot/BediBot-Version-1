@@ -3,13 +3,9 @@ import re
 
 import discord
 from dotenv import load_dotenv
-from uwaterloodriver import UW_Driver
 
 from commands import _mongoFunctions, _embedMessage, _email
 
-load_dotenv()
-os.environ['UW_API_KEY'] = os.getenv('UW_API_KEY')
-uw_driver = UW_Driver()
 
 
 async def verify(ctx: discord.Message, client: discord.Client):
