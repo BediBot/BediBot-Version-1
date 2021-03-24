@@ -26,19 +26,19 @@ async def lockdown(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
 
     elif len(args) == 2:
-        try:
-            role = get(ctx.guild.roles, name = args[1])
-        except:
+        role = get(ctx.guild.roles, name = args[1])
+        if role is None:
             replyEmbed = _embedMessage.create("Lockdown Reply", "Invalid Role", "red")
             await ctx.channel.send(embed = replyEmbed)
             return
-        replyEmbed = _embedMessage.create("Lockdown Reply", "Channel Locked for {}".format(args[1]), "green")
-        await ctx.channel.send(embed = replyEmbed)
+        else:
+            replyEmbed = _embedMessage.create("Lockdown Reply", "Channel Locked for {}".format(args[1]), "green")
+            await ctx.channel.send(embed = replyEmbed)
 
-        # await ctx.channel.set_permissions(role, send_messages = False, read_messages = True)
-        perms = ctx.channel.overwrites_for(role)  # Use a permissions overwrite object
-        perms.send_messages = False
-        await ctx.channel.set_permissions(role, overwrite = perms)
+            # await ctx.channel.set_permissions(role, send_messages = False, read_messages = True)
+            perms = ctx.channel.overwrites_for(role)  # Use a permissions overwrite object
+            perms.send_messages = False
+            await ctx.channel.set_permissions(role, overwrite = perms)
 
     else:
         replyEmbed = _embedMessage.create("Lockdown Reply", "This command needs can only take one argument.", "red")
@@ -65,18 +65,18 @@ async def unlock(ctx: discord.Message, client: discord.Client):
         await ctx.channel.send(embed = replyEmbed)
 
     elif len(args) == 2:
-        try:
-            role = get(ctx.guild.roles, name = args[1])
-        except:
+        role = get(ctx.guild.roles, name = args[1])
+        if role is None:
             replyEmbed = _embedMessage.create("Unlock reply", "Invalid Role", "red")
             await ctx.channel.send(embed = replyEmbed)
-
-        replyEmbed = _embedMessage.create("Unlock Reply", "Channel Unlocked for {}".format(args[1]), "green")
-        await ctx.channel.send(embed = replyEmbed)
-        # await ctx.channel.set_permissions(role, send_messages = True, read_messages = True)
-        perms = ctx.channel.overwrites_for(role)  # Use a permissions overwrite object
-        perms.send_messages = True
-        await ctx.channel.set_permissions(role, overwrite = perms)
+            return
+        else:
+            replyEmbed = _embedMessage.create("Unlock Reply", "Channel Unlocked for {}".format(args[1]), "green")
+            await ctx.channel.send(embed = replyEmbed)
+            # await ctx.channel.set_permissions(role, send_messages = True, read_messages = True)
+            perms = ctx.channel.overwrites_for(role)  # Use a permissions overwrite object
+            perms.send_messages = True
+            await ctx.channel.set_permissions(role, overwrite = perms)
 
     else:
         replyEmbed = _embedMessage.create("Unlock Reply", "This command needs can only take one argument.", "red")
