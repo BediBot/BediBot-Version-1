@@ -15,7 +15,8 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
     args = _util.parse_message(ctx.content)
 
     if len(args) != 3:
-        await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
+        await ctx.channel.send(
+            embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
         return
 
     if len(args[1]) > embed_field_max_char:
@@ -106,7 +107,7 @@ async def quotes_reaction_handler(reaction_payload: discord.RawReactionActionEve
                     reaction_object = reaction
                     break
 
-            if reaction_object.count == _mongoFunctions.get_settings(message.guild.id)['required_quote_reactions']:
+            if reaction_object.count >= _mongoFunctions.get_settings(message.guild.id)['required_quote_reactions']:
                 args = _util.parse_message(message.embeds[0].description)
                 quote = args[1]
                 quotedPerson = args[3]
