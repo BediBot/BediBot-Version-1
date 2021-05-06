@@ -79,10 +79,14 @@ async def remove_quote(ctx: discord.Message, client: discord.Client):
     if len(args[1]) > embed_field_max_char:
         await ctx.channel.send(embed = _embedMessage.create("RemoveQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
         return
-
-    embed = _embedMessage.create("RemoveQuote Reply", "\"" + args[1] + "\" by: " + args[2] + " \n Removed by: " + ctx.author.mention, "blue")
+    
+    embed = None
+    del_res = _mongoFunctions.delete_quote(ctx.guild.id, args[1], args[2])
+    if del_res.deleted_count == 1:
+        embed = _embedMessage.create("RemoveQuote Reply", "\"" + args[1] + "\" by: " + args[2] + " \n Removed by: " + ctx.author.mention, "blue")
+    else:
+        embed = _embedMessage.create("RemoveQuote Reply", '"' + args[1] + '" by: ' + args[2] + ' Does not exist \n Remove attempted by: ' + ctx.author.mention, "red")
     await ctx.channel.send(embed = embed)
-    _mongoFunctions.delete_quote(ctx.guild.id, args[1], args[2])
 
 
 async def quotes_reaction_handler(reaction_payload: discord.RawReactionActionEvent, message: discord.Message):
