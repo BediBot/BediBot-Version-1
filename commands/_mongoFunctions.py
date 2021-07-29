@@ -314,7 +314,7 @@ def insert_quote(guild_id: int, quote: str, quoted_person: str) -> bool:
 
 def delete_quote(guild_id: int, quote: str, quoted_person: str):
     coll = GuildInformation.get_collection("a" + str(guild_id) + ".quotes")
-    coll.delete_one({"quote": quote, "name": quoted_person})
+    return coll.delete_one({"quote": quote, "name": quoted_person})
 
 
 def find_quotes(guild_id: int, quoted_person: str, page: int):
