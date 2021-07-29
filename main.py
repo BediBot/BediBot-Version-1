@@ -15,6 +15,7 @@ commands = {
     "ping": ping,
     "parse": parse_command,
     "addquote": add_quote,
+    "aq": add_quote,
     "getquotes": get_quotes,
     "removequote": remove_quote,
     "adminverify": admin_verify,
