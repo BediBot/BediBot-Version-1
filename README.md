@@ -16,6 +16,11 @@ DEV INFORMATION
 - requirments.txt stores the packages required
 - API keys are stored in a .ENV file that will only be given to developers
 
+High Level Architecture
+========
+![image](https://user-images.githubusercontent.com/32375512/127747969-31292927-3c77-4186-82c4-b56a242a0880.png)
+
+
 Workflow
 ========
 Do NOT commit to master under any circumstances.
