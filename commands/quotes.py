@@ -29,8 +29,7 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
         fetched_msg = None
         if ctx.reference.cached_message is None:
             # Fetching the message
-            channel = bot.get_channel(ctx.reference.channel_id)
-            fetched_msg = await channel.fetch_message(ctx.reference.message_id)
+            fetched_msg = await ctx.channel.fetch_message(ctx.reference.message_id)
         else:
             fetched_msg = ctx.reference.cached_message
         if len(fetched_msg.content) > embed_field_max_char:
