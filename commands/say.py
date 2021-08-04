@@ -15,14 +15,14 @@ async def say(ctx: discord.Message, client: discord.Client):
     args = _util.parse_message(ctx.content)
 
     if len(args) != 4 and len(args) != 3:
-        await ctx.channel.send(embed = _embedMessage.create("Say Reply", "Invalid Syntax! You need three arguments for this function!\nSyntax: say title content OPTIONAL:channel", "red"))
+        await ctx.channel.send(
+            embed = _embedMessage.create("Say Reply", "Invalid Syntax! You need three arguments for this function!\nSyntax: say title content OPTIONAL:channel", "red"))
         return
 
     title = args[1]
 
     content = args[2]
 
-    target_channel = ctx.channel
     if len(args) == 4:
         channel_mention = args[3]
         channels = client.get_all_channels()
@@ -35,8 +35,8 @@ async def say(ctx: discord.Message, client: discord.Client):
         if target_channel is None:
             await ctx.channel.send(embed = _embedMessage.create("Say Reply", "Channel not Found!", "red"))
             return
-
-    
+    else:
+        target_channel = ctx.channel
 
     try:
         await ctx.delete()
