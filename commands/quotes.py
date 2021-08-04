@@ -13,17 +13,36 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
         return
 
     args = _util.parse_message(ctx.content)
-
-    if len(args) != 3:
+    
+    if len(args) < 2 or len(args) > 3:
         await ctx.channel.send(
-            embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
+            embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need one or two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
         return
+    
+    embed = None
+    
+    if len(args) == 2:
+        if ctx.reference is None:
+            await ctx.channel.send(
+                embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need to reply to a message for this function!", "red"))
+            return
+        fetched_msg = None
+        if ctx.reference.cached_message is None:
+            # Fetching the message
+            fetched_msg = await ctx.channel.fetch_message(ctx.reference.message_id)
+        else:
+            fetched_msg = ctx.reference.cached_message
+        if len(fetched_msg.content) > embed_field_max_char:
+            await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
+            return
+        embed = _embedMessage.create("AddQuote Reply", "| \"" + fetched_msg.content + "\" by: " + args[1] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
+    elif len(args) == 3:
+        if len(args[1]) > embed_field_max_char:
+            await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
+            return
 
-    if len(args[1]) > embed_field_max_char:
-        await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
-        return
-
-    embed = _embedMessage.create("AddQuote Reply", "| \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
+        embed = _embedMessage.create("AddQuote Reply", "| \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
+    
     message = await ctx.channel.send(embed = embed)
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = _mongoFunctions.get_settings(ctx.guild.id)['reaction_emoji']))
 
