@@ -7,6 +7,11 @@ embed_field_max_char = 1024
 
 
 async def add_quote(ctx: discord.Message, client: discord.Client):
+    if not _mongoFunctions.get_settings(ctx.guild.id)['quotes_enabled']:
+        replyEmbed = _embedMessage.create("AddQuote Reply", "Quotes are disabled. Contact an admin if this is a mistake.", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     if not _mongoFunctions.is_user_id_linked_to_verified_user_in_guild(ctx.guild.id, ctx.author.id) and _mongoFunctions.get_settings(ctx.guild.id)['verification_enabled']:
         replyEmbed = _embedMessage.create("AddQuote Reply", "Invalid Permissions", "red")
         await ctx.channel.send(embed = replyEmbed)
@@ -50,6 +55,11 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
 
 
 async def get_quotes(ctx: discord.Message, client: discord.Client):
+    if not _mongoFunctions.get_settings(ctx.guild.id)['quotes_enabled']:
+        replyEmbed = _embedMessage.create("AddQuote Reply", "Quotes are disabled. Contact an admin if this is a mistake.", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     args = _util.parse_message(ctx.content)
     if len(args) != 3 and len(args) != 2:
         await ctx.channel.send(embed = _embedMessage.create("getQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $getQuotes Bedi 2", "red"))
@@ -78,6 +88,11 @@ async def get_quotes(ctx: discord.Message, client: discord.Client):
 
 
 async def get_random_quote(ctx: discord.Message, client: discord.Client):
+    if not _mongoFunctions.get_settings(ctx.guild.id)['quotes_enabled']:
+        replyEmbed = _embedMessage.create("AddQuote Reply", "Quotes are disabled. Contact an admin if this is a mistake.", "red")
+        await ctx.channel.send(embed = replyEmbed)
+        return
+
     args = _util.parse_message(ctx.content)
 
     quote, name = _mongoFunctions.random_quote_from_person(ctx.guild.id, args[1]) \
