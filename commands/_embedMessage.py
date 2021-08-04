@@ -22,7 +22,7 @@ def create(title_string: str, description_string: str, colour_string: str):
         timestamp = datetime.datetime.utcnow()
     )
 
-    returnMessage.set_footer(text = "For any concerns, contact a BediBot dev: Aadi, Carson, Sahil, & Zayd")
+    returnMessage.set_footer(text = "For any concerns, contact a BediBot dev: Aadi, Carson, Sahil, Zayd, & Joe")
 
     return returnMessage
 
