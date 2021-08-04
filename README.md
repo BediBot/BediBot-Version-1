@@ -1,5 +1,5 @@
 # BediBot
-Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 4000+ users in both official and unofficial contexts.
+Python Discord Bot designed for UWaterloo Discord Servers. Currently, it is in active use with 5000+ users in both official and unofficial contexts.
 
 Key Features
 ========
@@ -15,6 +15,11 @@ DEV INFORMATION
 - Python 3.8 is required
 - requirments.txt stores the packages required
 - API keys are stored in a .ENV file that will only be given to developers
+
+High Level Architecture
+========
+![image](https://user-images.githubusercontent.com/32375512/127747969-31292927-3c77-4186-82c4-b56a242a0880.png)
+
 
 Workflow
 ========

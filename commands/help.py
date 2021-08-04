@@ -12,6 +12,8 @@ async def help_command(ctx: discord.Message, client: discord.Client):
 
     _embedMessage.add_field(help_embed, commandPrefix2 + "addquote \"quote with spaces\" Name",
                             "Adds a quote from the individual of your choice\nEx: " + commandPrefix2 + "addquote \"Life is Good\" Bedi", False)
+    _embedMessage.add_field(help_embed, "(replying to another message) " + commandPrefix2 + "addquote Name",
+                            "Adds a quote from the individual of your choice\nEx: (replying to another message) " + commandPrefix2 + "addquote Bedi", False)
     _embedMessage.add_field(help_embed, commandPrefix2 + "getquotes person pagenumber",
                             "Gets a persons quotes with a page number, with each page containing 5 quotes. Page number argument is optional.\nEx: " + commandPrefix2 + "getquotes Bedi 2",
                             False)
