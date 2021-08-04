@@ -25,8 +25,7 @@ async def setup_quotes(ctx: discord.Message, client: discord.Client):
     def check(message):
         return message.author == ctx.author and message.channel == ctx.channel
 
-    response_message = await ctx.channel.send(embed = _embedMessage.create("SetupQuotes Reply", "What is the quote reaction emoji name? "
-                                                                                                "(Must be a custom emoji, enter the name without the : characters)", "blue"))
+    response_message = await ctx.channel.send(embed = _embedMessage.create("SetupQuotes Reply", "Should Quotes be Enabled (y/n)?", "blue"))
 
     await set_settings(ctx, client, response_message, stop_embed, check)
 
@@ -34,6 +33,29 @@ async def setup_quotes(ctx: discord.Message, client: discord.Client):
 
 
 async def set_settings(ctx: discord.Message, client: discord.Client, response_message: discord.Message, stop_embed: discord.embeds, check):
+    while True:
+        await response_message.edit(embed = _embedMessage.create("Setup Reply", "Should Quotes be Enabled (y/n)?", "blue"))
+        try:
+            quotes_message = await client.wait_for('message', timeout = wait_timeout, check = check)
+        except asyncio.TimeoutError:
+            await response_message.edit(embed = _embedMessage.create("Setup Reply", "You took too long to respond.", "red"))
+            return
+        else:
+            quotes_string = quotes_message.content.lower()
+            if quotes_string == 'next':
+                break
+            if quotes_string == 'stop':
+                await ctx.channel.send(embed = stop_embed)
+                return
+            if quotes_string in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+                _mongoFunctions.update_setting(ctx.guild.id, "quotes_enabled", True)
+
+            else:
+                _mongoFunctions.update_setting(ctx.guild.id, "quotes_enabled", False)
+            break
+
+    await asyncio.sleep(0.5)
+
     while True:
         await response_message.edit(embed = _embedMessage.create("Setup Reply", "What is the quote reaction emoji name? "
                                                                                 "(Must be a custom emoji, enter the name without the : characters)", "blue"))

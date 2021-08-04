@@ -71,6 +71,9 @@ async def settings(ctx: discord.Message, client: discord.Client):
     await ctx.channel.send(embed = due_date_embed)
 
     quote_embed = _embedMessage.create("Quote Settings", "Here are the quote settings.", "blue")
-    _embedMessage.add_field(quote_embed, "Quote Reaction Emoji Name", _mongoFunctions.get_settings(ctx.guild.id)['reaction_emoji'], False)
-    _embedMessage.add_field(quote_embed, "Required Quote Reactions for Approval", _mongoFunctions.get_settings(ctx.guild.id)['required_quote_reactions'], False)
+    _embedMessage.add_field(quote_embed, "Quotes Enabled?", _mongoFunctions.get_settings(ctx.guild.id)['quotes_enabled'], False)
+
+    if _mongoFunctions.get_settings(ctx.guild.id)['quotes_enabled']:
+        _embedMessage.add_field(quote_embed, "Quote Reaction Emoji Name", _mongoFunctions.get_settings(ctx.guild.id)['reaction_emoji'], False)
+        _embedMessage.add_field(quote_embed, "Required Quote Reactions for Approval", _mongoFunctions.get_settings(ctx.guild.id)['required_quote_reactions'], False)
     await ctx.channel.send(embed = quote_embed)

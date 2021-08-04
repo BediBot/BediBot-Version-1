@@ -83,6 +83,8 @@ def generate_default_settings(guild_id: int):
                         "timezone": "America/Toronto",
                         "admin_role": "admin",
                         "pins_enabled": False,
+
+                        "quotes_enabled": True,
                         "reaction_emoji": "Default Reaction Emoji",
                         "required_quote_reactions": 4,
 

@@ -54,6 +54,8 @@ async def set_settings(ctx: discord.Message, client: discord.Client, response_me
                 _mongoFunctions.update_setting(ctx.guild.id, "due_dates_enabled", False)
             break
 
+    await asyncio.sleep(0.5)
+
     if _mongoFunctions.get_settings(ctx.guild.id)["due_dates_enabled"]:
         while True:
             await response_message.edit(embed = _embedMessage.create("Setup Reply", "Which streams require due dates? (Must be integers separated by spaces."
