@@ -13,14 +13,14 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
         return
 
     args = _util.parse_message(ctx.content)
-    
+
     if len(args) < 2 or len(args) > 3:
         await ctx.channel.send(
             embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need one or two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
         return
-    
+
     embed = None
-    
+
     if len(args) == 2:
         if ctx.reference is None:
             await ctx.channel.send(
@@ -35,14 +35,16 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
         if len(fetched_msg.content) > embed_field_max_char:
             await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
             return
-        embed = _embedMessage.create("AddQuote Reply", "| \"" + fetched_msg.content + "\" by: " + args[1] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
+        embed = _embedMessage.create("AddQuote Reply",
+                                     "| \"" + fetched_msg.content + "\" by: " + args[1] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
     elif len(args) == 3:
         if len(args[1]) > embed_field_max_char:
             await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
             return
 
-        embed = _embedMessage.create("AddQuote Reply", "| \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
-    
+        embed = _embedMessage.create("AddQuote Reply", "| \"" + args[1] + "\" by: " + args[2] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ",
+                                     "blue")
+
     message = await ctx.channel.send(embed = embed)
     await message.add_reaction(discord.utils.get(ctx.guild.emojis, name = _mongoFunctions.get_settings(ctx.guild.id)['reaction_emoji']))
 
@@ -59,11 +61,14 @@ async def get_quotes(ctx: discord.Message, client: discord.Client):
         else:
             page = int(args[2])
         quotes = _mongoFunctions.find_quotes(ctx.guild.id, person, page)
+
+        person = await get_author_name_from_ID(ctx, person)
+
         try:
             embed = _embedMessage.create("Quotes from: " + person, "Page: " + str(page), "green")
             for quote in quotes:
                 value = (quote["quote"][:(embed_field_max_char - 3)] + '...') if len(quote["quote"]) > 1024 else quote["quote"]
-                _embedMessage.add_field(embed_msg = embed, title_string = quote["name"], value_string = value, is_inline = False)
+                _embedMessage.add_field(embed_msg = embed, title_string = person, value_string = value, is_inline = False)
             await ctx.channel.send(embed = embed)
         except Exception as e:
             print(e)
@@ -75,11 +80,31 @@ async def get_quotes(ctx: discord.Message, client: discord.Client):
 async def get_random_quote(ctx: discord.Message, client: discord.Client):
     args = _util.parse_message(ctx.content)
 
-    quote = _mongoFunctions.random_quote_from_person(ctx.guild.id, args[1]) \
+    quote, name = _mongoFunctions.random_quote_from_person(ctx.guild.id, args[1]) \
         if len(args) == 2 \
         else _mongoFunctions.random_quote(ctx.guild.id)
 
-    await ctx.channel.send(embed = _embedMessage.create("GetRandomQuote Reply", quote, "blue"))
+    name = await get_author_name_from_ID(ctx, name)
+
+    embedText = '"' + quote + ' - ' + name
+
+    await ctx.channel.send(embed = _embedMessage.create("GetRandomQuote Reply", embedText, "blue"))
+
+
+async def get_author_name_from_ID(ctx: discord.Message, name: str):
+    if name.startswith("<@!"):
+        authorID = name.removeprefix("<@!")
+        authorID = authorID.removesuffix(">")
+        try:
+            member = await ctx.guild.fetch_member(int(authorID))
+            if member.nick is not None:
+                name = member.nick
+            else:
+                name = member.name
+        except:
+            print("Member doesn't exist on server!")
+
+    return name
 
 
 async def remove_quote(ctx: discord.Message, client: discord.Client):
@@ -98,7 +123,7 @@ async def remove_quote(ctx: discord.Message, client: discord.Client):
     if len(args[1]) > embed_field_max_char:
         await ctx.channel.send(embed = _embedMessage.create("RemoveQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
         return
-    
+
     embed = None
     del_res = _mongoFunctions.delete_quote(ctx.guild.id, args[1], args[2])
     if del_res.deleted_count == 1:
