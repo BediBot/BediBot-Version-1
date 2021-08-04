@@ -14,9 +14,9 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
 
     args = _util.parse_message(ctx.content)
     
-    if len(args) < 2:
+    if len(args) < 2 or len(args) > 3:
         await ctx.channel.send(
-            embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
+            embed = _embedMessage.create("AddQuote Reply", "Invalid Syntax! You need one or two arguments for this function!\nEx: $addquote \"Life is Good\" Bedi", "red"))
         return
     
     embed = None
