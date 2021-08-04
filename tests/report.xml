@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite name="tests.test_trivial.trivial_test-20210803232716" tests="1" file="tests/test_trivial.py" time="0.003" timestamp="2021-08-03T23:27:16" failures="0" errors="0" skipped="0">
+		<testcase classname="tests.test_trivial.trivial_test" name="test_trivial" time="0.003" timestamp="2021-08-03T23:27:16" file="tests\test_trivial.py" line="7"/>
+	</testsuite>
+</testsuites>
