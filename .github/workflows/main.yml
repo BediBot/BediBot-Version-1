@@ -34,5 +34,11 @@ jobs:
     - name: Test with unittest
       env:
         BOT_OWNERS: ${{secrets.BOT_OWNERS}}
+        BOT_TOKEN: ${{secrets.BOT_TOKEN}}
+        GMAIL_PASS: ${{secrets.GMAIL_PASS}}
+        GMAIL_USER: ${{secrets.GMAIL_USER}}
+        MONGO_CONNECTION_STRING: ${{secrets.MONGO_CONNECTION_STRING}}
+        MONGO_DATABASE_STRING: ${{secrets.MONGO_DATABASE_STRING}}
+        UW_API_KEY: ${{secrets.UW_API_KEY}}
       run: |
         bash scripts/test.sh
