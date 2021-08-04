@@ -33,9 +33,9 @@ async def add_quote(ctx: discord.Message, client: discord.Client):
             fetched_msg = await channel.fetch_message(ctx.reference.message_id)
         else:
             fetched_msg = ctx.reference.cached_message
-            if len(fetched_msg.content) > embed_field_max_char:
-                await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
-                return
+        if len(fetched_msg.content) > embed_field_max_char:
+            await ctx.channel.send(embed = _embedMessage.create("AddQuote Reply", "Quote is too long! Please submit a quote that is 1024 characters or fewer", "red"))
+            return
         embed = _embedMessage.create("AddQuote Reply", "| \"" + fetched_msg.content + "\" by: " + args[1] + " submitted by: " + ctx.author.mention + " \nReact to Approve\nApproved by: ", "blue")
     elif len(args) == 3:
         if len(args[1]) > embed_field_max_char:
