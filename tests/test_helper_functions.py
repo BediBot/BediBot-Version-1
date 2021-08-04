@@ -1,5 +1,5 @@
 import unittest
-from commands import _email, _dateFunctions
+from commands import _email, _dateFunctions, _hashingFunctions
 
 class helper_functions_Test(unittest.TestCase):
     def setUp(self) -> None:
@@ -31,3 +31,7 @@ class helper_functions_Test(unittest.TestCase):
 
         result = _dateFunctions.check_for_errors_in_date(invalid_year, valid_month, valid_day)
         assert result != 0
+
+    def test_hashing(self):
+        testHash = _hashingFunctions.hash_user_id("testUsername")
+        assert (_hashingFunctions.check_hash("testUsername", testHash))
