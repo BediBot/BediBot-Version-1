@@ -2,7 +2,7 @@ import os
 import discord
 from dotenv import load_dotenv
 from commands import *
-from commands import _setBotStatus, _scheduling, _mongoFunctions
+from commands import _setBotStatus, _scheduling, _mongoFunctions, _embedMessage
 
 commands = {
     "verify": verify,
@@ -35,8 +35,8 @@ commands = {
     "setupverification": setup_verification,
     "getrandomquote": get_random_quote,
     "kavirgoat": kavir_goat,
-    "purge" : purge,
-    "github" : show_github
+    "purge": purge,
+    "github": show_github
 }
 
 reaction_handler_prefix = "|"
@@ -60,6 +60,10 @@ async def on_ready():
 @client.event
 async def on_message(ctx):
     if ctx.author == client.user:
+        return
+
+    if not ctx.guild:
+        await ctx.channel.send(embed = _embedMessage.create("DM Reply", "Sorry! I'm not setup to handle DMs!", "red"))
         return
 
     prefix = _mongoFunctions.get_settings(ctx.guild.id)['prefix']
