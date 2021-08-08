@@ -1,104 +1,47 @@
-import os
+import traceback
+from os.path import join
+
 import discord
+import logging
+from discord.ext import commands
+import os
 from dotenv import load_dotenv
-from commands import *
-from commands import _setBotStatus, _scheduling, _mongoFunctions, _embedMessage
 
-commands = {
-    "verify": verify,
-    "confirm": confirm,
-    "unverify": unverify,
-    "setbirthday": set_birthday,
-    "addduedate": add_due_date,
-    "help": help_command,
-    "setduedatechannel": set_due_date_channel,
-    "ping": ping,
-    "parse": parse_command,
-    "addquote": add_quote,
-    "aq": add_quote,
-    "getquotes": get_quotes,
-    "removequote": remove_quote,
-    "adminverify": admin_verify,
-    "removeduedate": remove_due_date,
-    "forcebirthdays": force_birthdays,
-    "say": say,
-    "lockdown": lockdown,
-    "unlock": unlock,
-    "settings": settings,
-    "getbirthdays": get_birthdays,
-    "setup": setup,
-    "forceannouncement": force_announcement,
-    "setupannouncement": setup_announcement,
-    "setupbirthdays": setup_birthdays,
-    "setupduedates": setup_due_dates,
-    "setupquotes": setup_quotes,
-    "setupverification": setup_verification,
-    "getrandomquote": get_random_quote,
-    "kavirgoat": kavir_goat,
-    "purge": purge,
-    "github": show_github
-}
+from utils.guild import get_prefix
 
-reaction_handler_prefix = "|"
+load_dotenv()
 
-reactionHandlers = {
-    reaction_handler_prefix: quotes_reaction_handler
-}
+token = os.getenv('BOT_TOKEN')
+BOT_OWNERS = list(map(int, os.getenv("BOT_OWNERS").split(' ')))
 
-intents = discord.Intents.all()
-client = discord.Client(intents = intents)
+print(BOT_OWNERS)
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename = 'discord.log', encoding = 'utf-8', mode = 'w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
+bot = commands.Bot(command_prefix = get_prefix, owner_ids = BOT_OWNERS)
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-    await _mongoFunctions.init(client)
-    await _setBotStatus.set_random_bot_status(client)
-    await _scheduling.schedule_jobs(client)
+    print(f'\n\nLogged in as: {bot.user.name} - {bot.user.id}\nVersion: {discord.__version__}\n')
+    print(f'Successfully logged in and booted...!')
 
 
-@client.event
-async def on_message(ctx):
-    if ctx.author == client.user:
-        return
-
-    if not ctx.guild:
-        await ctx.channel.send(embed = _embedMessage.create("DM Reply", "Sorry! I'm not setup to handle DMs!", "red"))
-        return
-
-    prefix = _mongoFunctions.get_settings(ctx.guild.id)['prefix']
-
-    if ctx.content.startswith(prefix):
-        # Checks if the first word of the message's content (with the prefix removed) is in the dict of commands
-        command_string = ctx.content.split(" ")[0][len(prefix):].lower()
-
-        if command_string in commands:
-            await commands[command_string](ctx, client)
-
-
-@client.event
-async def on_raw_reaction_add(reaction_payload: discord.RawReactionActionEvent):
-    if reaction_payload.member.bot:
-        return
-
-    message = await client.get_channel(reaction_payload.channel_id).fetch_message(reaction_payload.message_id)
-
-    if message.author == client.user:
-        if message.embeds[0].description.split(" ")[0] in reactionHandlers:
-            await reactionHandlers[message.embeds[0].description.split(" ")[0]](reaction_payload, message)
-
-
-@client.event
-async def on_reaction_add(reaction: discord.Reaction, user: discord.Member):
-    await pins_reaction_handler(reaction, user, False)
-
-
-@client.event
-async def on_reaction_remove(reaction: discord.Reaction, user: discord.Member):
-    await pins_reaction_handler(reaction, user, True)
-
+cogs_dir = "cogs"
 
 if __name__ == "__main__":
-    load_dotenv()
-    TOKEN = os.getenv("BOT_TOKEN")
-    client.run(TOKEN)
+    for (dir_path, dir_names, filenames) in os.walk(cogs_dir):
+        for filename in filenames:
+            if filename.endswith('.py'):
+                extension = join(dir_path, filename).replace('.py', '').replace('\\', '.')
+                try:
+                    bot.load_extension(extension)
+                except (discord.ClientException, ModuleNotFoundError):
+                    print(f'Failed to load extension {extension}.')
+                    traceback.print_exc()
+
+    bot.run(token, bot = True, reconnect = True)
