@@ -6,4 +6,3 @@ python-dotenv==0.14.0
 dnspython==2.0.0
 schedule==0.6.0
 APScheduler==3.6.3
-unittest-xml-reporting

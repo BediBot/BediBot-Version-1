@@ -349,7 +349,7 @@ def random_quote_from_person(guild_id: int, quoted_person: str):
     ]
     try:
         quote = list(coll.aggregate(pipeline))[0]
-        return quote["quote"], quote["name"]
+        return '"' + quote["quote"] + '"  - ' + quote["name"]
     except Exception as e:
         print(e)
         return None
@@ -363,7 +363,7 @@ def random_quote(guild_id: int):
     ]
     try:
         quote = list(coll.aggregate(pipeline))[0]
-        return quote["quote"], quote["name"]
+        return '"' + quote["quote"] + '"  - ' + quote["name"]
     except Exception as e:
         print(e)
         return None
