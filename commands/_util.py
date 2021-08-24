@@ -32,7 +32,7 @@ async def purge_messages_with_limit(client: discord.Client, guild_id: int, chann
 
 def get_guild_count(client: discord.Client):
     for guild in client.guilds:
-        print(guild.name + ' - ' + str(guild.id))
+        print(guild.name + ' - ' + str(guild.id) + ' - ' + str(len([m for m in guild.members if not m.bot])))
     return len(client.guilds)
 
 
