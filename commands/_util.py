@@ -25,10 +25,14 @@ def author_is_bot_owner(ctx: discord.Message) -> bool:
 async def purge_messages_in_channel(client: discord.Client, guild_id: int, channel_id: int):
     await client.get_guild(guild_id).get_channel(channel_id).purge(limit = None, check = lambda msg: not msg.pinned)
 
+
 async def purge_messages_with_limit(client: discord.Client, guild_id: int, channel_id: int, numberOfMessages: int):
     await client.get_guild(guild_id).get_channel(channel_id).purge(limit = numberOfMessages, check = lambda msg: not msg.pinned)
 
+
 def get_guild_count(client: discord.Client):
+    for guild in client.guilds:
+        print(guild.name + ' - ' + guild.id)
     return len(client.guilds)
 
 
